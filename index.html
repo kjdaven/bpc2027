@@ -157,7 +157,10 @@
                 </div>
             </div>
             <div class="flex items-center space-x-2">
-                <button onclick="resetDataModal()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1.5 rounded-lg border border-slate-700 transition active:scale-95" title="Reset Data">
+                <button onclick="toggleAdminModal()" id="admin-toggle-btn" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1.5 rounded-lg border border-slate-700 transition active:scale-95 flex items-center" title="Admin Controls">
+                    <i class="fa-solid fa-lock mr-1 text-amber-400"></i><span id="admin-btn-label">Admin</span>
+                </button>
+                <button onclick="resetDataModal()" id="header-reset-btn" class="hidden text-xs bg-red-950/80 hover:bg-red-900 text-red-200 px-2.5 py-1.5 rounded-lg border border-red-800 transition active:scale-95" title="Reset Data">
                     <i class="fa-solid fa-rotate-right mr-1"></i>Reset
                 </button>
             </div>
@@ -256,6 +259,10 @@
                 <i class="fa-solid fa-users text-lg mb-0.5"></i>
                 <span class="text-[10px] font-medium">Rosters</span>
             </button>
+            <button onclick="switchTab('course')" id="nav-course" class="hidden flex-col items-center text-slate-400 hover:text-white transition py-1 px-3">
+                <i class="fa-solid fa-flag-checkered text-lg mb-0.5"></i>
+                <span class="text-[10px] font-medium">Course</span>
+            </button>
             <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3">
                 <i class="fa-solid fa-chart-bar text-lg mb-0.5"></i>
                 <span class="text-[10px] font-medium">Standings</span>
@@ -333,16 +340,110 @@
         <span id="toast-msg">Action completed</span>
     </div>
 
+    <!-- Custom Reset Confirmation Modal -->
+    <div id="reset-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-xs w-full p-5 shadow-2xl text-center space-y-4">
+            <div class="w-12 h-12 rounded-full bg-red-950/60 border border-red-800 text-red-400 flex items-center justify-center mx-auto">
+                <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-white">Reset Tournament Data?</h3>
+                <p class="text-xs text-slate-400 mt-1">This will clear all live scores, course edits, and custom player rosters for everyone using the app.</p>
+            </div>
+            <div class="flex space-x-2.5 pt-1">
+                <button onclick="closeResetModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">Cancel</button>
+                <button onclick="confirmResetData()" class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-600/30 transition">Reset All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login / Settings Modal -->
+    <div id="admin-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-xs w-full p-5 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-base font-bold text-white flex items-center">
+                    <i class="fa-solid fa-shield-halved text-amber-400 mr-2"></i><span id="admin-modal-title">Admin Access</span>
+                </h3>
+                <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <!-- Login View -->
+            <div id="admin-login-view" class="space-y-3">
+                <p class="text-xs text-slate-400">Enter the Admin PIN to unlock match pairings, roster editing, and course par/handicap controls.</p>
+                <input type="password" id="admin-pin-input" placeholder="Enter PIN (Default: 2027)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-center text-sm font-bold tracking-widest text-white focus:outline-none focus:border-amber-500">
+                <button onclick="verifyAdminPin()" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-extrabold uppercase tracking-wide transition">
+                    Unlock Admin Mode
+                </button>
+            </div>
+
+            <!-- Unlocked Admin Controls View -->
+            <div id="admin-unlocked-view" class="hidden space-y-3">
+                <div class="bg-emerald-950/40 border border-emerald-800/60 rounded-xl p-3 text-xs text-emerald-300">
+                    <i class="fa-solid fa-circle-check mr-1.5"></i>Admin Mode is active. You can edit match pairings, rosters, and hole pars/HCPs.
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-semibold text-slate-400">Update Admin PIN</label>
+                    <div class="flex space-x-2">
+                        <input type="text" id="new-admin-pin-input" placeholder="New PIN" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                        <button onclick="updateAdminPin()" class="bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-600 transition">Save</button>
+                    </div>
+                </div>
+                <button onclick="logoutAdmin()" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition">
+                    <i class="fa-solid fa-lock mr-1.5"></i>Lock Admin Mode
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Edit Matchup Modal -->
+    <div id="matchup-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Admin Matchup Editor</span>
+                    <h3 id="matchup-modal-title" class="text-sm font-bold text-white">Edit Match Players</h3>
+                </div>
+                <button onclick="closeMatchupModal()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="matchup-selectors-container" class="space-y-4">
+                <!-- Populated by JS -->
+            </div>
+            <div class="flex space-x-2 pt-2">
+                <button onclick="closeMatchupModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition">Cancel</button>
+                <button onclick="saveMatchupChanges()" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/30 transition">Save Matchup</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript Application Logic -->
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Cloud Sync Initialization
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'burnie-port-cup-2027';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        let db = null;
+        let auth = null;
+        let currentUser = null;
+        let tournamentDocRef = null;
+
         // --- Application State & Data Model ---
         let currentSession = 1;
         let activeTab = 'matches';
         let currentMatchId = null;
+        let editingMatchupId = null;
         let activeHole = 1;
+        let isAdmin = false;
+        let adminPin = '2027';
 
         // Course Info (Standard 18 holes par/hcp ratings)
-        const courseData = [
+        const defaultCourseData = [
             { hole: 1, par: 4, hcp: 7 },
             { hole: 2, par: 4, hcp: 3 },
             { hole: 3, par: 5, hcp: 11 },
@@ -363,8 +464,10 @@
             { hole: 18, par: 4, hcp: 14 }
         ];
 
+        let courseData = JSON.parse(JSON.stringify(defaultCourseData));
+
         // Teams (Team Burnie = Green, Team Port = Purple)
-        const rosters = {
+        const defaultRosters = {
             burnie: [
                 { id: 'b1', name: 'Burnie Captain A', hcp: 4, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B1' },
                 { id: 'b2', name: 'Burnie Player 2', hcp: 8, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B2' },
@@ -387,15 +490,10 @@
             ]
         };
 
-        // Matches across the 7 requested sessions (Total 32 matches across event = 32 points)
-        // Session 1: Day 1 Front 9 (Holes 1-9) = Scramble (2v2, 4 matches)
-        // Session 2: Day 1 Back 9 (Holes 10-18) = Better Score / Best Ball (2v2, 4 matches)
-        // Session 3: Day 2 First 9 (Holes 1-9) = Shamble (2v2, 4 matches)
-        // Session 4: Day 2 Second 9 (Holes 10-18) = Combined Score (2v2, 4 matches)
-        // Session 5: Day 2 Third 9 (Repeat F9 or play 1-9) = Alternate Shot (2v2, 4 matches)
-        // Session 6: Day 3 First 9 (Holes 1-9) = Singles vs One Opponent (1v1, 8 matches)
-        // Session 7: Day 3 Second 9 (Holes 10-18) = Singles vs The Other Opponents (1v1, 8 matches)
-        let matches = [
+        let rosters = JSON.parse(JSON.stringify(defaultRosters));
+
+        // Matches across the 7 sessions
+        const defaultMatches = [
             // Session 1: Scramble F9 (Holes 1-9)
             { id: 's1_m1', session: 1, type: 'Scramble (Holes 1-9)', burnie: ['b1', 'b8'], port: ['p1', 'p8'], startHole: 1, endHole: 9, scores: {} },
             { id: 's1_m2', session: 1, type: 'Scramble (Holes 1-9)', burnie: ['b2', 'b7'], port: ['p2', 'p7'], startHole: 1, endHole: 9, scores: {} },
@@ -447,50 +545,275 @@
             { id: 's7_m8', session: 7, type: 'Singles vs Opp 2 (Holes 10-18)', burnie: ['b8'], port: ['p6'], startHole: 10, endHole: 18, scores: {} }
         ];
 
-        // Load data from localStorage if available
-        function loadSavedData() {
-            const savedMatches = localStorage.getItem('burnie_port_cup_scores_v1');
-            if (savedMatches) {
-                try { matches = JSON.parse(savedMatches); } catch(e) { console.error(e); }
+        let matches = JSON.parse(JSON.stringify(defaultMatches));
+
+        // --- Real-Time Cloud Sync Setup ---
+        async function initCloudSync() {
+            if (!firebaseConfig) {
+                renderCurrentView();
+                updateOverallStandings();
+                return;
             }
-            const savedRosters = localStorage.getItem('burnie_port_cup_rosters_v1');
-            if (savedRosters) {
-                try { 
-                    const parsed = JSON.parse(savedRosters);
-                    if (parsed.burnie) rosters.burnie = parsed.burnie;
-                    if (parsed.port) rosters.port = parsed.port;
-                } catch(e) { console.error(e); }
+            try {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    const userCred = await signInWithCustomToken(auth, __initial_auth_token);
+                    currentUser = userCred.user;
+                } else {
+                    const userCred = await signInAnonymously(auth);
+                    currentUser = userCred.user;
+                }
+
+                tournamentDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'tournament', 'liveState');
+
+                onSnapshot(tournamentDocRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        if (data.matchesJson) {
+                            try { matches = JSON.parse(data.matchesJson); } catch (e) { console.error(e); }
+                        }
+                        if (data.rostersJson) {
+                            try { rosters = JSON.parse(data.rostersJson); } catch (e) { console.error(e); }
+                        }
+                        if (data.courseJson) {
+                            try { courseData = JSON.parse(data.courseJson); } catch (e) { console.error(e); }
+                        }
+                        if (data.adminPin) {
+                            adminPin = data.adminPin;
+                        }
+                        renderCurrentView();
+                        updateOverallStandings();
+                        if (currentMatchId && !document.getElementById('scorecard-modal').classList.contains('opacity-0')) {
+                            loadHoleScoringData();
+                        }
+                    } else {
+                        saveData();
+                    }
+                }, (error) => {
+                    console.error("Sync error:", error);
+                });
+            } catch (err) {
+                console.error("Initialization error:", err);
+                renderCurrentView();
+                updateOverallStandings();
             }
         }
 
-        function saveData() {
-            localStorage.setItem('burnie_port_cup_scores_v1', JSON.stringify(matches));
-            localStorage.setItem('burnie_port_cup_rosters_v1', JSON.stringify(rosters));
+        function renderCurrentView() {
+            if (activeTab === 'matches') renderMatches();
+            else if (activeTab === 'roster') renderRosters();
+            else if (activeTab === 'course') renderCourseSettings();
+            else if (activeTab === 'leaderboard') renderLeaderboard();
+        }
+
+        async function saveData() {
             updateOverallStandings();
-        }
-
-        function resetDataModal() {
-            if (confirm("Are you sure you want to reset all scores and customizations back to default?")) {
-                localStorage.removeItem('burnie_port_cup_scores_v1');
-                localStorage.removeItem('burnie_port_cup_rosters_v1');
-                location.reload();
+            if (!currentUser || !tournamentDocRef) return;
+            try {
+                await setDoc(tournamentDocRef, {
+                    matchesJson: JSON.stringify(matches),
+                    rostersJson: JSON.stringify(rosters),
+                    courseJson: JSON.stringify(courseData),
+                    adminPin: adminPin,
+                    updatedAt: Date.now()
+                });
+            } catch (e) {
+                console.error("Error saving live state:", e);
             }
         }
+
+        window.resetDataModal = function() {
+            if (!isAdmin) return;
+            const modal = document.getElementById('reset-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        };
+
+        window.closeResetModal = function() {
+            const modal = document.getElementById('reset-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        window.confirmResetData = async function() {
+            if (!isAdmin) return;
+            matches = JSON.parse(JSON.stringify(defaultMatches));
+            rosters = JSON.parse(JSON.stringify(defaultRosters));
+            courseData = JSON.parse(JSON.stringify(defaultCourseData));
+            await saveData();
+            closeResetModal();
+            renderCurrentView();
+            showToast("All tournament data reset for everyone!");
+        };
+
+        // --- Admin Mode Controls ---
+        function updateAdminUI() {
+            const btn = document.getElementById('admin-toggle-btn');
+            const resetBtn = document.getElementById('header-reset-btn');
+            const courseNav = document.getElementById('nav-course');
+
+            if (isAdmin) {
+                btn.className = "text-xs bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 px-2.5 py-1.5 rounded-lg border border-amber-500/50 transition active:scale-95 flex items-center";
+                btn.innerHTML = `<i class="fa-solid fa-lock-open mr-1 text-amber-400"></i><span>Admin</span>`;
+                resetBtn.classList.remove('hidden');
+                courseNav.classList.remove('hidden');
+                courseNav.classList.add('flex');
+            } else {
+                btn.className = "text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1.5 rounded-lg border border-slate-700 transition active:scale-95 flex items-center";
+                btn.innerHTML = `<i class="fa-solid fa-lock mr-1 text-slate-400"></i><span>Admin</span>`;
+                resetBtn.classList.add('hidden');
+                courseNav.classList.add('hidden');
+                courseNav.classList.remove('flex');
+                if (activeTab === 'course') switchTab('matches');
+            }
+            renderCurrentView();
+        }
+
+        window.toggleAdminModal = function() {
+            const modal = document.getElementById('admin-modal');
+            const loginView = document.getElementById('admin-login-view');
+            const unlockedView = document.getElementById('admin-unlocked-view');
+            const title = document.getElementById('admin-modal-title');
+
+            if (isAdmin) {
+                title.innerText = "Admin Controls";
+                loginView.classList.add('hidden');
+                unlockedView.classList.remove('hidden');
+            } else {
+                title.innerText = "Admin Login";
+                loginView.classList.remove('hidden');
+                unlockedView.classList.add('hidden');
+                document.getElementById('admin-pin-input').value = '';
+            }
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        };
+
+        window.closeAdminModal = function() {
+            document.getElementById('admin-modal').classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        window.verifyAdminPin = function() {
+            const entered = document.getElementById('admin-pin-input').value.trim();
+            if (entered === adminPin) {
+                isAdmin = true;
+                closeAdminModal();
+                updateAdminUI();
+                showToast("Admin Mode Unlocked!");
+            } else {
+                showToast("Incorrect Admin PIN");
+            }
+        };
+
+        window.updateAdminPin = function() {
+            const newPin = document.getElementById('new-admin-pin-input').value.trim();
+            if (newPin.length >= 4) {
+                adminPin = newPin;
+                saveData();
+                document.getElementById('new-admin-pin-input').value = '';
+                showToast("Admin PIN updated!");
+            } else {
+                showToast("PIN must be at least 4 characters");
+            }
+        };
+
+        window.logoutAdmin = function() {
+            isAdmin = false;
+            closeAdminModal();
+            updateAdminUI();
+            showToast("Admin Mode Locked");
+        };
+
+        // --- Admin Matchup Editor ---
+        window.openMatchupModal = function(e, matchId) {
+            e.stopPropagation();
+            if (!isAdmin) return;
+            editingMatchupId = matchId;
+            const match = matches.find(m => m.id === matchId);
+            document.getElementById('matchup-modal-title').innerText = `Session ${match.session} • ${match.type}`;
+
+            let html = `<div class="space-y-2"><span class="text-xs font-bold text-emerald-400 uppercase">Team Burnie Players</span>`;
+            match.burnie.forEach((selectedId, idx) => {
+                html += `<select id="edit-burnie-${idx}" class="w-full bg-slate-950 border border-emerald-800/60 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">`;
+                rosters.burnie.forEach(p => {
+                    html += `<option value="${p.id}" ${p.id === selectedId ? 'selected' : ''}>${p.name} (HCP ${p.hcp})</option>`;
+                });
+                html += `</select>`;
+            });
+            html += `</div>`;
+
+            html += `<div class="space-y-2"><span class="text-xs font-bold text-purple-400 uppercase">Team Port Players</span>`;
+            match.port.forEach((selectedId, idx) => {
+                html += `<select id="edit-port-${idx}" class="w-full bg-slate-950 border border-purple-800/60 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500">`;
+                rosters.port.forEach(p => {
+                    html += `<option value="${p.id}" ${p.id === selectedId ? 'selected' : ''}>${p.name} (HCP ${p.hcp})</option>`;
+                });
+                html += `</select>`;
+            });
+            html += `</div>`;
+
+            document.getElementById('matchup-selectors-container').innerHTML = html;
+            document.getElementById('matchup-modal').classList.remove('opacity-0', 'pointer-events-none');
+        };
+
+        window.closeMatchupModal = function() {
+            document.getElementById('matchup-modal').classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        window.saveMatchupChanges = function() {
+            if (!isAdmin || !editingMatchupId) return;
+            const match = matches.find(m => m.id === editingMatchupId);
+            
+            const newBurnie = [];
+            for (let i = 0; i < match.burnie.length; i++) {
+                newBurnie.push(document.getElementById(`edit-burnie-${i}`).value);
+            }
+            const newPort = [];
+            for (let i = 0; i < match.port.length; i++) {
+                newPort.push(document.getElementById(`edit-port-${i}`).value);
+            }
+
+            match.burnie = newBurnie;
+            match.port = newPort;
+            saveData();
+            closeMatchupModal();
+            renderMatches();
+            showToast("Matchup updated for all users!");
+        };
+
+        // --- Admin Course Par & HCP Editor ---
+        window.updateCourseHole = function(holeNum, field, val) {
+            if (!isAdmin) return;
+            const hole = courseData.find(c => c.hole === holeNum);
+            if (hole) {
+                const parsed = parseInt(val);
+                if (!isNaN(parsed)) {
+                    hole[field] = parsed;
+                    saveData();
+                    showToast(`Hole ${holeNum} ${field.toUpperCase()} updated!`);
+                }
+            }
+        };
 
         function getPlayerById(id) {
             return [...rosters.burnie, ...rosters.port].find(p => p.id === id);
         }
 
-        function updatePlayerDetail(teamKey, pId, field, value) {
+        function isTeamSingleScoreFormat(match) {
+            return match.type.includes('Scramble') || match.type.includes('Alternate Shot');
+        }
+
+        window.updatePlayerDetail = function(teamKey, pId, field, value) {
+            if (!isAdmin) return;
             const player = rosters[teamKey].find(p => p.id === pId);
             if (player) {
                 if (field === 'name') player.name = value;
                 if (field === 'hcp') player.hcp = parseInt(value) || 0;
                 if (field === 'photo') player.photo = value;
                 saveData();
-                showToast("Player updated successfully!");
+                showToast("Player updated for all users!");
             }
-        }
+        };
 
         // --- Match Analysis Engine ---
         function calculateMatchStatus(match) {
@@ -500,38 +823,47 @@
             const start = match.startHole;
             const end = match.endHole;
             const totalHoles = (end - start) + 1;
+            const singleTeamEntry = isTeamSingleScoreFormat(match);
 
             for (let h = start; h <= end; h++) {
                 const holeScores = match.scores[h];
                 if (!holeScores) continue;
 
-                const allBurnieScored = match.burnie.every(pId => holeScores.burnie && holeScores.burnie[pId] !== undefined && holeScores.burnie[pId] !== '');
-                const allPortScored = match.port.every(pId => holeScores.port && holeScores.port[pId] !== undefined && holeScores.port[pId] !== '');
-
-                if (!allBurnieScored || !allPortScored) continue;
-
-                holesCompleted++;
-
                 let burnieTeamScore = 0;
                 let portTeamScore = 0;
 
-                if (match.type.includes('Combined')) {
-                    // Sum of all players net/gross on team
-                    match.burnie.forEach(pId => burnieTeamScore += parseInt(holeScores.burnie[pId]));
-                    match.port.forEach(pId => portTeamScore += parseInt(holeScores.port[pId]));
-                } else {
-                    // Best ball / scramble / singles (lowest score among team players)
-                    burnieTeamScore = 999;
-                    match.burnie.forEach(pId => {
-                        const s = parseInt(holeScores.burnie[pId]);
-                        if (s < burnieTeamScore) burnieTeamScore = s;
-                    });
+                if (singleTeamEntry) {
+                    const bScore = holeScores.burnie ? holeScores.burnie['team'] : undefined;
+                    const pScore = holeScores.port ? holeScores.port['team'] : undefined;
+                    if (bScore === undefined || bScore === '' || pScore === undefined || pScore === '') continue;
 
-                    portTeamScore = 999;
-                    match.port.forEach(pId => {
-                        const s = parseInt(holeScores.port[pId]);
-                        if (s < portTeamScore) portTeamScore = s;
-                    });
+                    holesCompleted++;
+                    burnieTeamScore = parseInt(bScore);
+                    portTeamScore = parseInt(pScore);
+                } else {
+                    const allBurnieScored = match.burnie.every(pId => holeScores.burnie && holeScores.burnie[pId] !== undefined && holeScores.burnie[pId] !== '');
+                    const allPortScored = match.port.every(pId => holeScores.port && holeScores.port[pId] !== undefined && holeScores.port[pId] !== '');
+
+                    if (!allBurnieScored || !allPortScored) continue;
+
+                    holesCompleted++;
+
+                    if (match.type.includes('Combined')) {
+                        match.burnie.forEach(pId => burnieTeamScore += parseInt(holeScores.burnie[pId]));
+                        match.port.forEach(pId => portTeamScore += parseInt(holeScores.port[pId]));
+                    } else {
+                        burnieTeamScore = 999;
+                        match.burnie.forEach(pId => {
+                            const s = parseInt(holeScores.burnie[pId]);
+                            if (s < burnieTeamScore) burnieTeamScore = s;
+                        });
+
+                        portTeamScore = 999;
+                        match.port.forEach(pId => {
+                            const s = parseInt(holeScores.port[pId]);
+                            if (s < portTeamScore) portTeamScore = s;
+                        });
+                    }
                 }
 
                 if (burnieTeamScore < portTeamScore) {
@@ -619,7 +951,7 @@
         }
 
         // --- UI Navigation & Rendering ---
-        function switchSession(sessionNum) {
+        window.switchSession = function(sessionNum) {
             currentSession = sessionNum;
             for (let i = 1; i <= 7; i++) {
                 const btn = document.getElementById(`tab-session-${i}`);
@@ -632,7 +964,7 @@
 
             const descCard = document.getElementById('session-description-card');
             const descriptions = {
-                1: "Day 1 Front 9 - Scramble: Team plays from best shot on each stroke. Lowest score wins the hole.",
+                1: "Day 1 Front 9 - Scramble: Team plays from best shot on each stroke. Single team score wins the hole.",
                 2: "Day 1 Back 9 - Better Score (Best Ball): Both players play own ball; lowest net score wins the hole.",
                 3: "Day 2 First 9 - Shamble: Both tee off, pick best drive, then play own ball in.",
                 4: "Day 2 Second 9 - Combined Score: Sum of both team players' scores on each hole.",
@@ -643,16 +975,17 @@
             descCard.innerHTML = `<i class="fa-solid fa-circle-info text-emerald-400 mt-0.5 text-sm"></i><div><span class="font-semibold text-white">Session ${sessionNum}:</span> ${descriptions[sessionNum]}</div>`;
 
             renderMatches();
-        }
+        };
 
-        function switchTab(tabName) {
+        window.switchTab = function(tabName) {
             activeTab = tabName;
-            ['matches', 'roster', 'leaderboard'].forEach(t => {
+            ['matches', 'roster', 'course', 'leaderboard'].forEach(t => {
                 const navBtn = document.getElementById(`nav-${t}`);
+                if (!navBtn) return;
                 if (t === tabName) {
-                    navBtn.className = "flex flex-col items-center text-emerald-400 transition py-1 px-3";
+                    navBtn.className = navBtn.className.replace('text-slate-400 hover:text-white', 'text-emerald-400');
                 } else {
-                    navBtn.className = "flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3";
+                    navBtn.className = navBtn.className.replace('text-emerald-400', 'text-slate-400 hover:text-white');
                 }
             });
 
@@ -660,10 +993,12 @@
                 renderMatches();
             } else if (tabName === 'roster') {
                 renderRosters();
+            } else if (tabName === 'course') {
+                renderCourseSettings();
             } else if (tabName === 'leaderboard') {
                 renderLeaderboard();
             }
-        }
+        };
 
         function renderMatches() {
             if (activeTab !== 'matches') return;
@@ -673,32 +1008,40 @@
             let html = '';
             sessionMatches.forEach((m, idx) => {
                 const status = calculateMatchStatus(m);
-                const burnieNames = m.burnie.map(id => getPlayerById(id).name.split(' ')[0]).join(' & ');
-                const portNames = m.port.map(id => getPlayerById(id).name.split(' ')[0]).join(' & ');
+                const burnieNames = m.burnie.map(id => getPlayerById(id).name).join(' & ');
+                const portNames = m.port.map(id => getPlayerById(id).name).join(' & ');
+                const adminEditBtn = isAdmin ? `
+                    <button onclick="openMatchupModal(event, '${m.id}')" class="ml-2 text-[10px] bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-md font-bold transition">
+                        <i class="fa-solid fa-pen mr-1"></i>Edit Pairings
+                    </button>
+                ` : '';
 
                 html += `
                     <div onclick="openMatchModal('${m.id}')" class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 hover:border-emerald-500/60 transition shadow-lg cursor-pointer active:scale-[0.99] group">
                         <div class="flex justify-between items-center mb-2.5">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-md border border-emerald-900">
-                                Match ${idx + 1} • ${m.type}
-                            </span>
-                            <span class="text-xs ${status.color} flex items-center">
+                            <div class="flex items-center flex-wrap gap-1">
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-md border border-emerald-900">
+                                    Match ${idx + 1} • ${m.type}
+                                </span>
+                                ${adminEditBtn}
+                            </div>
+                            <span class="text-xs ${status.color} flex items-center flex-shrink-0">
                                 ${status.text} <i class="fa-solid fa-chevron-right text-[10px] ml-1.5 text-slate-500 group-hover:text-emerald-400 transition"></i>
                             </span>
                         </div>
                         
                         <div class="space-y-2 mt-3">
                             <div class="flex justify-between items-center bg-emerald-950/30 border border-emerald-900/40 rounded-xl px-3 py-2">
-                                <span class="text-xs font-bold text-emerald-200 flex items-center">
+                                <span class="text-xs font-bold text-emerald-200 flex items-center flex-shrink-0 mr-2">
                                     <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span> Team Burnie
                                 </span>
-                                <span class="text-xs text-slate-300 font-medium">${burnieNames}</span>
+                                <span class="text-xs text-slate-300 font-medium text-right truncate">${burnieNames}</span>
                             </div>
                             <div class="flex justify-between items-center bg-purple-950/30 border border-purple-900/40 rounded-xl px-3 py-2">
-                                <span class="text-xs font-bold text-purple-200 flex items-center">
+                                <span class="text-xs font-bold text-purple-200 flex items-center flex-shrink-0 mr-2">
                                     <span class="w-2 h-2 rounded-full bg-purple-500 mr-2"></span> Team Port
                                 </span>
-                                <span class="text-xs text-slate-300 font-medium">${portNames}</span>
+                                <span class="text-xs text-slate-300 font-medium text-right truncate">${portNames}</span>
                             </div>
                         </div>
                     </div>
@@ -711,25 +1054,42 @@
             const container = document.getElementById('matches-container');
             let html = `
                 <div class="space-y-4">
+                    ${!isAdmin ? `
+                    <div class="bg-slate-800/60 border border-slate-700 rounded-xl p-3 text-xs text-slate-300 flex items-center justify-between">
+                        <span><i class="fa-solid fa-lock text-amber-400 mr-1.5"></i>Roster editing is locked to Admin only.</span>
+                        <button onclick="toggleAdminModal()" class="text-amber-400 font-bold underline">Unlock</button>
+                    </div>` : ''}
                     <div class="bg-slate-800/80 border border-emerald-900/50 rounded-2xl p-4 shadow-lg">
                         <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wide mb-3 flex items-center">
-                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2"></span> Team Burnie Roster & Headshots
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2"></span> Team Burnie Roster
                         </h3>
                         <div class="space-y-3">
             `;
             rosters.burnie.forEach(p => {
-                html += `
-                    <div class="bg-slate-900/80 border border-slate-700/60 p-3 rounded-xl flex items-center space-x-3">
-                        <img src="${p.photo}" alt="${p.name}" class="w-12 h-12 rounded-full object-cover border border-emerald-500/50 flex-shrink-0" onerror="this.src='https://placehold.co/150x150/1b5e20/ffffff?text=Golf'">
-                        <div class="flex-1 space-y-2">
-                            <div class="flex space-x-2">
-                                <input type="text" value="${p.name}" onchange="updatePlayerDetail('burnie', '${p.id}', 'name', this.value)" placeholder="Player Name" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white focus:outline-none focus:border-emerald-500">
-                                <input type="number" value="${p.hcp}" onchange="updatePlayerDetail('burnie', '${p.id}', 'hcp', this.value)" placeholder="Hcp" class="w-16 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-center text-white focus:outline-none focus:border-emerald-500" title="Handicap">
+                if (isAdmin) {
+                    html += `
+                        <div class="bg-slate-900/80 border border-slate-700/60 p-3 rounded-xl flex items-center space-x-3">
+                            <img src="${p.photo}" alt="${p.name}" class="w-12 h-12 rounded-full object-cover border border-emerald-500/50 flex-shrink-0" onerror="this.src='https://placehold.co/150x150/1b5e20/ffffff?text=Golf'">
+                            <div class="flex-1 space-y-2">
+                                <div class="flex space-x-2">
+                                    <input type="text" value="${p.name}" onchange="updatePlayerDetail('burnie', '${p.id}', 'name', this.value)" placeholder="Player Name" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white focus:outline-none focus:border-emerald-500">
+                                    <input type="number" value="${p.hcp}" onchange="updatePlayerDetail('burnie', '${p.id}', 'hcp', this.value)" placeholder="Hcp" class="w-16 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-center text-white focus:outline-none focus:border-emerald-500" title="Handicap">
+                                </div>
+                                <input type="url" value="${p.photo}" onchange="updatePlayerDetail('burnie', '${p.id}', 'photo', this.value)" placeholder="Photo Image URL (https://...)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-[11px] text-slate-300 focus:outline-none focus:border-emerald-500">
                             </div>
-                            <input type="url" value="${p.photo}" onchange="updatePlayerDetail('burnie', '${p.id}', 'photo', this.value)" placeholder="Photo Image URL (https://...)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-[11px] text-slate-300 focus:outline-none focus:border-emerald-500">
                         </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    html += `
+                        <div class="bg-slate-900/60 border border-slate-700/50 p-2.5 rounded-xl flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <img src="${p.photo}" alt="${p.name}" class="w-10 h-10 rounded-full object-cover border border-emerald-500/50" onerror="this.src='https://placehold.co/150x150/1b5e20/ffffff?text=Golf'">
+                                <span class="text-xs font-bold text-white">${p.name}</span>
+                            </div>
+                            <span class="bg-slate-800 text-slate-300 px-2.5 py-1 rounded-lg text-xs">HCP: <strong class="text-emerald-400">${p.hcp}</strong></span>
+                        </div>
+                    `;
+                }
             });
             html += `
                         </div>
@@ -737,26 +1097,73 @@
 
                     <div class="bg-slate-800/80 border border-purple-900/50 rounded-2xl p-4 shadow-lg">
                         <h3 class="text-sm font-bold text-purple-400 uppercase tracking-wide mb-3 flex items-center">
-                            <span class="w-2.5 h-2.5 rounded-full bg-purple-500 mr-2"></span> Team Port Roster & Headshots
+                            <span class="w-2.5 h-2.5 rounded-full bg-purple-500 mr-2"></span> Team Port Roster
                         </h3>
                         <div class="space-y-3">
             `;
             rosters.port.forEach(p => {
-                html += `
-                    <div class="bg-slate-900/80 border border-slate-700/60 p-3 rounded-xl flex items-center space-x-3">
-                        <img src="${p.photo}" alt="${p.name}" class="w-12 h-12 rounded-full object-cover border border-purple-500/50 flex-shrink-0" onerror="this.src='https://placehold.co/150x150/5e35b1/ffffff?text=Golf'">
-                        <div class="flex-1 space-y-2">
-                            <div class="flex space-x-2">
-                                <input type="text" value="${p.name}" onchange="updatePlayerDetail('port', '${p.id}', 'name', this.value)" placeholder="Player Name" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white focus:outline-none focus:border-purple-500">
-                                <input type="number" value="${p.hcp}" onchange="updatePlayerDetail('port', '${p.id}', 'hcp', this.value)" placeholder="Hcp" class="w-16 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-center text-white focus:outline-none focus:border-purple-500" title="Handicap">
+                if (isAdmin) {
+                    html += `
+                        <div class="bg-slate-900/80 border border-slate-700/60 p-3 rounded-xl flex items-center space-x-3">
+                            <img src="${p.photo}" alt="${p.name}" class="w-12 h-12 rounded-full object-cover border border-purple-500/50 flex-shrink-0" onerror="this.src='https://placehold.co/150x150/5e35b1/ffffff?text=Golf'">
+                            <div class="flex-1 space-y-2">
+                                <div class="flex space-x-2">
+                                    <input type="text" value="${p.name}" onchange="updatePlayerDetail('port', '${p.id}', 'name', this.value)" placeholder="Player Name" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-white focus:outline-none focus:border-purple-500">
+                                    <input type="number" value="${p.hcp}" onchange="updatePlayerDetail('port', '${p.id}', 'hcp', this.value)" placeholder="Hcp" class="w-16 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-center text-white focus:outline-none focus:border-purple-500" title="Handicap">
+                                </div>
+                                <input type="url" value="${p.photo}" onchange="updatePlayerDetail('port', '${p.id}', 'photo', this.value)" placeholder="Photo Image URL (https://...)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-[11px] text-slate-300 focus:outline-none focus:border-purple-500">
                             </div>
-                            <input type="url" value="${p.photo}" onchange="updatePlayerDetail('port', '${p.id}', 'photo', this.value)" placeholder="Photo Image URL (https://...)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-[11px] text-slate-300 focus:outline-none focus:border-purple-500">
                         </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="bg-slate-900/60 border border-slate-700/50 p-2.5 rounded-xl flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <img src="${p.photo}" alt="${p.name}" class="w-10 h-10 rounded-full object-cover border border-purple-500/50" onerror="this.src='https://placehold.co/150x150/5e35b1/ffffff?text=Golf'">
+                                <span class="text-xs font-bold text-white">${p.name}</span>
+                            </div>
+                            <span class="bg-slate-800 text-slate-300 px-2.5 py-1 rounded-lg text-xs">HCP: <strong class="text-purple-400">${p.hcp}</strong></span>
+                        </div>
+                    `;
+                }
+            });
+            html += `
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
+        }
+
+        function renderCourseSettings() {
+            const container = document.getElementById('matches-container');
+            let html = `
+                <div class="bg-slate-800/80 border border-amber-500/40 rounded-2xl p-4 shadow-lg space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-sm font-bold text-amber-400 uppercase tracking-wide flex items-center">
+                                <i class="fa-solid fa-flag-checkered mr-2"></i>Course Hole Setup
+                            </h3>
+                            <p class="text-xs text-slate-400">Edit Par and Handicap Index for all 18 holes</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-[10px] font-bold uppercase text-slate-400 px-2">
+                        <span>Hole</span>
+                        <span class="text-center">Par</span>
+                        <span class="text-center">HCP Index</span>
+                    </div>
+                    <div class="space-y-2">
+            `;
+            courseData.forEach(c => {
+                html += `
+                    <div class="grid grid-cols-3 gap-2 items-center bg-slate-900/80 border border-slate-700/60 px-3 py-2 rounded-xl">
+                        <span class="text-xs font-bold text-white">Hole ${c.hole}</span>
+                        <input type="number" min="3" max="6" value="${c.par}" onchange="updateCourseHole(${c.hole}, 'par', this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-lg py-1.5 text-center text-xs font-bold text-emerald-400 focus:outline-none focus:border-amber-500">
+                        <input type="number" min="1" max="18" value="${c.hcp}" onchange="updateCourseHole(${c.hole}, 'hcp', this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-lg py-1.5 text-center text-xs font-bold text-amber-300 focus:outline-none focus:border-amber-500">
                     </div>
                 `;
             });
             html += `
-                        </div>
                     </div>
                 </div>
             `;
@@ -818,7 +1225,7 @@
         }
 
         // --- Hole Scoring Modal Logic ---
-        function openMatchModal(matchId) {
+        window.openMatchModal = function(matchId) {
             currentMatchId = matchId;
             const match = matches.find(m => m.id === matchId);
             activeHole = match.startHole;
@@ -831,9 +1238,9 @@
 
             renderHoleSelectorStrip();
             loadHoleScoringData();
-        }
+        };
 
-        function closeMatchModal() {
+        window.closeMatchModal = function() {
             const modal = document.getElementById('scorecard-modal');
             const panel = document.getElementById('modal-panel');
             
@@ -842,7 +1249,7 @@
 
             renderMatches();
             updateOverallStandings();
-        }
+        };
 
         function renderHoleSelectorStrip() {
             const match = matches.find(m => m.id === currentMatchId);
@@ -864,19 +1271,19 @@
             strip.innerHTML = html;
         }
 
-        function setActiveHole(holeNum) {
+        window.setActiveHole = function(holeNum) {
             activeHole = holeNum;
             renderHoleSelectorStrip();
             loadHoleScoringData();
-        }
+        };
 
-        function changeActiveHole(direction) {
+        window.changeActiveHole = function(direction) {
             const match = matches.find(m => m.id === currentMatchId);
             let nextHole = activeHole + direction;
             if (nextHole >= match.startHole && nextHole <= match.endHole) {
                 setActiveHole(nextHole);
             }
-        }
+        };
 
         function loadHoleScoringData() {
             const match = matches.find(m => m.id === currentMatchId);
@@ -898,56 +1305,96 @@
                 match.scores[activeHole] = { burnie: {}, port: {} };
             }
 
+            const singleTeamEntry = isTeamSingleScoreFormat(match);
             let html = '';
 
-            // Team Burnie Players
-            html += `<div class="space-y-2"><span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wide">Team Burnie Scores</span>`;
-            match.burnie.forEach(pId => {
-                const player = getPlayerById(pId);
-                const currentScore = (match.scores[activeHole].burnie && match.scores[activeHole].burnie[pId]) !== undefined ? match.scores[activeHole].burnie[pId] : '';
-                
-                html += `
-                    <div class="flex justify-between items-center bg-slate-900/80 border border-emerald-900/40 p-2.5 rounded-xl">
-                        <div>
-                            <span class="text-xs font-semibold text-white block">${player.name}</span>
-                            <span class="text-[10px] text-slate-400">HCP ${player.hcp}</span>
-                        </div>
-                        <div class="flex items-center space-x-1.5">
-                            <button onclick="adjustScore('${currentMatchId}', ${activeHole}, 'burnie', '${pId}', -1)" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-sm flex items-center justify-center transition active:scale-95">-</button>
-                            <input type="number" id="score_burnie_${pId}" value="${currentScore}" placeholder="--" onchange="saveScoreInput('${currentMatchId}', ${activeHole}, 'burnie', '${pId}', this.value)" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white focus:outline-none focus:border-emerald-500">
-                            <button onclick="adjustScore('${currentMatchId}', ${activeHole}, 'burnie', '${pId}', 1)" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-sm flex items-center justify-center transition active:scale-95">+</button>
-                        </div>
-                    </div>
-                `;
-            });
-            html += `</div>`;
+            if (singleTeamEntry) {
+                // Single Team Score Entry (Scramble / Alternate Shot)
+                const burnieTeamNames = match.burnie.map(id => getPlayerById(id).name).join(' & ');
+                const portTeamNames = match.port.map(id => getPlayerById(id).name).join(' & ');
+                const currentBurnieTeamScore = (match.scores[activeHole].burnie && match.scores[activeHole].burnie['team']) !== undefined ? match.scores[activeHole].burnie['team'] : '';
+                const currentPortTeamScore = (match.scores[activeHole].port && match.scores[activeHole].port['team']) !== undefined ? match.scores[activeHole].port['team'] : '';
 
-            // Team Port Players
-            html += `<div class="space-y-2 pt-2"><span class="text-[10px] font-bold text-purple-400 uppercase tracking-wide">Team Port Scores</span>`;
-            match.port.forEach(pId => {
-                const player = getPlayerById(pId);
-                const currentScore = (match.scores[activeHole].port && match.scores[activeHole].port[pId]) !== undefined ? match.scores[activeHole].port[pId] : '';
-                
                 html += `
-                    <div class="flex justify-between items-center bg-slate-900/80 border border-purple-900/40 p-2.5 rounded-xl">
-                        <div>
-                            <span class="text-xs font-semibold text-white block">${player.name}</span>
-                            <span class="text-[10px] text-slate-400">HCP ${player.hcp}</span>
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wide">Team Burnie Team Score</span>
+                        <div class="flex justify-between items-center bg-slate-900/80 border border-emerald-900/40 p-3 rounded-xl">
+                            <div class="pr-2">
+                                <span class="text-xs font-bold text-white block">Team Burnie</span>
+                                <span class="text-[10px] text-slate-400 block">${burnieTeamNames}</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5 flex-shrink-0">
+                                <button onclick="adjustScore('${currentMatchId}', ${activeHole}, 'burnie', 'team', -1)" class="w-9 h-9 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-sm flex items-center justify-center transition active:scale-95">-</button>
+                                <input type="number" id="score_burnie_team" value="${currentBurnieTeamScore}" placeholder="--" onchange="saveScoreInput('${currentMatchId}', ${activeHole}, 'burnie', 'team', this.value)" class="w-12 h-9 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-sm text-white focus:outline-none focus:border-emerald-500">
+                                <button onclick="adjustScore('${currentMatchId}', ${activeHole}, 'burnie', 'team', 1)" class="w-9 h-9 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-sm flex items-center justify-center transition active:scale-95">+</button>
+                            </div>
                         </div>
-                        <div class="flex items-center space-x-1.5">
-                            <button onclick="adjustScore('${currentMatchId}', ${activeHole}, 'port', '${pId}', -1)" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-sm flex items-center justify-center transition active:scale-95">-</button>
-                            <input type="number" id="score_port_${pId}" value="${currentScore}" placeholder="--" onchange="saveScoreInput('${currentMatchId}', ${activeHole}, 'port', '${pId}', this.value)" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white focus:outline-none focus:border-purple-500">
-                            <button onclick="adjustScore('${currentMatchId}', ${activeHole}, 'port', '${pId}', 1)" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-sm flex items-center justify-center transition active:scale-95">+</button>
+                    </div>
+
+                    <div class="space-y-2 pt-2">
+                        <span class="text-[10px] font-bold text-purple-400 uppercase tracking-wide">Team Port Team Score</span>
+                        <div class="flex justify-between items-center bg-slate-900/80 border border-purple-900/40 p-3 rounded-xl">
+                            <div class="pr-2">
+                                <span class="text-xs font-bold text-white block">Team Port</span>
+                                <span class="text-[10px] text-slate-400 block">${portTeamNames}</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5 flex-shrink-0">
+                                <button onclick="adjustScore('${currentMatchId}', ${activeHole}, 'port', 'team', -1)" class="w-9 h-9 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-sm flex items-center justify-center transition active:scale-95">-</button>
+                                <input type="number" id="score_port_team" value="${currentPortTeamScore}" placeholder="--" onchange="saveScoreInput('${currentMatchId}', ${activeHole}, 'port', 'team', this.value)" class="w-12 h-9 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-sm text-white focus:outline-none focus:border-purple-500">
+                                <button onclick="adjustScore('${currentMatchId}', ${activeHole}, 'port', 'team', 1)" class="w-9 h-9 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-sm flex items-center justify-center transition active:scale-95">+</button>
+                            </div>
                         </div>
                     </div>
                 `;
-            });
-            html += `</div>`;
+            } else {
+                // Individual Player Score Entry
+                html += `<div class="space-y-2"><span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wide">Team Burnie Scores</span>`;
+                match.burnie.forEach(pId => {
+                    const player = getPlayerById(pId);
+                    const currentScore = (match.scores[activeHole].burnie && match.scores[activeHole].burnie[pId]) !== undefined ? match.scores[activeHole].burnie[pId] : '';
+                    
+                    html += `
+                        <div class="flex justify-between items-center bg-slate-900/80 border border-emerald-900/40 p-2.5 rounded-xl">
+                            <div>
+                                <span class="text-xs font-semibold text-white block">${player.name}</span>
+                                <span class="text-[10px] text-slate-400">HCP ${player.hcp}</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5">
+                                <button onclick="adjustScore('${currentMatchId}', ${activeHole}, 'burnie', '${pId}', -1)" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-sm flex items-center justify-center transition active:scale-95">-</button>
+                                <input type="number" id="score_burnie_${pId}" value="${currentScore}" placeholder="--" onchange="saveScoreInput('${currentMatchId}', ${activeHole}, 'burnie', '${pId}', this.value)" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white focus:outline-none focus:border-emerald-500">
+                                <button onclick="adjustScore('${currentMatchId}', ${activeHole}, 'burnie', '${pId}', 1)" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-sm flex items-center justify-center transition active:scale-95">+</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+
+                html += `<div class="space-y-2 pt-2"><span class="text-[10px] font-bold text-purple-400 uppercase tracking-wide">Team Port Scores</span>`;
+                match.port.forEach(pId => {
+                    const player = getPlayerById(pId);
+                    const currentScore = (match.scores[activeHole].port && match.scores[activeHole].port[pId]) !== undefined ? match.scores[activeHole].port[pId] : '';
+                    
+                    html += `
+                        <div class="flex justify-between items-center bg-slate-900/80 border border-purple-900/40 p-2.5 rounded-xl">
+                            <div>
+                                <span class="text-xs font-semibold text-white block">${player.name}</span>
+                                <span class="text-[10px] text-slate-400">HCP ${player.hcp}</span>
+                            </div>
+                            <div class="flex items-center space-x-1.5">
+                                <button onclick="adjustScore('${currentMatchId}', ${activeHole}, 'port', '${pId}', -1)" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-sm flex items-center justify-center transition active:scale-95">-</button>
+                                <input type="number" id="score_port_${pId}" value="${currentScore}" placeholder="--" onchange="saveScoreInput('${currentMatchId}', ${activeHole}, 'port', '${pId}', this.value)" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white focus:outline-none focus:border-purple-500">
+                                <button onclick="adjustScore('${currentMatchId}', ${activeHole}, 'port', '${pId}', 1)" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-sm flex items-center justify-center transition active:scale-95">+</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
 
             document.getElementById('hole-players-scoring-list').innerHTML = html;
         }
 
-        function saveScoreInput(matchId, holeNum, team, pId, val) {
+        window.saveScoreInput = function(matchId, holeNum, team, pId, val) {
             const match = matches.find(m => m.id === matchId);
             if (!match.scores[holeNum]) match.scores[holeNum] = { burnie: {}, port: {} };
             if (!match.scores[holeNum][team]) match.scores[holeNum][team] = {};
@@ -957,10 +1404,10 @@
             
             const status = calculateMatchStatus(match);
             document.getElementById('modal-match-state').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1.5"></span> ${status.text}`;
-            showToast(`Hole ${holeNum} score saved!`);
-        }
+            showToast(`Hole ${holeNum} synced live!`);
+        };
 
-        function adjustScore(matchId, holeNum, team, pId, delta) {
+        window.adjustScore = function(matchId, holeNum, team, pId, delta) {
             const match = matches.find(m => m.id === matchId);
             if (!match.scores[holeNum]) match.scores[holeNum] = { burnie: {}, port: {} };
             if (!match.scores[holeNum][team]) match.scores[holeNum][team] = {};
@@ -981,7 +1428,7 @@
 
             const status = calculateMatchStatus(match);
             document.getElementById('modal-match-state').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1.5"></span> ${status.text}`;
-        }
+        };
 
         function showToast(msg) {
             const toast = document.getElementById('toast');
@@ -992,18 +1439,18 @@
             }, 2000);
         }
 
-        function enterApp() {
+        window.enterApp = function() {
             const splash = document.getElementById('splash-screen');
             splash.classList.add('opacity-0', 'pointer-events-none');
             setTimeout(() => {
                 splash.style.display = 'none';
             }, 500);
-        }
+        };
 
         window.onload = function() {
-            loadSavedData();
             renderMatches();
             updateOverallStandings();
+            initCloudSync();
         };
     </script>
 </body>
