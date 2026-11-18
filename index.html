@@ -177,7 +177,7 @@
                 <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-800/50">
                     <i class="fa-solid fa-trophy mr-1 text-amber-400"></i>Live Standings
                 </span>
-                <span id="cup-status-text" class="text-xs font-bold text-slate-300">Target: 16.5 pts to Win</span>
+                <span id="cup-status-text" class="text-xs font-bold text-slate-300">Target: 27.5 pts to Win</span>
             </div>
             
             <div class="grid grid-cols-5 gap-2 items-center text-center">
@@ -511,61 +511,79 @@
         let defaultRosters = {
             burnie: [
                 { id: 'b1', name: 'Burnie Captain A', hcp: 4, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B1' },
-                { id: 'b2', name: 'Burnie Player 2', hcp: 8, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B2' },
-                { id: 'b3', name: 'Burnie Player 3', hcp: 11, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B3' },
-                { id: 'b4', name: 'Burnie Player 4', hcp: 14, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B4' },
-                { id: 'b5', name: 'Burnie Player 5', hcp: 16, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B5' },
-                { id: 'b6', name: 'Burnie Player 6', hcp: 19, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B6' },
-                { id: 'b7', name: 'Burnie Player 7', hcp: 22, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B7' },
-                { id: 'b8', name: 'Burnie Player 8', hcp: 25, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B8' }
+                { id: 'b2', name: 'Burnie Player 2', hcp: 6, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B2' },
+                { id: 'b3', name: 'Burnie Player 3', hcp: 8, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B3' },
+                { id: 'b4', name: 'Burnie Player 4', hcp: 10, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B4' },
+                { id: 'b5', name: 'Burnie Player 5', hcp: 12, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B5' },
+                { id: 'b6', name: 'Burnie Player 6', hcp: 14, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B6' },
+                { id: 'b7', name: 'Burnie Player 7', hcp: 16, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B7' },
+                { id: 'b8', name: 'Burnie Player 8', hcp: 18, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B8' },
+                { id: 'b9', name: 'Burnie Player 9', hcp: 20, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B9' },
+                { id: 'b10', name: 'Burnie Player 10', hcp: 22, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B10' },
+                { id: 'b11', name: 'Burnie Player 11', hcp: 24, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B11' },
+                { id: 'b12', name: 'Burnie Player 12', hcp: 26, photo: 'https://placehold.co/150x150/1b5e20/ffffff?text=B12' }
             ],
             port: [
                 { id: 'p1', name: 'Port Captain A', hcp: 5, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P1' },
                 { id: 'p2', name: 'Port Player 2', hcp: 7, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P2' },
-                { id: 'p3', name: 'Port Player 3', hcp: 10, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P3' },
-                { id: 'p4', name: 'Port Player 4', hcp: 13, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P4' },
-                { id: 'p5', name: 'Port Player 5', hcp: 17, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P5' },
-                { id: 'p6', name: 'Port Player 6', hcp: 20, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P6' },
-                { id: 'p7', name: 'Port Player 7', hcp: 23, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P7' },
-                { id: 'p8', name: 'Port Player 8', hcp: 26, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P8' }
+                { id: 'p3', name: 'Port Player 3', hcp: 9, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P3' },
+                { id: 'p4', name: 'Port Player 4', hcp: 11, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P4' },
+                { id: 'p5', name: 'Port Player 5', hcp: 13, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P5' },
+                { id: 'p6', name: 'Port Player 6', hcp: 15, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P6' },
+                { id: 'p7', name: 'Port Player 7', hcp: 17, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P7' },
+                { id: 'p8', name: 'Port Player 8', hcp: 19, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P8' },
+                { id: 'p9', name: 'Port Player 9', hcp: 21, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P9' },
+                { id: 'p10', name: 'Port Player 10', hcp: 23, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P10' },
+                { id: 'p11', name: 'Port Player 11', hcp: 25, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P11' },
+                { id: 'p12', name: 'Port Player 12', hcp: 28, photo: 'https://placehold.co/150x150/5e35b1/ffffff?text=P12' }
             ]
         };
 
         let rosters = JSON.parse(JSON.stringify(defaultRosters));
 
-        // Matches across the 7 sessions
+        // Matches across the 7 sessions (Scaled for 12 players per team = 6 team matches / 12 singles matches per session)
         const defaultMatches = [
-            // Session 1: Scramble F9 (Holes 1-9)
-            { id: 's1_m1', session: 1, type: 'Scramble (Holes 1-9)', burnie: ['b1', 'b8'], port: ['p1', 'p8'], startHole: 1, endHole: 9, scores: {} },
-            { id: 's1_m2', session: 1, type: 'Scramble (Holes 1-9)', burnie: ['b2', 'b7'], port: ['p2', 'p7'], startHole: 1, endHole: 9, scores: {} },
-            { id: 's1_m3', session: 1, type: 'Scramble (Holes 1-9)', burnie: ['b3', 'b6'], port: ['p3', 'p6'], startHole: 1, endHole: 9, scores: {} },
-            { id: 's1_m4', session: 1, type: 'Scramble (Holes 1-9)', burnie: ['b4', 'b5'], port: ['p4', 'p5'], startHole: 1, endHole: 9, scores: {} },
+            // Session 1: Scramble F9 (Holes 1-9) - 6 matches (12 points)
+            { id: 's1_m1', session: 1, type: 'Scramble (Holes 1-9)', burnie: ['b1', 'b12'], port: ['p1', 'p12'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's1_m2', session: 1, type: 'Scramble (Holes 1-9)', burnie: ['b2', 'b11'], port: ['p2', 'p11'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's1_m3', session: 1, type: 'Scramble (Holes 1-9)', burnie: ['b3', 'b10'], port: ['p3', 'p10'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's1_m4', session: 1, type: 'Scramble (Holes 1-9)', burnie: ['b4', 'b9'], port: ['p4', 'p9'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's1_m5', session: 1, type: 'Scramble (Holes 1-9)', burnie: ['b5', 'b8'], port: ['p5', 'p8'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's1_m6', session: 1, type: 'Scramble (Holes 1-9)', burnie: ['b6', 'b7'], port: ['p6', 'p7'], startHole: 1, endHole: 9, scores: {} },
 
-            // Session 2: Better Score B9 (Holes 10-18)
-            { id: 's2_m1', session: 2, type: 'Better Score (Holes 10-18)', burnie: ['b1', 'b7'], port: ['p2', 'p8'], startHole: 10, endHole: 18, scores: {} },
-            { id: 's2_m2', session: 2, type: 'Better Score (Holes 10-18)', burnie: ['b2', 'b8'], port: ['p1', 'p7'], startHole: 10, endHole: 18, scores: {} },
-            { id: 's2_m3', session: 2, type: 'Better Score (Holes 10-18)', burnie: ['b3', 'b5'], port: ['p3', 'p6'], startHole: 10, endHole: 18, scores: {} },
-            { id: 's2_m4', session: 2, type: 'Better Score (Holes 10-18)', burnie: ['b4', 'b6'], port: ['p4', 'p5'], startHole: 10, endHole: 18, scores: {} },
+            // Session 2: Better Score B9 (Holes 10-18) - 6 matches (12 points)
+            { id: 's2_m1', session: 2, type: 'Better Score (Holes 10-18)', burnie: ['b1', 'b11'], port: ['p2', 'p12'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's2_m2', session: 2, type: 'Better Score (Holes 10-18)', burnie: ['b2', 'b12'], port: ['p1', 'p11'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's2_m3', session: 2, type: 'Better Score (Holes 10-18)', burnie: ['b3', 'b9'], port: ['p3', 'p10'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's2_m4', session: 2, type: 'Better Score (Holes 10-18)', burnie: ['b4', 'b10'], port: ['p4', 'p9'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's2_m5', session: 2, type: 'Better Score (Holes 10-18)', burnie: ['b5', 'b7'], port: ['p5', 'p6'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's2_m6', session: 2, type: 'Better Score (Holes 10-18)', burnie: ['b6', 'b8'], port: ['p6', 'p5'], startHole: 10, endHole: 18, scores: {} },
 
-            // Session 3: Shamble (First 9 / Holes 1-9)
-            { id: 's3_m1', session: 3, type: 'Shamble (Holes 1-9)', burnie: ['b1', 'b6'], port: ['p3', 'p8'], startHole: 1, endHole: 9, scores: {} },
-            { id: 's3_m2', session: 3, type: 'Shamble (Holes 1-9)', burnie: ['b2', 'b5'], port: ['p4', 'p7'], startHole: 1, endHole: 9, scores: {} },
-            { id: 's3_m3', session: 3, type: 'Shamble (Holes 1-9)', burnie: ['b3', 'b8'], port: ['p1', 'p6'], startHole: 1, endHole: 9, scores: {} },
-            { id: 's3_m4', session: 3, type: 'Shamble (Holes 1-9)', burnie: ['b4', 'b7'], port: ['p2', 'p5'], startHole: 1, endHole: 9, scores: {} },
+            // Session 3: Shamble (First 9 / Holes 1-9) - 6 matches (12 points)
+            { id: 's3_m1', session: 3, type: 'Shamble (Holes 1-9)', burnie: ['b1', 'b10'], port: ['p3', 'p12'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's3_m2', session: 3, type: 'Shamble (Holes 1-9)', burnie: ['b2', 'b9'], port: ['p4', 'p11'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's3_m3', session: 3, type: 'Shamble (Holes 1-9)', burnie: ['b3', 'b12'], port: ['p1', 'p10'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's3_m4', session: 3, type: 'Shamble (Holes 1-9)', burnie: ['b4', 'b11'], port: ['p2', 'p9'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's3_m5', session: 3, type: 'Shamble (Holes 1-9)', burnie: ['b5', 'b6'], port: ['p7', 'p8'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's3_m6', session: 3, type: 'Shamble (Holes 1-9)', burnie: ['b7', 'b8'], port: ['p5', 'p6'], startHole: 1, endHole: 9, scores: {} },
 
-            // Session 4: Combined Score (Second 9 / Holes 10-18)
-            { id: 's4_m1', session: 4, type: 'Combined Score (Holes 10-18)', burnie: ['b1', 'b5'], port: ['p2', 'p6'], startHole: 10, endHole: 18, scores: {} },
-            { id: 's4_m2', session: 4, type: 'Combined Score (Holes 10-18)', burnie: ['b2', 'b6'], port: ['p1', 'p5'], startHole: 10, endHole: 18, scores: {} },
-            { id: 's4_m3', session: 4, type: 'Combined Score (Holes 10-18)', burnie: ['b3', 'b7'], port: ['p4', 'p8'], startHole: 10, endHole: 18, scores: {} },
-            { id: 's4_m4', session: 4, type: 'Combined Score (Holes 10-18)', burnie: ['b4', 'b8'], port: ['p3', 'p7'], startHole: 10, endHole: 18, scores: {} },
+            // Session 4: Combined Score (Second 9 / Holes 10-18) - 6 matches (12 points)
+            { id: 's4_m1', session: 4, type: 'Combined Score (Holes 10-18)', burnie: ['b1', 'b9'], port: ['p2', 'p10'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's4_m2', session: 4, type: 'Combined Score (Holes 10-18)', burnie: ['b2', 'b10'], port: ['p1', 'p9'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's4_m3', session: 4, type: 'Combined Score (Holes 10-18)', burnie: ['b3', 'b11'], port: ['p4', 'p12'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's4_m4', session: 4, type: 'Combined Score (Holes 10-18)', burnie: ['b4', 'b12'], port: ['p3', 'p11'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's4_m5', session: 4, type: 'Combined Score (Holes 10-18)', burnie: ['b5', 'b7'], port: ['p6', 'p8'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's4_m6', session: 4, type: 'Combined Score (Holes 10-18)', burnie: ['b6', 'b8'], port: ['p5', 'p7'], startHole: 10, endHole: 18, scores: {} },
 
-            // Session 5: Alternate Shot (Third 9 / Holes 1-9)
-            { id: 's5_m1', session: 5, type: 'Alternate Shot (Holes 1-9)', burnie: ['b1', 'b3'], port: ['p2', 'p4'], startHole: 1, endHole: 9, scores: {} },
-            { id: 's5_m2', session: 5, type: 'Alternate Shot (Holes 1-9)', burnie: ['b2', 'b4'], port: ['p1', 'p3'], startHole: 1, endHole: 9, scores: {} },
-            { id: 's5_m3', session: 5, type: 'Alternate Shot (Holes 1-9)', burnie: ['b5', 'b7'], port: ['p6', 'p8'], startHole: 1, endHole: 9, scores: {} },
-            { id: 's5_m4', session: 5, type: 'Alternate Shot (Holes 1-9)', burnie: ['b6', 'b8'], port: ['p5', 'p7'], startHole: 1, endHole: 9, scores: {} },
+            // Session 5: Alternate Shot (Third 9 / Holes 1-9) - 6 matches (12 points)
+            { id: 's5_m1', session: 5, type: 'Alternate Shot (Holes 1-9)', burnie: ['b1', 'b5'], port: ['p2', 'p6'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's5_m2', session: 5, type: 'Alternate Shot (Holes 1-9)', burnie: ['b2', 'b6'], port: ['p1', 'p5'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's5_m3', session: 5, type: 'Alternate Shot (Holes 1-9)', burnie: ['b3', 'b7'], port: ['p4', 'p8'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's5_m4', session: 5, type: 'Alternate Shot (Holes 1-9)', burnie: ['b4', 'b8'], port: ['p3', 'p7'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's5_m5', session: 5, type: 'Alternate Shot (Holes 1-9)', burnie: ['b9', 'b11'], port: ['p10', 'p12'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's5_m6', session: 5, type: 'Alternate Shot (Holes 1-9)', burnie: ['b10', 'b12'], port: ['p9', 'p11'], startHole: 1, endHole: 9, scores: {} },
 
-            // Session 6: Singles vs One Opponent (First 9 / Holes 1-9)
+            // Session 6: Singles vs One Opponent (First 9 / Holes 1-9) - 12 matches (12 points)
             { id: 's6_m1', session: 6, type: 'Singles vs Opp 1 (Holes 1-9)', burnie: ['b1'], port: ['p2'], startHole: 1, endHole: 9, scores: {} },
             { id: 's6_m2', session: 6, type: 'Singles vs Opp 1 (Holes 1-9)', burnie: ['b2'], port: ['p1'], startHole: 1, endHole: 9, scores: {} },
             { id: 's6_m3', session: 6, type: 'Singles vs Opp 1 (Holes 1-9)', burnie: ['b3'], port: ['p4'], startHole: 1, endHole: 9, scores: {} },
@@ -574,8 +592,12 @@
             { id: 's6_m6', session: 6, type: 'Singles vs Opp 1 (Holes 1-9)', burnie: ['b6'], port: ['p5'], startHole: 1, endHole: 9, scores: {} },
             { id: 's6_m7', session: 6, type: 'Singles vs Opp 1 (Holes 1-9)', burnie: ['b7'], port: ['p8'], startHole: 1, endHole: 9, scores: {} },
             { id: 's6_m8', session: 6, type: 'Singles vs Opp 1 (Holes 1-9)', burnie: ['b8'], port: ['p7'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's6_m9', session: 6, type: 'Singles vs Opp 1 (Holes 1-9)', burnie: ['b9'], port: ['p10'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's6_m10', session: 6, type: 'Singles vs Opp 1 (Holes 1-9)', burnie: ['b10'], port: ['p9'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's6_m11', session: 6, type: 'Singles vs Opp 1 (Holes 1-9)', burnie: ['b11'], port: ['p12'], startHole: 1, endHole: 9, scores: {} },
+            { id: 's6_m12', session: 6, type: 'Singles vs Opp 1 (Holes 1-9)', burnie: ['b12'], port: ['p11'], startHole: 1, endHole: 9, scores: {} },
 
-            // Session 7: Singles vs The Other Opponents (Second 9 / Holes 10-18)
+            // Session 7: Singles vs The Other Opponents (Second 9 / Holes 10-18) - 12 matches (12 points)
             { id: 's7_m1', session: 7, type: 'Singles vs Opp 2 (Holes 10-18)', burnie: ['b1'], port: ['p3'], startHole: 10, endHole: 18, scores: {} },
             { id: 's7_m2', session: 7, type: 'Singles vs Opp 2 (Holes 10-18)', burnie: ['b2'], port: ['p4'], startHole: 10, endHole: 18, scores: {} },
             { id: 's7_m3', session: 7, type: 'Singles vs Opp 2 (Holes 10-18)', burnie: ['b3'], port: ['p1'], startHole: 10, endHole: 18, scores: {} },
@@ -583,7 +605,11 @@
             { id: 's7_m5', session: 7, type: 'Singles vs Opp 2 (Holes 10-18)', burnie: ['b5'], port: ['p7'], startHole: 10, endHole: 18, scores: {} },
             { id: 's7_m6', session: 7, type: 'Singles vs Opp 2 (Holes 10-18)', burnie: ['b6'], port: ['p8'], startHole: 10, endHole: 18, scores: {} },
             { id: 's7_m7', session: 7, type: 'Singles vs Opp 2 (Holes 10-18)', burnie: ['b7'], port: ['p5'], startHole: 10, endHole: 18, scores: {} },
-            { id: 's7_m8', session: 7, type: 'Singles vs Opp 2 (Holes 10-18)', burnie: ['b8'], port: ['p6'], startHole: 10, endHole: 18, scores: {} }
+            { id: 's7_m8', session: 7, type: 'Singles vs Opp 2 (Holes 10-18)', burnie: ['b8'], port: ['p6'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's7_m9', session: 7, type: 'Singles vs Opp 2 (Holes 10-18)', burnie: ['b9'], port: ['p11'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's7_m10', session: 7, type: 'Singles vs Opp 2 (Holes 10-18)', burnie: ['b10'], port: ['p12'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's7_m11', session: 7, type: 'Singles vs Opp 2 (Holes 10-18)', burnie: ['b11'], port: ['p9'], startHole: 10, endHole: 18, scores: {} },
+            { id: 's7_m12', session: 7, type: 'Singles vs Opp 2 (Holes 10-18)', burnie: ['b12'], port: ['p10'], startHole: 10, endHole: 18, scores: {} }
         ];
 
         let matches = JSON.parse(JSON.stringify(defaultMatches));
@@ -677,38 +703,6 @@
             }
         }
 
-        function renderLeaderboard() {
-            const container = document.getElementById('matches-container');
-
-            let html = `
-                <div class="space-y-4">
-                    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg">
-                        <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wide mb-3">All Session Results Summary</h4>
-                        <div class="space-y-2.5">
-            `;
-
-            matches.forEach((m, idx) => {
-                const s = calculateMatchStatus(m);
-                html += `
-                    <div class="flex justify-between items-center bg-slate-900/60 border border-slate-700/50 p-3 rounded-xl text-xs">
-                        <div>
-                            <span class="text-[10px] text-emerald-400 font-bold block">Session ${m.session} • Match ${((idx % 4) + 1)}</span>
-                            <span class="font-medium text-white">${m.burnie.map(id => getPlayerById(id).name.split(' ')[0]).join('/')} vs ${m.port.map(id => getPlayerById(id).name.split(' ')[0]).join('/')}</span>
-                        </div>
-                        <span class="font-bold ${s.color}">${s.text}</span>
-                    </div>
-                `;
-            });
-
-            html += `
-                        </div>
-                    </div>
-                </div>
-            `;
-            container.innerHTML = html;
-        }
-
-        // --- New Info & History Pages ---
         function renderWeekAtGlance() {
             document.getElementById('matches-container').innerHTML = `
                 <div class="space-y-4">
@@ -718,7 +712,7 @@
                         <div class="mt-3 space-y-2 text-xs text-slate-300 bg-slate-900/60 p-3 rounded-xl border border-slate-700/50">
                             <p><strong class="text-white">What:</strong> Burnie-Port Cup Weekend 2027</p>
                             <p><strong class="text-white">When:</strong> Month XX (Travel) • Month XX–XX (Golf Rounds)</p>
-                            <p><strong class="text-white">Where:</strong> TBD (North Myrtle Beach, SC or Orlando Area, FL)</p>
+                            <p><strong class="text-white">Where:</strong> Orlando, FL Area</p>
                             <p><strong class="text-white">Courses:</strong> Course 1 (18 holes) • Course 2 (27 holes) • Course 3 (18 holes)</p>
                         </div>
                     </div>
@@ -772,7 +766,7 @@
                     <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3 text-xs text-slate-300">
                         <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded-full border border-emerald-800">Tournament Rules</span>
                         <h3 class="text-lg font-extrabold text-white">Event Format Overview</h3>
-                        <p>The Burnie-Port Cup is a 3-day, 7-session Match Play competition between <strong class="text-emerald-400">Team Burnie</strong> and <strong class="text-purple-400">Team Port</strong> (32 total points available; <strong class="text-amber-400">16.5 points</strong> wins the Cup).</p>
+                        <p>The Burnie-Port Cup is a 3-day, 7-session Match Play competition between <strong class="text-emerald-400">Team Burnie</strong> and <strong class="text-purple-400">Team Port</strong> with 24 total players (54 total points available; <strong class="text-amber-400">27.5 points</strong> wins the Cup).</p>
                         <div class="space-y-2 pt-1">
                             <div class="bg-slate-900/70 p-3 rounded-xl border border-slate-700/50">
                                 <p class="font-bold text-white">Day 1 • Session 1: Scramble (Front 9)</p>
@@ -790,18 +784,47 @@
                                 <p class="font-bold text-white">Day 2 • Session 4: Combined Score (2nd 9)</p>
                                 <p class="text-slate-400 mt-0.5">Both players play their own ball and the sum of both partners' scores determines the hole winner.</p>
                             </div>
-                            <div class="bg-slate-900/70 p-3 rounded-xl border border-slate-700/50">
-                                <p class="font-bold text-white">Day 2 • Session 5: Alternate Shot (3rd 9)</p>
-                                <p class="text-slate-400 mt-0.5">Partners alternate tee shots and alternate strokes on a single ball until holed.</p>
-                            </div>
-                            <div class="bg-slate-900/70 p-3 rounded-xl border border-slate-700/50">
-                                <p class="font-bold text-white">Day 3 • Sessions 6 & 7: Singles Matches (18 Holes)</p>
-                                <p class="text-slate-400 mt-0.5">Head-to-head 1v1 match play: Front 9 against Opponent 1, Back 9 against Opponent 2.</p>
-                            </div>
                         </div>
                     </div>
                 </div>
             `;
+        }
+
+        function renderLeaderboard() {
+            const container = document.getElementById('matches-container');
+
+            let html = `
+                <div class="space-y-4">
+                    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg text-center mb-4">
+                        <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wide">Target: 27.5 Points to Win the Cup</h4>
+                        <p class="text-[11px] text-slate-400 mt-0.5">54 total available match points across 24 players</p>
+                    </div>
+                    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg">
+                        <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wide mb-3">All Session Results Summary</h4>
+                        <div class="space-y-2.5">
+            `;
+
+            matches.forEach((m, idx) => {
+                const s = calculateMatchStatus(m);
+                const burnieNamesStr = m.burnie.map(id => getPlayerById(id).name.split(' ')[0]).join('/');
+                const portNamesStr = m.port.map(id => getPlayerById(id).name.split(' ')[0]).join('/');
+                html += `
+                    <div class="flex justify-between items-center bg-slate-900/60 border border-slate-700/50 p-3 rounded-xl text-xs">
+                        <div>
+                            <span class="text-[10px] text-emerald-400 font-bold block">Session ${m.session} • Match ${((idx % 6) + 1)}</span>
+                            <span class="font-medium text-white">${burnieNamesStr} vs ${portNamesStr}</span>
+                        </div>
+                        <span class="font-bold ${s.color}">${s.text}</span>
+                    </div>
+                `;
+            });
+
+            html += `
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = html;
         }
 
         function renderBpcLogo() {
@@ -871,9 +894,9 @@
                     <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border border-amber-500/40 rounded-2xl p-5 shadow-xl space-y-3 text-xs text-slate-300">
                         <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-950/70 px-2.5 py-1 rounded-full border border-amber-700/50">Official Invitation</span>
                         <h3 class="text-xl font-extrabold text-white">You're Invited: Burnie-Port Cup 2027</h3>
-                        <p class="leading-relaxed">Pack your clubs, bring your best banter, and get ready to unplug for an unforgettable 3-day Ryder Cup-style golf weekend in <strong class="text-white">Tampa Area, FL</strong>!</p>
+                        <p class="leading-relaxed">Pack your clubs, bring your best banter, and get ready to unplug for an unforgettable 3-day Ryder Cup-style golf weekend in the <strong class="text-white">Orlando, FL Area</strong>!</p>
                         <div class="bg-slate-950/70 p-3.5 rounded-xl border border-slate-700/70 space-y-1.5">
-                            <p><strong class="text-emerald-400">Location:</strong> Tampa Area, FL</p>
+                            <p><strong class="text-emerald-400">Location:</strong> Orlando, FL Area</p>
                             <p><strong class="text-emerald-400">Golf Lineup:</strong> Course 1 (18 Holes) • Course 2 (27 Holes) • Course 3 (18 Holes)</p>
                             <p><strong class="text-emerald-400">Kickoff:</strong> Arrival Day 8:00 PM Welcome Reception & Captains' Pairing Draft</p>
                         </div>
