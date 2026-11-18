@@ -208,36 +208,39 @@
             </div>
         </div>
 
-        <!-- Session Selector Tabs -->
-        <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 mb-4 shadow-inner overflow-x-auto no-scrollbar">
-            <button onclick="switchSession(1)" id="tab-session-1" class="flex-shrink-0 py-2 px-3 text-xs font-bold rounded-lg transition text-center bg-emerald-600 text-white shadow-md">
-                Day 1: Scramble (F9)
-            </button>
-            <button onclick="switchSession(2)" id="tab-session-2" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                Day 1: Better Score (B9)
-            </button>
-            <button onclick="switchSession(3)" id="tab-session-3" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                Day 2: Shamble (1st 9)
-            </button>
-            <button onclick="switchSession(4)" id="tab-session-4" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                Day 2: Combined (2nd 9)
-            </button>
-            <button onclick="switchSession(5)" id="tab-session-5" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                Day 2: Alternate (3rd 9)
-            </button>
-            <button onclick="switchSession(6)" id="tab-session-6" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                Day 3: Singles vs Opp 1
-            </button>
-            <button onclick="switchSession(7)" id="tab-session-7" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                Day 3: Singles vs Opp 2
-            </button>
-        </div>
+        <!-- Session Selector & Overview Wrapper (Only visible on Sessions tab) -->
+        <div id="sessions-controls-wrapper">
+            <!-- Session Selector Tabs -->
+            <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 mb-4 shadow-inner overflow-x-auto no-scrollbar">
+                <button onclick="switchSession(1)" id="tab-session-1" class="flex-shrink-0 py-2 px-3 text-xs font-bold rounded-lg transition text-center bg-emerald-600 text-white shadow-md">
+                    Day 1: Scramble (F9)
+                </button>
+                <button onclick="switchSession(2)" id="tab-session-2" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
+                    Day 1: Better Score (B9)
+                </button>
+                <button onclick="switchSession(3)" id="tab-session-3" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
+                    Day 2: Shamble (1st 9)
+                </button>
+                <button onclick="switchSession(4)" id="tab-session-4" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
+                    Day 2: Combined (2nd 9)
+                </button>
+                <button onclick="switchSession(5)" id="tab-session-5" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
+                    Day 2: Alternate (3rd 9)
+                </button>
+                <button onclick="switchSession(6)" id="tab-session-6" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
+                    Day 3: Singles vs Opp 1
+                </button>
+                <button onclick="switchSession(7)" id="tab-session-7" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
+                    Day 3: Singles vs Opp 2
+                </button>
+            </div>
 
-        <!-- Session Overview Info -->
-        <div id="session-description-card" class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-3 mb-5 text-xs text-slate-300 flex items-start space-x-2.5">
-            <i class="fa-solid fa-circle-info text-emerald-400 mt-0.5 text-sm"></i>
-            <div>
-                <span class="font-semibold text-white">Day 1 Front 9 - Scramble:</span> Team plays from best shot on each stroke. Lowest score wins the hole.
+            <!-- Session Overview Info -->
+            <div id="session-description-card" class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-3 mb-5 text-xs text-slate-300 flex items-start space-x-2.5">
+                <i class="fa-solid fa-circle-info text-emerald-400 mt-0.5 text-sm"></i>
+                <div>
+                    <span class="font-semibold text-white">Day 1 Front 9 - Scramble:</span> Team plays from best shot on each stroke. Lowest score wins the hole.
+                </div>
             </div>
         </div>
 
@@ -676,32 +679,9 @@
 
         function renderLeaderboard() {
             const container = document.getElementById('matches-container');
-            let totalBurniePts = 0;
-            let totalPortPts = 0;
-            matches.forEach(m => {
-                const s = calculateMatchStatus(m);
-                totalBurniePts += s.burniePoints;
-                totalPortPts += s.portPoints;
-            });
 
             let html = `
                 <div class="space-y-4">
-                    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg text-center">
-                        <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wide mb-1">Burnie-Port Cup 2027 Standings</h3>
-                        <p class="text-xs text-slate-400 mb-4">First team to 16.5 points wins the Cup</p>
-                        <div class="flex justify-around items-center">
-                            <div>
-                                <span class="text-xs text-emerald-400 font-bold block mb-1">BURNIE</span>
-                                <span class="text-4xl font-black text-white">${totalBurniePts.toFixed(1)}</span>
-                            </div>
-                            <span class="text-xl font-bold text-slate-600">- vs -</span>
-                            <div>
-                                <span class="text-xs text-purple-400 font-bold block mb-1">PORT</span>
-                                <span class="text-4xl font-black text-white">${totalPortPts.toFixed(1)}</span>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg">
                         <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wide mb-3">All Session Results Summary</h4>
                         <div class="space-y-2.5">
@@ -1144,6 +1124,10 @@
 
         function switchTab(tabName) {
             activeTab = tabName;
+            const sessionsWrapper = document.getElementById('sessions-controls-wrapper');
+            if (sessionsWrapper) {
+                sessionsWrapper.classList.toggle('hidden', tabName !== 'matches');
+            }
             const tabs = ['matches', 'roster', 'course', 'leaderboard', 'weekatglance', 'bpcname', 'format', 'bpclogo', 'pastresults', 'invitation'];
             tabs.forEach(t => {
                 const navBtn = document.getElementById(`nav-${t}`);
