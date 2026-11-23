@@ -237,6 +237,10 @@
                 <i class="fa-solid fa-envelope-open-text text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Invitation</span>
             </button>
+            <button onclick="switchTab('picsvids')" id="nav-picsvids" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
+                <i class="fa-solid fa-photo-film text-base mb-0.5"></i>
+                <span class="text-[10px] font-medium">Pics/Vids</span>
+            </button>
             <button onclick="switchTab('course')" id="nav-course" class="hidden flex-shrink-0 flex flex-col items-center text-amber-400 hover:text-amber-300 transition py-1 px-3 min-w-[68px]">
                 <i class="fa-solid fa-flag-checkered text-base mb-0.5"></i>
                 <span class="text-[10px] font-bold">Course</span>
@@ -679,7 +683,7 @@
 
         function switchTab(tabName) {
             activeTab = tabName;
-            const navIds = ['matches', 'roster', 'leaderboard', 'indleaders', 'eventatglance', 'weekatglance', 'bpcname', 'format', 'bpclogo', 'pastresults', 'invitation', 'course'];
+            const navIds = ['matches', 'roster', 'leaderboard', 'indleaders', 'eventatglance', 'weekatglance', 'bpcname', 'format', 'bpclogo', 'pastresults', 'invitation', 'picsvids', 'course'];
             navIds.forEach(id => {
                 const el = document.getElementById(`nav-${id}`);
                 if (!el) return;
@@ -716,6 +720,7 @@
             else if (activeTab === 'bpclogo') renderBpcLogo();
             else if (activeTab === 'pastresults') renderPastResults();
             else if (activeTab === 'invitation') renderInvitation();
+            else if (activeTab === 'picsvids') renderPicsVids();
             else if (activeTab === 'course') renderCourseEditor();
         }
 
@@ -1315,6 +1320,166 @@
             `;
         }
 
+        // --- Cloudinary Pics/Vids Upload & Trip Gallery ---
+        const CLOUDINARY_CLOUD_NAME = 'mrcuhnqn';
+        const CLOUDINARY_UPLOAD_PRESET = 'golf_trip_unsigned';
+        const MEDIA_STORAGE_KEY = 'bpc_2027_media_gallery_v1';
+        let uploadedMedia = [];
+
+        function loadMediaState() {
+            try {
+                const raw = localStorage.getItem(MEDIA_STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed)) uploadedMedia = parsed;
+                }
+            } catch (e) {
+                console.error('Failed to load saved media', e);
+            }
+        }
+
+        function saveMediaState() {
+            try {
+                localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(uploadedMedia));
+            } catch (e) {
+                console.error('Failed to save media', e);
+            }
+        }
+
+        function renderPicsVids() {
+            const container = document.getElementById('main-view-container');
+            const galleryHtml = uploadedMedia.length === 0
+                ? `<div class="text-center py-6 bg-slate-900/60 border border-slate-800 rounded-xl text-xs text-slate-400">
+                        No photos or videos uploaded yet. Select a file above to share with the trip!
+                   </div>`
+                : uploadedMedia.map(item => {
+                    const mediaEl = item.resourceType === 'video'
+                        ? `<video src="${item.url}" controls class="w-full max-h-64 rounded-xl bg-black object-contain"></video>`
+                        : `<img src="${item.url}" alt="${item.caption}" class="w-full max-h-64 rounded-xl object-cover bg-slate-950">`;
+                    return `
+                        <div class="bg-slate-900/80 border border-slate-700/70 rounded-xl p-3 space-y-2">
+                            ${mediaEl}
+                            <div class="flex items-center justify-between text-xs pt-1">
+                                <span class="font-semibold text-white truncate pr-2">${item.caption}</span>
+                                <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:text-emerald-300 text-[11px] font-bold flex-shrink-0">
+                                    Open <i class="fa-solid fa-arrow-up-right-from-square ml-0.5"></i>
+                                </a>
+                            </div>
+                            <div class="text-[10px] text-slate-500">${item.createdAt}</div>
+                        </div>
+                    `;
+                }).join('');
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Trip Media Share</span>
+                                <h3 class="text-base font-extrabold text-white mt-0.5">Pics &amp; Vids</h3>
+                            </div>
+                            <span class="text-[10px] font-semibold bg-slate-900 text-slate-300 px-2.5 py-1 rounded-full border border-slate-700">
+                                Cloudinary
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-300">
+                            Upload photos and videos from the Burnie-Port Cup in Orlando directly to the trip gallery.
+                        </p>
+
+                        <div>
+                            <label for="media-caption-input" class="block text-[11px] font-semibold text-slate-400 mb-1">
+                                Optional Caption or Hole Note
+                            </label>
+                            <input
+                                type="text"
+                                id="media-caption-input"
+                                placeholder="e.g., Clutch birdie putt on #9..."
+                                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                            >
+                        </div>
+
+                        <label class="flex flex-col items-center justify-center w-full border-2 border-dashed border-slate-700 hover:border-emerald-500 bg-slate-950/70 rounded-xl p-4 cursor-pointer transition">
+                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-emerald-400 mb-1.5"></i>
+                            <span class="text-xs font-bold text-white">Tap to select photo or video</span>
+                            <span class="text-[10px] text-slate-400 mt-0.5">JPG, PNG, WEBP, MP4, MOV</span>
+                            <input
+                                type="file"
+                                id="cloudinary-file-input"
+                                accept="image/*,video/*"
+                                onchange="handleCloudinaryUpload(event)"
+                                class="hidden"
+                            >
+                        </label>
+
+                        <div id="media-upload-status" class="hidden text-xs rounded-xl px-3 py-2 bg-slate-900 border border-slate-700 text-slate-200"></div>
+                    </div>
+
+                    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
+                        <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wide">
+                            Uploaded Trip Media (${uploadedMedia.length})
+                        </h4>
+                        <div class="grid grid-cols-1 gap-3">
+                            ${galleryHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function handleCloudinaryUpload(event) {
+            const fileInput = event.target;
+            const file = fileInput && fileInput.files && fileInput.files[0];
+            if (!file) return;
+
+            const statusEl = document.getElementById('media-upload-status');
+            const captionInput = document.getElementById('media-caption-input');
+            const caption = captionInput ? captionInput.value.trim() : '';
+
+            if (statusEl) {
+                statusEl.classList.remove('hidden');
+                statusEl.className = 'text-xs rounded-xl px-3 py-2 bg-slate-900 border border-emerald-700/60 text-emerald-300 flex items-center space-x-2';
+                statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Uploading "${file.name}"...</span>`;
+            }
+
+            const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+            if (caption) {
+                formData.append('context', `caption=${caption}`);
+            }
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error && data.error.message ? data.error.message : 'Upload failed');
+                }
+
+                uploadedMedia.unshift({
+                    id: data.public_id || String(Date.now()),
+                    url: data.secure_url,
+                    resourceType: data.resource_type || (file.type.startsWith('video/') ? 'video' : 'image'),
+                    caption: caption || file.name,
+                    createdAt: new Date().toLocaleString()
+                });
+                saveMediaState();
+                renderPicsVids();
+                showToast('Pic/Vid uploaded!');
+            } catch (err) {
+                console.error('Cloudinary upload error:', err);
+                if (statusEl) {
+                    statusEl.className = 'text-xs rounded-xl px-3 py-2 bg-rose-950/60 border border-rose-800 text-rose-200 flex items-center space-x-2';
+                    statusEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-400"></i><span>Upload error: ${err.message}</span>`;
+                }
+                showToast('Upload failed');
+            }
+        }
+        window.handleCloudinaryUpload = handleCloudinaryUpload;
+
         // --- Admin Course Editor (6 Sessions x 9 Holes) ---
         function renderCourseEditor() {
             if (!isAdmin) {
@@ -1740,6 +1905,7 @@
 
         window.onload = function () {
             loadState();
+            loadMediaState();
             switchSession(1);
             updateOverallStandings();
         };
