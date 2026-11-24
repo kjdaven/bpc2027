@@ -23,7 +23,7 @@
                     }
                 }
             }
-        }
+        };
     </script>
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -36,36 +36,28 @@
     <!-- Welcome Splash Screen -->
     <div id="splash-screen" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-6 transition-opacity duration-500">
         <div class="max-w-md w-full flex flex-col items-center text-center">
-            <!-- Exact Logo Image with SVG Fallback -->
             <div class="w-full max-w-[380px] mb-8 flex items-center justify-center">
                 <img id="splash-logo-img" src="./logo.png" alt="War at Walt's World - Burnie-Port Cup 2027"
                      class="w-full h-auto rounded-2xl shadow-2xl object-contain"
                      onerror="this.style.display='none'; document.getElementById('splash-svg-fallback').classList.remove('hidden');">
-                
-                <!-- Fallback Crest Graphic if logo.png is not uploaded alongside index.html -->
+
                 <div id="splash-svg-fallback" class="hidden w-full bg-black border border-slate-800 rounded-3xl p-5 shadow-2xl">
                     <p class="text-white font-black tracking-wider text-xl uppercase mb-2" style="text-shadow: 0 2px 10px rgba(255,255,255,0.25);">War at Walt's World</p>
                     <svg viewBox="0 0 360 220" class="w-full h-auto mx-auto">
-                        <!-- Green Driver Left -->
                         <line x1="85" y1="60" x2="145" y2="115" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
                         <path d="M85,35 C45,45 45,105 85,115 C110,120 125,95 110,60 Z" fill="#16a34a" stroke="#15803d" stroke-width="3"/>
-                        <!-- Purple Putter Right -->
                         <line x1="275" y1="60" x2="215" y2="115" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
                         <path d="M275,35 C315,45 315,105 275,115 C250,120 235,95 250,60 Z" fill="#7e22ce" stroke="#6b21a8" stroke-width="3"/>
-                        <!-- Geodesic Sphere Center -->
                         <circle cx="180" cy="115" r="56" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
                         <path d="M135,95 L180,65 L225,95 L210,150 L150,150 Z" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
                         <path d="M180,65 L180,165 M126,115 L234,115 M145,75 L215,155 M215,75 L145,155" stroke="#cbd5e1" stroke-width="1.2"/>
-                        <!-- Gold Trophy -->
                         <path d="M160,82 L200,82 L195,112 C192,122 168,122 165,112 Z" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
                         <rect x="176" y="118" width="8" height="16" fill="#eab308"/>
                         <rect x="166" y="134" width="28" height="8" rx="2" fill="#334155"/>
-                        <!-- Banner -->
                         <path d="M110,145 L250,145 L240,180 L120,180 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="3"/>
                         <text x="180" y="168" text-anchor="middle" font-weight="900" font-size="18" fill="#1e293b">
                             <tspan fill="#16a34a">Burnie</tspan>-<tspan fill="#7e22ce">Port</tspan> <tspan fill="#eab308">Cup</tspan>
                         </text>
-                        <!-- Year -->
                         <polygon points="145,183 215,183 180,208" fill="#facc15" stroke="#94a3b8" stroke-width="2"/>
                         <text x="180" y="198" text-anchor="middle" font-weight="900" font-size="13" fill="#0f172a">2027</text>
                     </svg>
@@ -112,7 +104,7 @@
     <!-- Main Content Container -->
     <main class="flex-1 max-w-md w-full mx-auto pb-24 overflow-y-auto px-4 pt-4">
 
-        <!-- Live Scoreboard Summary Banner (Always Visible) -->
+        <!-- Live Scoreboard Summary Banner -->
         <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-2xl p-4 border border-slate-700 shadow-xl mb-5 relative overflow-hidden">
             <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
             <div class="flex justify-between items-center mb-3">
@@ -121,21 +113,18 @@
                 </span>
                 <span id="cup-status-text" class="text-xs font-bold text-slate-300">Target: 21.5 pts to Win</span>
             </div>
-            
+
             <div class="grid grid-cols-5 gap-2 items-center text-center">
-                <!-- Team Burnie -->
                 <div class="col-span-2 bg-emerald-950/40 border border-emerald-900/50 rounded-xl p-3 flex flex-col items-center justify-center shadow-inner">
                     <span class="text-xs font-bold text-emerald-400 uppercase tracking-wide">Team Burnie</span>
                     <span id="score-burnie" class="text-3xl font-extrabold text-emerald-100 my-0.5">0.0</span>
                     <span class="text-[10px] text-emerald-300/70">Points</span>
                 </div>
 
-                <!-- VS -->
                 <div class="col-span-1 flex flex-col items-center justify-center">
                     <span class="text-xs font-black text-slate-500 italic">VS</span>
                 </div>
 
-                <!-- Team Port -->
                 <div class="col-span-2 bg-purple-950/40 border border-purple-900/50 rounded-xl p-3 flex flex-col items-center justify-center shadow-inner">
                     <span class="text-xs font-bold text-purple-400 uppercase tracking-wide">Team Port</span>
                     <span id="score-port" class="text-3xl font-extrabold text-purple-100 my-0.5">0.0</span>
@@ -143,59 +132,66 @@
                 </div>
             </div>
 
-            <!-- Progress bar -->
             <div class="mt-4 w-full bg-slate-800 rounded-full h-2.5 overflow-hidden flex border border-slate-700">
                 <div id="progress-burnie" class="bg-gradient-to-r from-emerald-600 to-emerald-500 h-full transition-all duration-500" style="width: 50%"></div>
                 <div id="progress-port" class="bg-gradient-to-r from-purple-500 to-purple-600 h-full transition-all duration-500" style="width: 50%"></div>
             </div>
         </div>
 
-        <!-- Scorecards / Sessions Controls (Only visible when Scorecards tab is selected) -->
-        <div id="sessions-controls-wrapper">
-            <!-- 6 Session Selector Tabs -->
+        <!-- Scorecards Controls (Only visible when Scorecards tab is selected) -->
+        <div id="sessions-controls-wrapper" class="hidden">
             <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 mb-3 shadow-inner overflow-x-auto no-scrollbar space-x-1">
                 <button onclick="switchSession(1)" id="tab-session-1" class="flex-shrink-0 py-2 px-3 text-xs font-bold rounded-lg transition text-center bg-emerald-600 text-white shadow-md">
-                    D1 S1: Scramble
+                    <span id="lock-icon-1" class="hidden mr-1"><i class="fa-solid fa-lock text-amber-300 text-[10px]"></i></span>D1 S1: Scramble
                 </button>
                 <button onclick="switchSession(2)" id="tab-session-2" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                    D1 S2: Better Score
+                    <span id="lock-icon-2" class="hidden mr-1"><i class="fa-solid fa-lock text-amber-300 text-[10px]"></i></span>D1 S2: Better Score
                 </button>
                 <button onclick="switchSession(3)" id="tab-session-3" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                    D1 S3: Combined
+                    <span id="lock-icon-3" class="hidden mr-1"><i class="fa-solid fa-lock text-amber-300 text-[10px]"></i></span>D1 S3: Combined
                 </button>
                 <button onclick="switchSession(4)" id="tab-session-4" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                    D2 S1: Shamble
+                    <span id="lock-icon-4" class="hidden mr-1"><i class="fa-solid fa-lock text-amber-300 text-[10px]"></i></span>D2 S1: Shamble
                 </button>
                 <button onclick="switchSession(5)" id="tab-session-5" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                    D2 S2: Alt Shot
+                    <span id="lock-icon-5" class="hidden mr-1"><i class="fa-solid fa-lock text-amber-300 text-[10px]"></i></span>D2 S2: Alt Shot
                 </button>
                 <button onclick="switchSession(6)" id="tab-session-6" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                    D2 S3: Singles
+                    <span id="lock-icon-6" class="hidden mr-1"><i class="fa-solid fa-lock text-amber-300 text-[10px]"></i></span>D2 S3: Singles
                 </button>
             </div>
 
-            <!-- Session Overview Info & Admin Lock Toggle -->
             <div id="session-description-card" class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-3 mb-4 text-xs text-slate-300 flex items-start space-x-2.5">
                 <i class="fa-solid fa-circle-info text-emerald-400 mt-0.5 text-sm"></i>
                 <div>
                     <span class="font-semibold text-white">Day 1 • Session 1 (Scramble):</span> 6 matches (2v2). Team plays from best shot on each stroke. Lowest score wins the hole.
                 </div>
             </div>
+
+            <!-- Admin Session Lock Toggle Bar -->
+            <div id="session-lock-admin-bar" class="hidden mb-4 bg-slate-900/90 border border-amber-500/40 rounded-xl px-3.5 py-2.5 flex items-center justify-between">
+                <div class="flex items-center space-x-2 text-xs">
+                    <i class="fa-solid fa-shield-halved text-amber-400"></i>
+                    <span id="session-lock-status-label" class="font-semibold text-slate-200">Session Unlocked for Scoring</span>
+                </div>
+                <button onclick="toggleCurrentSessionLock()" id="session-lock-toggle-btn" class="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 transition active:scale-95 flex items-center space-x-1.5">
+                    <i id="session-lock-toggle-icon" class="fa-solid fa-lock-open"></i>
+                    <span id="session-lock-toggle-text">Lock Session</span>
+                </button>
+            </div>
         </div>
 
         <!-- Dynamic Page Container -->
-        <div id="main-view-container" class="space-y-4">
-            <!-- Dynamically populated based on active tab -->
-        </div>
+        <div id="main-view-container" class="space-y-4"></div>
 
     </main>
 
     <!-- Scrollable Bottom Navigation Bar -->
     <nav class="bg-slate-950 border-t border-slate-800 fixed bottom-0 left-0 right-0 z-40 py-2 px-2 shadow-lg">
         <div class="max-w-md mx-auto flex items-center overflow-x-auto no-scrollbar space-x-1">
-            <button onclick="switchTab('invitation')" id="nav-invitation" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
+            <button onclick="switchTab('invitation')" id="nav-invitation" class="flex-shrink-0 flex flex-col items-center text-emerald-400 font-bold transition py-1 px-3 min-w-[68px]">
                 <i class="fa-solid fa-envelope-open-text text-base mb-0.5"></i>
-                <span class="text-[10px] font-medium">Invitation</span>
+                <span class="text-[10px]">Invitation</span>
             </button>
             <button onclick="switchTab('eventatglance')" id="nav-eventatglance" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[82px]">
                 <i class="fa-solid fa-calendar-days text-base mb-0.5"></i>
@@ -213,6 +209,10 @@
                 <i class="fa-solid fa-medal text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Past Results</span>
             </button>
+            <button onclick="switchTab('handicaps')" id="nav-handicaps" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[72px]">
+                <i class="fa-solid fa-scale-balanced text-base mb-0.5"></i>
+                <span class="text-[10px] font-medium">Handicaps</span>
+            </button>
             <button onclick="switchTab('bpcname')" id="nav-bpcname" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
                 <i class="fa-solid fa-book-open text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">BPC Name</span>
@@ -225,20 +225,20 @@
                 <i class="fa-solid fa-users text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Rosters</span>
             </button>
-            <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[82px]">
+            <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[80px]">
                 <i class="fa-solid fa-chart-bar text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Match Results</span>
             </button>
-            <button onclick="switchTab('indleaders')" id="nav-indleaders" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
+            <button onclick="switchTab('indleaders')" id="nav-indleaders" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[76px]">
                 <i class="fa-solid fa-ranking-star text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Ind. Leaders</span>
             </button>
-            <button onclick="switchTab('matches')" id="nav-matches" class="flex-shrink-0 flex flex-col items-center text-emerald-400 transition py-1 px-3 min-w-[68px]">
+            <button onclick="switchTab('matches')" id="nav-matches" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[70px]">
                 <i class="fa-solid fa-golf-ball-tee text-base mb-0.5"></i>
-                <span class="text-[10px] font-bold">Scorecards</span>
+                <span class="text-[10px] font-medium">Scorecards</span>
             </button>
-            <button onclick="switchTab('picsvids')" id="nav-picsvids" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
-                <i class="fa-solid fa-photo-film text-base mb-0.5"></i>
+            <button onclick="switchTab('picsvids')" id="nav-picsvids" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[70px]">
+                <i class="fa-solid fa-camera-retro text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Pics/Vids</span>
             </button>
             <button onclick="switchTab('course')" id="nav-course" class="hidden flex-shrink-0 flex flex-col items-center text-amber-400 hover:text-amber-300 transition py-1 px-3 min-w-[68px]">
@@ -268,10 +268,9 @@
                 <span id="modal-course-name" class="text-slate-400 text-[11px]">9-Hole Match Play</span>
             </div>
 
-            <!-- Locked Session Banner Inside Modal -->
-            <div id="modal-locked-banner" class="hidden bg-amber-950/80 border-b border-amber-700/60 px-4 py-2 text-[11px] text-amber-200 flex items-center space-x-2">
+            <div id="modal-session-locked-banner" class="hidden bg-amber-950/60 border-b border-amber-700/60 px-4 py-2 text-[11px] text-amber-300 font-semibold flex items-center space-x-2">
                 <i class="fa-solid fa-lock text-amber-400"></i>
-                <span>This session is locked by the Admin. Scores are view-only.</span>
+                <span>This session is locked by Admin. Scores are view-only.</span>
             </div>
 
             <!-- 9-Hole Selector Strip -->
@@ -332,7 +331,7 @@
             <div id="admin-unlocked-view" class="hidden space-y-4">
                 <div class="bg-emerald-950/50 border border-emerald-800/60 rounded-xl p-3 text-xs text-emerald-300 flex items-center space-x-2">
                     <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                    <span>Admin Mode is active. You can lock/unlock sessions, edit rosters, pairings, and course holes.</span>
+                    <span>Admin Mode is active. You can edit rosters, pairings, session locks, and course holes.</span>
                 </div>
 
                 <div>
@@ -402,16 +401,26 @@
 
         let currentSession = 1;
         let activeCourseSession = 1;
-        let activeTab = 'matches';
+        let activeTab = 'invitation';
         let currentMatchId = null;
         let editingPairingMatchId = null;
-        let activeHoleIdx = 0; // 0 to 8 within the 9-hole session
+        let activeHoleIdx = 0;
         let isAdmin = false;
         let adminPin = '5998';
-        let uploadedMedia = [];
-        let sessionLocks = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false };
 
-        // 24 Total Players (12 per team)
+        // Per-session lock flags (only Admin can toggle)
+        let sessionLocks = {
+            1: false,
+            2: false,
+            3: false,
+            4: false,
+            5: false,
+            6: false
+        };
+
+        // Uploaded trip photos/videos metadata stored locally + Cloudinary URLs
+        let uploadedMedia = [];
+
         const defaultRosters = {
             burnie: [
                 { id: 'b1', name: 'Chris Burnett (C)', hcp: 6, photo: '' },
@@ -443,7 +452,6 @@
             ]
         };
 
-        // 6 Independent 9-Hole Session Course Configurations
         const makeDefaultNine = (startNum) => Array.from({ length: 9 }, (_, i) => ({
             num: startNum + i,
             par: [4, 4, 5, 3, 4, 4, 3, 5, 4][i],
@@ -459,7 +467,6 @@
             6: { label: 'D2 • S3', courseName: 'Day 2 - Third 9 (Singles)', holes: makeDefaultNine(19) }
         };
 
-        // 42 Total Matches = 42 Total Points (21.5 to Win)
         function createDefaultMatches() {
             const list = [];
             for (let i = 0; i < 6; i++) {
@@ -526,15 +533,20 @@
                     if (parsed.sessionCourses) sessionCourses = parsed.sessionCourses;
                     if (parsed.matches && parsed.matches.length === 42) matches = parsed.matches;
                     if (parsed.adminPin) adminPin = parsed.adminPin;
-                    if (parsed.sessionLocks) sessionLocks = { ...sessionLocks, ...parsed.sessionLocks };
-                }
-                const mediaRaw = localStorage.getItem(MEDIA_STORAGE_KEY);
-                if (mediaRaw) {
-                    const parsedMedia = JSON.parse(mediaRaw);
-                    if (Array.isArray(parsedMedia)) uploadedMedia = parsedMedia;
+                    if (parsed.sessionLocks) sessionLocks = Object.assign({ 1: false, 2: false, 3: false, 4: false, 5: false, 6: false }, parsed.sessionLocks);
                 }
             } catch (e) {
                 console.error('Failed to load saved state', e);
+            }
+
+            try {
+                const rawMedia = localStorage.getItem(MEDIA_STORAGE_KEY);
+                if (rawMedia) {
+                    const parsedMedia = JSON.parse(rawMedia);
+                    if (Array.isArray(parsedMedia)) uploadedMedia = parsedMedia;
+                }
+            } catch (e) {
+                console.error('Failed to load saved media', e);
             }
         }
 
@@ -553,26 +565,13 @@
             }
         }
 
-        function saveMediaState() {
+        function saveMedia() {
             try {
                 localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(uploadedMedia));
             } catch (e) {
-                console.error('Failed to save media list', e);
+                console.error('Failed to save media', e);
             }
         }
-
-        function isSessionLocked(sessionNum) {
-            return Boolean(sessionLocks[sessionNum]);
-        }
-
-        function toggleSessionLock(sessionNum) {
-            if (!isAdmin) return;
-            sessionLocks[sessionNum] = !sessionLocks[sessionNum];
-            saveState();
-            switchSession(sessionNum);
-            showToast(sessionLocks[sessionNum] ? `Session ${sessionNum} locked` : `Session ${sessionNum} unlocked`);
-        }
-        window.toggleSessionLock = toggleSessionLock;
 
         function getPlayerById(id) {
             return [...rosters.burnie, ...rosters.port].find(p => p.id === id) || { id, name: 'Player', hcp: 12, photo: '' };
@@ -591,8 +590,56 @@
             const splash = document.getElementById('splash-screen');
             splash.classList.add('opacity-0', 'pointer-events-none');
             setTimeout(() => splash.classList.add('hidden'), 500);
+            switchTab('invitation');
         }
         window.enterApp = enterApp;
+
+        // --- Session Lock Controls ---
+        function updateSessionLockUI() {
+            for (let s = 1; s <= 6; s++) {
+                const iconEl = document.getElementById(`lock-icon-${s}`);
+                if (iconEl) {
+                    if (sessionLocks[s]) iconEl.classList.remove('hidden');
+                    else iconEl.classList.add('hidden');
+                }
+            }
+
+            const adminBar = document.getElementById('session-lock-admin-bar');
+            if (!adminBar) return;
+
+            if (isAdmin) {
+                adminBar.classList.remove('hidden');
+                const locked = !!sessionLocks[currentSession];
+                const statusLabel = document.getElementById('session-lock-status-label');
+                const toggleBtn = document.getElementById('session-lock-toggle-btn');
+                const toggleIcon = document.getElementById('session-lock-toggle-icon');
+                const toggleText = document.getElementById('session-lock-toggle-text');
+
+                if (locked) {
+                    statusLabel.innerHTML = `Session ${currentSession} is <span class="text-amber-400">Locked</span> (Read-Only)`;
+                    toggleBtn.className = 'text-[11px] font-bold px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition active:scale-95 flex items-center space-x-1.5';
+                    toggleIcon.className = 'fa-solid fa-lock-open';
+                    toggleText.innerText = 'Unlock Session';
+                } else {
+                    statusLabel.innerHTML = `Session ${currentSession} is <span class="text-emerald-400">Unlocked</span> for Scoring`;
+                    toggleBtn.className = 'text-[11px] font-bold px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 transition active:scale-95 flex items-center space-x-1.5';
+                    toggleIcon.className = 'fa-solid fa-lock';
+                    toggleText.innerText = 'Lock Session';
+                }
+            } else {
+                adminBar.classList.add('hidden');
+            }
+        }
+
+        function toggleCurrentSessionLock() {
+            if (!isAdmin) return;
+            sessionLocks[currentSession] = !sessionLocks[currentSession];
+            saveState();
+            updateSessionLockUI();
+            renderMatches();
+            showToast(sessionLocks[currentSession] ? `Session ${currentSession} locked` : `Session ${currentSession} unlocked`);
+        }
+        window.toggleCurrentSessionLock = toggleCurrentSessionLock;
 
         // --- Match Scoring & Status Engine ---
         function calculateMatchStatus(match) {
@@ -690,24 +737,12 @@
         // --- Navigation & View Rendering ---
         function switchSession(sessionNum) {
             currentSession = sessionNum;
-            const tabLabels = {
-                1: 'D1 S1: Scramble',
-                2: 'D1 S2: Better Score',
-                3: 'D1 S3: Combined',
-                4: 'D2 S1: Shamble',
-                5: 'D2 S2: Alt Shot',
-                6: 'D2 S3: Singles'
-            };
-
             for (let i = 1; i <= 6; i++) {
                 const btn = document.getElementById(`tab-session-${i}`);
                 if (!btn) continue;
-                const locked = isSessionLocked(i);
-                const lockBadge = locked ? '<i class="fa-solid fa-lock text-[9px] mr-1 text-amber-300"></i>' : '';
-                btn.innerHTML = `${lockBadge}${tabLabels[i]}`;
                 btn.className = i === sessionNum
-                    ? 'flex-shrink-0 py-2 px-3 text-xs font-bold rounded-lg transition text-center bg-emerald-600 text-white shadow-md flex items-center'
-                    : 'flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white flex items-center';
+                    ? 'flex-shrink-0 py-2 px-3 text-xs font-bold rounded-lg transition text-center bg-emerald-600 text-white shadow-md'
+                    : 'flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white';
             }
 
             const descriptions = {
@@ -719,37 +754,18 @@
                 6: 'Day 2 • Session 3 (Singles - 12 Matches): Head-to-head 1v1 match play across all 24 players for the final 12 points!'
             };
             const cInfo = sessionCourses[sessionNum];
-            const locked = isSessionLocked(sessionNum);
-
-            const adminLockControl = isAdmin
-                ? `<button onclick="toggleSessionLock(${sessionNum})" class="mt-2.5 inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-bold border transition ${locked ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 hover:bg-amber-500/30' : 'bg-emerald-950/80 border-emerald-700/60 text-emerald-300 hover:bg-emerald-900/70'}">
-                        <i class="fa-solid ${locked ? 'fa-lock' : 'fa-lock-open'}"></i>
-                        <span>${locked ? 'Session Locked (Tap to Unlock)' : 'Session Unlocked (Tap to Lock)'}</span>
-                   </button>`
-                : '';
-
-            const golferLockedBanner = locked
-                ? `<div class="mt-2 flex items-center space-x-1.5 text-[11px] font-semibold text-amber-300">
-                        <i class="fa-solid fa-lock"></i>
-                        <span>Scoring is locked for this session by Admin.</span>
-                   </div>`
-                : '';
-
             document.getElementById('session-description-card').innerHTML = `
-                <i class="fa-solid ${locked ? 'fa-lock text-amber-400' : 'fa-circle-info text-emerald-400'} mt-0.5 text-sm"></i>
-                <div class="flex-1">
-                    <div><span class="font-semibold text-white">${cInfo.courseName}:</span> ${descriptions[sessionNum]}</div>
-                    ${golferLockedBanner}
-                    ${adminLockControl}
-                </div>
+                <i class="fa-solid fa-circle-info text-emerald-400 mt-0.5 text-sm"></i>
+                <div><span class="font-semibold text-white">${cInfo.courseName}:</span> ${descriptions[sessionNum]}</div>
             `;
-            renderCurrentView();
+            updateSessionLockUI();
+            if (activeTab === 'matches') renderMatches();
         }
         window.switchSession = switchSession;
 
         function switchTab(tabName) {
             activeTab = tabName;
-            const navIds = ['invitation', 'eventatglance', 'weekatglance', 'format', 'pastresults', 'bpcname', 'bpclogo', 'roster', 'leaderboard', 'indleaders', 'matches', 'picsvids', 'course'];
+            const navIds = ['invitation', 'eventatglance', 'weekatglance', 'format', 'pastresults', 'handicaps', 'bpcname', 'bpclogo', 'roster', 'leaderboard', 'indleaders', 'matches', 'picsvids', 'course'];
             navIds.forEach(id => {
                 const el = document.getElementById(`nav-${id}`);
                 if (!el) return;
@@ -762,12 +778,10 @@
                 }
             });
 
-            // Only display the 6-session strip when on the Scorecards ('matches') tab
             const sessionWrapper = document.getElementById('sessions-controls-wrapper');
             if (tabName === 'matches') {
                 sessionWrapper.classList.remove('hidden');
-                switchSession(currentSession);
-                return;
+                updateSessionLockUI();
             } else {
                 sessionWrapper.classList.add('hidden');
             }
@@ -787,6 +801,7 @@
             else if (activeTab === 'format') renderFormat();
             else if (activeTab === 'bpclogo') renderBpcLogo();
             else if (activeTab === 'pastresults') renderPastResults();
+            else if (activeTab === 'handicaps') renderHandicaps();
             else if (activeTab === 'invitation') renderInvitation();
             else if (activeTab === 'picsvids') renderPicsVids();
             else if (activeTab === 'course') renderCourseEditor();
@@ -795,8 +810,17 @@
         function renderMatches() {
             const container = document.getElementById('main-view-container');
             const sessionMatches = matches.filter(m => m.session === currentSession);
-            const locked = isSessionLocked(currentSession);
+            const isLocked = !!sessionLocks[currentSession];
             let html = '';
+
+            if (isLocked) {
+                html += `
+                    <div class="bg-amber-950/50 border border-amber-700/60 rounded-xl px-3.5 py-2.5 text-xs text-amber-300 flex items-center space-x-2">
+                        <i class="fa-solid fa-lock text-amber-400"></i>
+                        <span>Session ${currentSession} is locked by Admin. Scores can be viewed but not edited.</span>
+                    </div>
+                `;
+            }
 
             sessionMatches.forEach((m, idx) => {
                 const st = calculateMatchStatus(m);
@@ -804,12 +828,13 @@
                 const pPlayers = m.port.map(id => getPlayerById(id));
 
                 html += `
-                    <div class="bg-slate-800/80 border ${locked ? 'border-amber-800/40' : 'border-slate-700/80'} rounded-2xl p-4 hover:border-emerald-500/60 transition shadow-lg">
+                    <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 hover:border-emerald-500/60 transition shadow-lg">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded-md border border-emerald-900 inline-flex items-center">
-                                ${locked ? '<i class="fa-solid fa-lock text-amber-400 mr-1.5"></i>' : ''}Match ${idx + 1} • ${m.format}
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded-md border border-emerald-900">
+                                Match ${idx + 1} • ${m.format}
                             </span>
                             <div class="flex items-center space-x-2">
+                                ${isLocked ? `<span class="text-[10px] bg-amber-950/90 text-amber-300 border border-amber-700/60 px-2 py-0.5 rounded-md font-bold"><i class="fa-solid fa-lock mr-1"></i>Locked</span>` : ''}
                                 ${isAdmin ? `<button onclick="openPairingModal('${m.id}')" class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-md font-bold hover:bg-amber-500/30">Edit Pairings</button>` : ''}
                                 <span onclick="openMatchModal('${m.id}')" class="text-xs ${st.color} cursor-pointer flex items-center">
                                     ${st.text} <i class="fa-solid fa-chevron-right text-[10px] ml-1.5 text-slate-500"></i>
@@ -949,10 +974,8 @@
             container.innerHTML = html;
         }
 
-        // --- Individual Player Standings (Ranked by Total Points) ---
         function renderIndLeaders() {
             const container = document.getElementById('main-view-container');
-
             const statsMap = {};
             rosters.burnie.forEach(p => {
                 statsMap[p.id] = { id: p.id, name: p.name, team: 'burnie', photo: p.photo || '', played: 0, wins: 0, losses: 0, ties: 0, points: 0 };
@@ -1074,18 +1097,17 @@
             `;
         }
 
-        // --- Informational Pages ---
         function renderEventAtGlance() {
             document.getElementById('main-view-container').innerHTML = `
                 <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 shadow-lg space-y-4 text-xs text-slate-300 leading-relaxed">
                     <div class="border-b border-slate-700 pb-3">
                         <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Official Schedule</span>
-                        <h2 class="text-lg font-extrabold text-white mt-0.5">The Event at a Glance</h2>
+                        <h2 class="text-lg font-extrabold text-white mt-0.5">BPC Event at a Glance</h2>
                         <p class="text-slate-400 mt-1"><strong class="text-white">Location:</strong> Orlando, FL Area • <strong class="text-white">Event:</strong> Burnie-Port Cup 2027</p>
                     </div>
                     <div class="space-y-3">
                         <div class="bg-slate-900/70 p-3 rounded-xl border border-slate-700/60">
-                            <h3 class="font-bold text-amber-400 mb-1">Arrival / Travel Day</h3>
+                            <h3 class="font-bold text-amber-400 mb-1">Optional Day</h3>
                             <ul class="list-disc pl-4 space-y-1">
                                 <li>Lodging check-in no earlier than 3:00 PM.</li>
                                 <li>Optional afternoon warm-up & BURNIE-PORT CUP "Big Break" Skills Contest.</li>
@@ -1124,7 +1146,6 @@
                         <h2 class="text-lg font-extrabold text-white mt-0.5">The Week at a Glance</h2>
                     </div>
 
-                    <!-- Quick Trip Summary -->
                     <div class="bg-slate-900/80 border border-slate-700/70 rounded-xl p-3.5 space-y-2">
                         <div class="flex justify-between gap-2"><span class="text-slate-400 flex-shrink-0">Who:</span><strong class="text-white text-right">(24) lucky invites</strong></div>
                         <div class="flex justify-between gap-2"><span class="text-slate-400 flex-shrink-0">What:</span><span class="text-white text-right">Fun week hanging out playing friendly & semi-competitive golf</span></div>
@@ -1132,7 +1153,6 @@
                         <div class="flex justify-between gap-2"><span class="text-slate-400 flex-shrink-0">Where:</span><strong class="text-emerald-400 text-right">Orlando, FL Area</strong></div>
                     </div>
 
-                    <!-- Lodging -->
                     <div class="bg-slate-900/80 border border-slate-700/70 rounded-xl p-3.5 space-y-2">
                         <h3 class="font-bold text-amber-400 text-sm">Lodging Overview</h3>
                         <p>2 houses rented across the street from each other—each is a <strong class="text-white">12 bedroom / 11 bathroom</strong> house. (<a href="https://www.upstay.com/rentals/2547" target="_blank" rel="noopener noreferrer" class="underline text-amber-300 hover:text-amber-200">House #1</a> • <a href="https://www.upstay.com/rentals/2403" target="_blank" rel="noopener noreferrer" class="underline text-amber-300 hover:text-amber-200">House #2</a>)</p>
@@ -1142,7 +1162,6 @@
                         </ul>
                     </div>
 
-                    <!-- Golf Courses -->
                     <div class="bg-slate-900/80 border border-emerald-900/60 rounded-xl p-3.5 space-y-2">
                         <h3 class="font-bold text-emerald-400 text-sm">Golf Courses</h3>
                         <p><strong class="text-white">BPC Course 1 (Warm-Up & Skills):</strong> <a href="https://www.shinglecreekgolf.com/wp-content/uploads/SNC-SC-web.pdf" target="_blank" rel="noopener noreferrer" class="underline text-emerald-300 hover:text-emerald-200">Shingles Creek</a> / <a href="https://www.championsgatecountryclub.com/golf/about-the-club" target="_blank" rel="noopener noreferrer" class="underline text-emerald-300 hover:text-emerald-200">Championsgate</a> (18 Holes) – Mon 9/27</p>
@@ -1154,7 +1173,6 @@
                         </div>
                     </div>
 
-                    <!-- Detailed Itinerary -->
                     <div class="space-y-2.5">
                         <h3 class="font-bold text-white text-sm">Detailed Itinerary</h3>
 
@@ -1364,6 +1382,64 @@
             `;
         }
 
+        function renderHandicaps() {
+            document.getElementById('main-view-container').innerHTML = `
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 shadow-lg space-y-4 text-xs text-slate-300 leading-relaxed">
+                    <div class="border-b border-slate-700 pb-3">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">USGA Rules of Handicapping • Appendix C</span>
+                        <h2 class="text-lg font-extrabold text-white mt-0.5">Handicaps Explained</h2>
+                    </div>
+
+                    <p>You're probably reading this because you asked me about how handicaps will be handled for this event and I redirected you here to read more. Handicaps will be used for the BPC in multiple ways. They will be applied in each Match Session and will also be used for individual contests (aka. NET Skins, etc.). Because USGA suggests playing off the lowest Playing Handicap within a match, the handicap strokes awarded on the Match Scorecard will differ from the handicap stroke allocation for a NET Skins competition. The app will consider all of this when the scores are entered into the Scorecards. Refer to USGA's website for more info if you so choose.</p>
+
+                    <p>Everyone will be assigned a Handicap Index (HI) for this event. A HI is USGA's attempt to quantify a player's abilities using recent rounds results and it also considers the wide range of course variables (such as length, hazards, etc.). The USGA developed the GHIN (Golf Handicap and Information Network) to calculate HI. However, 1.) very few golfers elect to pay an annual fee for GHIN to keep their HI, and 2.) even players who use GHIN actually understand how the system is supposed to be used. For one example, the GHIN has a "maximum stroke rule" in place to prevent players from reporting excessively bad scores on a hole...but very few people know or adhere to that rule.</p>
+
+                    <p>From my experience, a player's HI is approximately 70% of the score they "typically" shoot on an "average" par 72 course. I know, there's still some subjectivity in there but that's what I've found from my days running a Men's Golf Association. So for those who don't have a GHIN to report, we will use 70% of their "self-reported" average round. I also know this relies on the honor system to responsibly report this score but golf is a game of integrity so anyone can cheat on their GHIN index just as one can when self-reporting their average score.</p>
+
+                    <p>With a HI, a Course Handicap (CH) can be calculated for any given course using USGA's equation along with the Course Par, Course Rating and Course Slope. That CH is then further modified based on whatever match format is being played to arrive at the Player's Playing Handicap (PH). The allowances come from USGA's Rules of Handicapping Appendix C. Then all players within a match are supposed to play off the lowest player's PH (meaning, the lowest handicap player should play as a 0 (zero). SO refer to that as their Match Handicap (MH).</p>
+
+                    <div class="bg-slate-900/80 border border-slate-700/70 rounded-xl p-3 space-y-2.5">
+                        <p class="text-white font-semibold">Here is a summary of the more common match formats played and the USGA Allowance for each Team format. The allowance for Singles matches is 100% (meaning PH = CH).</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-[11px]">
+                                <thead>
+                                    <tr class="bg-slate-950 text-amber-400 border-b border-slate-700">
+                                        <th class="p-2 font-bold">Player on Team</th>
+                                        <th class="p-2 font-bold">Four-Ball (aka. Best Score)</th>
+                                        <th class="p-2 font-bold">Combined (aka. Total score of 2)</th>
+                                        <th class="p-2 font-bold">Scramble (aka. Captain's Choice) 35%L/15%H</th>
+                                        <th class="p-2 font-bold">Greensomes (aka. Select Drive Alternate Shot) 60%L/40%H</th>
+                                        <th class="p-2 font-bold">Foursomes (aka. Alternate Shot)</th>
+                                        <th class="p-2 font-bold">Shamble (aka. Select Drive, Best Score) 70%</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800 text-slate-200">
+                                    <tr class="bg-slate-900/60">
+                                        <td class="p-2 font-semibold text-emerald-400">Lower handicap</td>
+                                        <td class="p-2">90%</td>
+                                        <td class="p-2">100%</td>
+                                        <td class="p-2">35%</td>
+                                        <td class="p-2">60%</td>
+                                        <td class="p-2">50%</td>
+                                        <td class="p-2">70%</td>
+                                    </tr>
+                                    <tr class="bg-slate-900/40">
+                                        <td class="p-2 font-semibold text-purple-400">Higher handicap</td>
+                                        <td class="p-2">90%</td>
+                                        <td class="p-2">100%</td>
+                                        <td class="p-2">15%</td>
+                                        <td class="p-2">40%</td>
+                                        <td class="p-2">50%</td>
+                                        <td class="p-2">70%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         function renderInvitation() {
             document.getElementById('main-view-container').innerHTML = `
                 <div class="bg-gradient-to-b from-slate-800 to-slate-900 border border-amber-500/40 rounded-2xl p-5 shadow-xl space-y-4 text-xs text-slate-200 leading-relaxed">
@@ -1384,160 +1460,152 @@
             `;
         }
 
-        // --- Cloudinary Pics/Vids Upload & Gallery ---
+        // --- Pics/Vids Cloudinary Upload & Gallery ---
         function renderPicsVids() {
             const container = document.getElementById('main-view-container');
-
             let galleryHtml = '';
+
             if (uploadedMedia.length === 0) {
                 galleryHtml = `
-                    <div class="text-center py-6 bg-slate-900/50 border border-slate-800 rounded-xl text-xs text-slate-400">
-                        No photos or videos uploaded yet. Select a file above to share with the group!
+                    <div class="bg-slate-900/70 border border-slate-700/60 rounded-xl p-6 text-center text-xs text-slate-400">
+                        <i class="fa-solid fa-photo-film text-2xl text-slate-500 mb-2 block"></i>
+                        No photos or videos uploaded yet. Choose a photo or video above to share with the trip!
                     </div>
                 `;
             } else {
-                galleryHtml = uploadedMedia.map((item, idx) => {
-                    const mediaTag = item.resourceType === 'video'
-                        ? `<video src="${item.url}" controls playsinline class="w-full max-h-72 rounded-xl bg-black object-contain"></video>`
-                        : `<img src="${item.url}" alt="${item.caption}" class="w-full max-h-72 rounded-xl object-cover bg-slate-950">`;
-
-                    return `
-                        <div class="bg-slate-900/80 border border-slate-700/70 rounded-xl p-3 space-y-2">
-                            ${mediaTag}
-                            <div class="flex items-center justify-between text-xs pt-1">
-                                <span class="font-medium text-white truncate pr-2">${item.caption}</span>
+                galleryHtml = `<div class="grid grid-cols-1 gap-3">`;
+                uploadedMedia.forEach((item, idx) => {
+                    const isVideo = item.resourceType === 'video' || /\.(mp4|mov|webm|m4v)$/i.test(item.url);
+                    galleryHtml += `
+                        <div class="bg-slate-900/85 border border-slate-700/70 rounded-xl overflow-hidden shadow">
+                            ${isVideo
+                                ? `<video src="${item.url}" controls playsinline class="w-full max-h-64 object-cover bg-black"></video>`
+                                : `<img src="${item.url}" alt="${item.caption || 'Trip Media'}" class="w-full max-h-64 object-cover bg-black" onerror="this.src='https://placehold.co/600x360/0f172a/e2e8f0?text=Media+Unavailable'">`
+                            }
+                            <div class="p-3 flex items-center justify-between gap-2 text-xs">
+                                <div class="min-w-0">
+                                    <p class="font-semibold text-white truncate">${item.caption || (isVideo ? 'Trip Video' : 'Trip Photo')}</p>
+                                    <p class="text-[10px] text-slate-400">${item.uploadedBy ? `By ${item.uploadedBy} • ` : ''}${item.date || ''}</p>
+                                </div>
                                 <div class="flex items-center space-x-2 flex-shrink-0">
-                                    <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:text-emerald-300 text-[11px] font-semibold">
-                                        Open <i class="fa-solid fa-arrow-up-right-from-square ml-0.5"></i>
-                                    </a>
-                                    ${isAdmin ? `<button onclick="removeMediaItem(${idx})" class="text-rose-400 hover:text-rose-300 text-[11px] font-semibold">Delete</button>` : ''}
+                                    <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-emerald-400 px-2.5 py-1 rounded-lg border border-slate-700 font-semibold">Open</a>
+                                    ${isAdmin ? `<button onclick="removeMediaItem(${idx})" class="text-[11px] bg-red-950/70 hover:bg-red-900 text-red-300 px-2 py-1 rounded-lg border border-red-800/60"><i class="fa-solid fa-trash"></i></button>` : ''}
                                 </div>
                             </div>
-                            <div class="text-[10px] text-slate-500">${item.createdAt}</div>
                         </div>
                     `;
-                }).join('');
+                });
+                galleryHtml += `</div>`;
             }
 
             container.innerHTML = `
-                <div class="space-y-4">
-                    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg">
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wide flex items-center">
-                                <i class="fa-solid fa-camera-retro mr-2"></i>Trip Pics &amp; Vids
-                            </h3>
-                            <span class="text-[10px] font-semibold bg-slate-900 text-slate-300 px-2 py-0.5 rounded-full border border-slate-700">
-                                Cloudinary
-                            </span>
-                        </div>
-                        <p class="text-xs text-slate-300 mb-3">
-                            Upload photos and videos from the 2027 Burnie-Port Cup in Orlando.
-                        </p>
-
-                        <div class="mb-3">
-                            <label for="media-caption-input" class="block text-[11px] font-semibold text-slate-400 mb-1">
-                                Optional Caption or Hole Note
-                            </label>
-                            <input
-                                type="text"
-                                id="media-caption-input"
-                                placeholder="e.g., Clutch birdie putt on #9..."
-                                class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
-                            >
-                        </div>
-
-                        <label class="flex flex-col items-center justify-center w-full border-2 border-dashed border-slate-700 hover:border-emerald-500 bg-slate-950/70 rounded-xl p-4 cursor-pointer transition">
-                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-emerald-400 mb-1.5"></i>
-                            <span class="text-xs font-semibold text-white">Tap to select photo or video</span>
-                            <span class="text-[10px] text-slate-400 mt-0.5">JPG, PNG, WEBP, MP4, MOV</span>
-                            <input
-                                type="file"
-                                id="cloudinary-file-input"
-                                accept="image/*,video/*"
-                                onchange="handleCloudinaryUpload(event)"
-                                class="hidden"
-                            >
-                        </label>
-
-                        <div id="media-upload-status" class="hidden mt-3 text-xs rounded-xl px-3 py-2 bg-slate-900 border border-slate-700 text-slate-200"></div>
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-4 text-xs text-slate-200">
+                    <div class="border-b border-slate-700 pb-3">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Trip Photo & Video Feed</span>
+                        <h2 class="text-lg font-extrabold text-white mt-0.5">Pics/Vids</h2>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Cloud: <strong class="text-slate-200">${CLOUDINARY_CLOUD_NAME}</strong> • Preset: <strong class="text-slate-200">${CLOUDINARY_UPLOAD_PRESET}</strong></p>
                     </div>
 
-                    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg">
-                        <div class="flex items-center justify-between mb-3">
-                            <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wide">
-                                Uploaded Trip Media (${uploadedMedia.length})
-                            </h4>
+                    <div class="bg-slate-900/80 border border-slate-700/70 rounded-xl p-3.5 space-y-3">
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Your Name (Optional)</label>
+                            <input type="text" id="media-uploader-name" placeholder="e.g., Chris or Kevin" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
                         </div>
-                        <div class="grid grid-cols-1 gap-3">
-                            ${galleryHtml}
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Caption (Optional)</label>
+                            <input type="text" id="media-caption-input" placeholder="e.g., Tap-in birdie on #5" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
                         </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Select Photo or Video</label>
+                            <input type="file" id="cloudinary-file-input" accept="image/*,video/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500">
+                        </div>
+                        <button onclick="uploadMediaToCloudinary()" id="cloudinary-upload-btn" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-purple-600 hover:from-emerald-500 hover:to-purple-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <span id="cloudinary-upload-btn-text">Upload Pic / Vid</span>
+                        </button>
+                        <p id="cloudinary-upload-status" class="text-[11px] text-slate-400 hidden"></p>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        <h3 class="text-xs font-bold uppercase tracking-wide text-slate-300">Uploaded Pics & Vids (${uploadedMedia.length})</h3>
+                        ${galleryHtml}
                     </div>
                 </div>
             `;
         }
 
-        async function handleCloudinaryUpload(event) {
-            const fileInput = event.target;
-            const file = fileInput && fileInput.files && fileInput.files[0];
-            if (!file) return;
-
-            const statusEl = document.getElementById('media-upload-status');
+        async function uploadMediaToCloudinary() {
+            const fileInput = document.getElementById('cloudinary-file-input');
             const captionInput = document.getElementById('media-caption-input');
-            const caption = captionInput ? captionInput.value.trim() : '';
+            const nameInput = document.getElementById('media-uploader-name');
+            const btn = document.getElementById('cloudinary-upload-btn');
+            const btnText = document.getElementById('cloudinary-upload-btn-text');
+            const statusEl = document.getElementById('cloudinary-upload-status');
 
-            if (statusEl) {
-                statusEl.classList.remove('hidden');
-                statusEl.className = 'mt-3 text-xs rounded-xl px-3 py-2 bg-slate-900 border border-emerald-700/60 text-emerald-300 flex items-center space-x-2';
-                statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Uploading "${file.name}" to Cloudinary...</span>`;
+            if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+                showToast('Please select a photo or video first');
+                return;
             }
 
-            const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/auto/upload`;
+            const file = fileInput.files[0];
+            const isVideoFile = file.type && file.type.startsWith('video/');
+            const resourceType = isVideoFile ? 'video' : 'image';
+            const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
+
             const formData = new FormData();
             formData.append('file', file);
             formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-            if (caption) {
-                formData.append('context', `caption=${caption}`);
-            }
+
+            btn.disabled = true;
+            btnText.innerText = 'Uploading...';
+            statusEl.classList.remove('hidden', 'text-red-400', 'text-emerald-400');
+            statusEl.classList.add('text-amber-300');
+            statusEl.innerText = `Uploading ${file.name} to Cloudinary...`;
 
             try {
-                const response = await fetch(endpoint, {
+                const resp = await fetch(endpoint, {
                     method: 'POST',
                     body: formData
                 });
+                const data = await resp.json();
 
-                const data = await response.json();
-                if (!response.ok) {
+                if (!resp.ok || !data.secure_url) {
                     throw new Error(data.error && data.error.message ? data.error.message : 'Upload failed');
                 }
 
                 uploadedMedia.unshift({
-                    id: data.public_id || String(Date.now()),
                     url: data.secure_url,
-                    resourceType: data.resource_type || (file.type.startsWith('video/') ? 'video' : 'image'),
-                    caption: caption || file.name,
-                    createdAt: new Date().toLocaleString()
+                    publicId: data.public_id || '',
+                    resourceType: data.resource_type || resourceType,
+                    caption: captionInput ? captionInput.value.trim() : '',
+                    uploadedBy: nameInput ? nameInput.value.trim() : '',
+                    date: new Date().toLocaleDateString()
                 });
+                saveMedia();
 
-                saveMediaState();
+                statusEl.classList.remove('text-amber-300', 'text-red-400');
+                statusEl.classList.add('text-emerald-400');
+                statusEl.innerText = 'Upload complete!';
+                showToast('Uploaded to Pics/Vids!');
                 renderPicsVids();
-                showToast('Pic/Vid uploaded!');
             } catch (err) {
                 console.error('Cloudinary upload error:', err);
-                if (statusEl) {
-                    statusEl.className = 'mt-3 text-xs rounded-xl px-3 py-2 bg-rose-950/60 border border-rose-800 text-rose-200 flex items-center space-x-2';
-                    statusEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-400"></i><span>Upload error: ${err.message}</span>`;
-                }
+                statusEl.classList.remove('text-amber-300', 'text-emerald-400');
+                statusEl.classList.add('text-red-400');
+                statusEl.innerText = `Upload error: ${err.message}`;
                 showToast('Upload failed');
+                btn.disabled = false;
+                btnText.innerText = 'Upload Pic / Vid';
             }
         }
-        window.handleCloudinaryUpload = handleCloudinaryUpload;
+        window.uploadMediaToCloudinary = uploadMediaToCloudinary;
 
         function removeMediaItem(idx) {
             if (!isAdmin) return;
             uploadedMedia.splice(idx, 1);
-            saveMediaState();
+            saveMedia();
             renderPicsVids();
-            showToast('Media removed from gallery');
+            showToast('Item removed');
         }
         window.removeMediaItem = removeMediaItem;
 
@@ -1686,12 +1754,9 @@
             const match = matches.find(m => m.id === currentMatchId);
             const cData = sessionCourses[match.session];
             const holeObj = cData.holes[activeHoleIdx];
-            const locked = isSessionLocked(match.session);
-
-            const lockedBanner = document.getElementById('modal-locked-banner');
-            if (lockedBanner) {
-                lockedBanner.classList.toggle('hidden', !locked);
-            }
+            const isLocked = !!sessionLocks[match.session];
+            const disabledAttr = isLocked ? 'disabled' : '';
+            const disabledBtnClass = isLocked ? 'opacity-40 cursor-not-allowed' : '';
 
             document.getElementById('active-hole-num').innerText = holeObj.num;
             document.getElementById('active-hole-par').innerText = holeObj.par;
@@ -1699,6 +1764,10 @@
             document.getElementById('modal-match-subtitle').innerText = `Session ${match.session} • ${match.format}`;
             document.getElementById('modal-course-name').innerText = cData.courseName;
             document.getElementById('modal-format-badge').innerText = match.teamEntryOnly ? 'Team Score Entry' : match.format;
+
+            const lockedBanner = document.getElementById('modal-session-locked-banner');
+            if (isLocked) lockedBanner.classList.remove('hidden');
+            else lockedBanner.classList.add('hidden');
 
             const bNames = match.burnie.map(id => getPlayerById(id).name.split(' ')[0]).join(' & ');
             const pNames = match.port.map(id => getPlayerById(id).name.split(' ')[0]).join(' & ');
@@ -1709,9 +1778,6 @@
 
             if (!match.scores[activeHoleIdx]) match.scores[activeHoleIdx] = { burnie: {}, port: {} };
             const hScore = match.scores[activeHoleIdx];
-            const disabledAttr = locked ? 'disabled' : '';
-            const disabledBtnClass = locked ? 'opacity-40 cursor-not-allowed' : '';
-            const disabledInputClass = locked ? 'opacity-60 cursor-not-allowed' : '';
 
             let html = '';
             if (match.teamEntryOnly) {
@@ -1725,9 +1791,9 @@
                                 <span class="text-[11px] text-slate-300">${bNames}</span>
                             </div>
                             <div class="flex items-center space-x-1.5">
-                                <button ${disabledAttr} onclick="adjustTeamScore(-1, 'burnie')" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">-</button>
-                                <input ${disabledAttr} type="number" id="team_score_burnie" value="${bVal}" placeholder="--" onchange="saveTeamScore(this.value, 'burnie')" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${disabledInputClass}">
-                                <button ${disabledAttr} onclick="adjustTeamScore(1, 'burnie')" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">+</button>
+                                <button onclick="adjustTeamScore(-1, 'burnie')" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">-</button>
+                                <input type="number" id="team_score_burnie" value="${bVal}" placeholder="--" ${disabledAttr} onchange="saveTeamScore(this.value, 'burnie')" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${disabledBtnClass}">
+                                <button onclick="adjustTeamScore(1, 'burnie')" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">+</button>
                             </div>
                         </div>
                         <div class="flex justify-between items-center bg-slate-900/90 border border-purple-900/50 p-3 rounded-xl">
@@ -1736,9 +1802,9 @@
                                 <span class="text-[11px] text-slate-300">${pNames}</span>
                             </div>
                             <div class="flex items-center space-x-1.5">
-                                <button ${disabledAttr} onclick="adjustTeamScore(-1, 'port')" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">-</button>
-                                <input ${disabledAttr} type="number" id="team_score_port" value="${pVal}" placeholder="--" onchange="saveTeamScore(this.value, 'port')" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${disabledInputClass}">
-                                <button ${disabledAttr} onclick="adjustTeamScore(1, 'port')" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">+</button>
+                                <button onclick="adjustTeamScore(-1, 'port')" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">-</button>
+                                <input type="number" id="team_score_port" value="${pVal}" placeholder="--" ${disabledAttr} onchange="saveTeamScore(this.value, 'port')" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${disabledBtnClass}">
+                                <button onclick="adjustTeamScore(1, 'port')" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">+</button>
                             </div>
                         </div>
                     </div>
@@ -1755,9 +1821,9 @@
                                 <span class="text-[10px] text-slate-400">HCP ${p.hcp}</span>
                             </div>
                             <div class="flex items-center space-x-1.5">
-                                <button ${disabledAttr} onclick="adjustPlayerScore('burnie', '${pId}', -1)" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">-</button>
-                                <input ${disabledAttr} type="number" id="score_burnie_${pId}" value="${val}" placeholder="--" onchange="savePlayerScore('burnie', '${pId}', this.value)" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${disabledInputClass}">
-                                <button ${disabledAttr} onclick="adjustPlayerScore('burnie', '${pId}', 1)" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">+</button>
+                                <button onclick="adjustPlayerScore('burnie', '${pId}', -1)" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">-</button>
+                                <input type="number" id="score_burnie_${pId}" value="${val}" placeholder="--" ${disabledAttr} onchange="savePlayerScore('burnie', '${pId}', this.value)" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${disabledBtnClass}">
+                                <button onclick="adjustPlayerScore('burnie', '${pId}', 1)" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">+</button>
                             </div>
                         </div>
                     `;
@@ -1773,9 +1839,9 @@
                                 <span class="text-[10px] text-slate-400">HCP ${p.hcp}</span>
                             </div>
                             <div class="flex items-center space-x-1.5">
-                                <button ${disabledAttr} onclick="adjustPlayerScore('port', '${pId}', -1)" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">-</button>
-                                <input ${disabledAttr} type="number" id="score_port_${pId}" value="${val}" placeholder="--" onchange="savePlayerScore('port', '${pId}', this.value)" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${disabledInputClass}">
-                                <button ${disabledAttr} onclick="adjustPlayerScore('port', '${pId}', 1)" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">+</button>
+                                <button onclick="adjustPlayerScore('port', '${pId}', -1)" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">-</button>
+                                <input type="number" id="score_port_${pId}" value="${val}" placeholder="--" ${disabledAttr} onchange="savePlayerScore('port', '${pId}', this.value)" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${disabledBtnClass}">
+                                <button onclick="adjustPlayerScore('port', '${pId}', 1)" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">+</button>
                             </div>
                         </div>
                     `;
@@ -1788,7 +1854,10 @@
 
         function saveTeamScore(val, team) {
             const match = matches.find(m => m.id === currentMatchId);
-            if (!match || isSessionLocked(match.session)) return;
+            if (!match || sessionLocks[match.session]) {
+                showToast('Session is locked');
+                return;
+            }
             if (!match.scores[activeHoleIdx]) match.scores[activeHoleIdx] = {};
             const key = team === 'burnie' ? 'burnieTeam' : 'portTeam';
             match.scores[activeHoleIdx][key] = val === '' ? '' : parseInt(val, 10);
@@ -1802,7 +1871,10 @@
 
         function adjustTeamScore(delta, team) {
             const match = matches.find(m => m.id === currentMatchId);
-            if (!match || isSessionLocked(match.session)) return;
+            if (!match || sessionLocks[match.session]) {
+                showToast('Session is locked');
+                return;
+            }
             const par = sessionCourses[match.session].holes[activeHoleIdx].par;
             if (!match.scores[activeHoleIdx]) match.scores[activeHoleIdx] = {};
             const key = team === 'burnie' ? 'burnieTeam' : 'portTeam';
@@ -1821,7 +1893,10 @@
 
         function savePlayerScore(team, pId, val) {
             const match = matches.find(m => m.id === currentMatchId);
-            if (!match || isSessionLocked(match.session)) return;
+            if (!match || sessionLocks[match.session]) {
+                showToast('Session is locked');
+                return;
+            }
             if (!match.scores[activeHoleIdx]) match.scores[activeHoleIdx] = { burnie: {}, port: {} };
             if (!match.scores[activeHoleIdx][team]) match.scores[activeHoleIdx][team] = {};
             match.scores[activeHoleIdx][team][pId] = val === '' ? '' : parseInt(val, 10);
@@ -1835,7 +1910,10 @@
 
         function adjustPlayerScore(team, pId, delta) {
             const match = matches.find(m => m.id === currentMatchId);
-            if (!match || isSessionLocked(match.session)) return;
+            if (!match || sessionLocks[match.session]) {
+                showToast('Session is locked');
+                return;
+            }
             const par = sessionCourses[match.session].holes[activeHoleIdx].par;
             if (!match.scores[activeHoleIdx]) match.scores[activeHoleIdx] = { burnie: {}, port: {} };
             if (!match.scores[activeHoleIdx][team]) match.scores[activeHoleIdx][team] = {};
@@ -1879,13 +1957,10 @@
                 document.getElementById('admin-lock-icon').className = 'fa-solid fa-lock-open text-emerald-400';
                 document.getElementById('admin-btn-text').innerText = 'Admin On';
                 document.getElementById('nav-course').classList.remove('hidden');
+                updateSessionLockUI();
                 closeAdminModal();
-                if (activeTab === 'matches') {
-                    switchSession(currentSession);
-                } else {
-                    switchTab('course');
-                }
-                showToast('Admin Mode unlocked');
+                switchTab('course');
+                showToast('Admin Mode unlocked • Course setup available');
             } else {
                 document.getElementById('admin-pin-error').classList.remove('hidden');
             }
@@ -1897,8 +1972,8 @@
             document.getElementById('admin-lock-icon').className = 'fa-solid fa-lock text-amber-400';
             document.getElementById('admin-btn-text').innerText = 'Admin';
             document.getElementById('nav-course').classList.add('hidden');
-            if (activeTab === 'course') switchTab('matches');
-            else if (activeTab === 'matches') switchSession(currentSession);
+            updateSessionLockUI();
+            if (activeTab === 'course') switchTab('invitation');
             else renderCurrentView();
             closeAdminModal();
             showToast('Admin Mode locked');
@@ -1985,6 +2060,7 @@
         window.onload = function () {
             loadState();
             switchSession(1);
+            switchTab('invitation');
             updateOverallStandings();
         };
     </script>
