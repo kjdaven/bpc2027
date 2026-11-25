@@ -245,6 +245,10 @@
                 <i class="fa-solid fa-coins text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">BPC Skins</span>
             </button>
+            <button onclick="switchTab('kodak')" id="nav-kodak" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[72px]">
+                <i class="fa-solid fa-bullseye text-base mb-0.5"></i>
+                <span class="text-[10px] font-medium">LuckySpa9</span>
+            </button>
             <button onclick="switchTab('matches')" id="nav-matches" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
                 <i class="fa-solid fa-golf-ball-tee text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Scorecards</span>
@@ -446,6 +450,17 @@
             entryFees: { 1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10 },
             participants: { 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {} }
         };
+        let kodakHoles = [
+            { session: 1, holeIdx: 0 },
+            { session: 1, holeIdx: 4 },
+            { session: 2, holeIdx: 2 },
+            { session: 3, holeIdx: 7 },
+            { session: 4, holeIdx: 1 },
+            { session: 4, holeIdx: 8 },
+            { session: 5, holeIdx: 3 },
+            { session: 6, holeIdx: 4 },
+            { session: 6, holeIdx: 8 }
+        ];
         let venueHouses = {
             house1: {
                 address: '2560 Shanti Dr, Kissimmee, FL 34746',
@@ -583,6 +598,9 @@
                         skinsConfig.entryFees = Object.assign({ 1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10 }, parsed.skinsConfig.entryFees || {});
                         skinsConfig.participants = Object.assign({ 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {} }, parsed.skinsConfig.participants || {});
                     }
+                    if (Array.isArray(parsed.kodakHoles) && parsed.kodakHoles.length === 9) {
+                        kodakHoles = parsed.kodakHoles;
+                    }
                     if (parsed.venueHouses) {
                         venueHouses = Object.assign(venueHouses, parsed.venueHouses);
                     }
@@ -610,6 +628,7 @@
                     adminPin,
                     sessionLocks,
                     skinsConfig,
+                    kodakHoles,
                     venueHouses
                 }));
                 updateOverallStandings();
@@ -929,7 +948,7 @@
 
         function switchTab(tabName) {
             activeTab = tabName;
-            const navIds = ['invitation', 'eventatglance', 'weekatglance', 'venues', 'format', 'pastresults', 'handicaps', 'bpcname', 'bpclogo', 'roster', 'leaderboard', 'indleaders', 'skins', 'matches', 'picsvids', 'course'];
+            const navIds = ['invitation', 'eventatglance', 'weekatglance', 'venues', 'format', 'pastresults', 'handicaps', 'bpcname', 'bpclogo', 'roster', 'leaderboard', 'indleaders', 'skins', 'kodak', 'matches', 'picsvids', 'course'];
             navIds.forEach(id => {
                 const el = document.getElementById(`nav-${id}`);
                 if (!el) return;
@@ -962,6 +981,7 @@
             else if (activeTab === 'leaderboard') renderLeaderboard();
             else if (activeTab === 'indleaders') renderIndLeaders();
             else if (activeTab === 'skins') renderSkins();
+            else if (activeTab === 'kodak') renderKodakChallenge();
             else if (activeTab === 'eventatglance') renderEventAtGlance();
             else if (activeTab === 'weekatglance') renderWeekAtGlance();
             else if (activeTab === 'venues') renderVenues();
@@ -1707,6 +1727,253 @@
                     </div>
 
                     <div class="space-y-2">${playersHtml}</div>
+                </div>
+            `;
+        }
+
+        // --- Kodak 9 Signature Hole Challenge (Net using Playing Handicap PH) ---
+        function updateKodakHole(slotIdx, encodedVal) {
+            if (!isAdmin) return;
+            const [sStr, hStr] = String(encodedVal).split('-');
+            const s = parseInt(sStr, 10);
+            const hIdx = parseInt(hStr, 10);
+            if (!isNaN(s) && !isNaN(hIdx)) {
+                kodakHoles[slotIdx] = { session: s, holeIdx: hIdx };
+                saveState();
+                renderKodakChallenge();
+                showToast(`Signature Hole #${slotIdx + 1} updated`);
+            }
+        }
+        window.updateKodakHole = updateKodakHole;
+
+        function getPlayerSessionPH(playerId, sessionNum) {
+            const sessionMatches = matches.filter(m => m.session === sessionNum);
+            const match = sessionMatches.find(m => m.burnie.includes(playerId) || m.port.includes(playerId));
+            if (match) {
+                const hdcpInfo = calculateMatchHandicaps(match);
+                const side = match.burnie.includes(playerId) ? 'burnie' : 'port';
+                if (hdcpInfo.isTeam) {
+                    return side === 'burnie' ? hdcpInfo.burnieTeam.ph : hdcpInfo.portTeam.ph;
+                }
+                return hdcpInfo[side][playerId].ph;
+            }
+            const p = getPlayerById(playerId);
+            const ch = calculateNineHoleCH(p.hcp, sessionNum);
+            if (sessionNum === 2) return Math.round(ch * 0.90);
+            if (sessionNum === 4) return Math.round(ch * 0.70);
+            if (sessionNum === 1) return Math.round(ch * 0.35);
+            if (sessionNum === 5) return Math.round(ch * 0.50);
+            return ch;
+        }
+
+        function getPlayerKodakHoleNet(playerId, sessionNum, holeIdx) {
+            const sessionMatches = matches.filter(m => m.session === sessionNum);
+            const match = sessionMatches.find(m => m.burnie.includes(playerId) || m.port.includes(playerId));
+            if (!match) return null;
+            const hScore = match.scores[holeIdx];
+            if (!hScore) return null;
+
+            const side = match.burnie.includes(playerId) ? 'burnie' : 'port';
+            const ph = getPlayerSessionPH(playerId, sessionNum);
+            const strokes = getHoleStrokesForMH(ph, sessionNum, holeIdx);
+
+            if (match.teamEntryOnly) {
+                const rawVal = side === 'burnie' ? hScore.burnieTeam : hScore.portTeam;
+                if (rawVal === undefined || rawVal === '' || isNaN(parseInt(rawVal, 10))) return null;
+                return parseInt(rawVal, 10) - strokes;
+            } else {
+                if (!hScore[side]) return null;
+                const rawVal = hScore[side][playerId];
+                if (rawVal === undefined || rawVal === '' || isNaN(parseInt(rawVal, 10))) return null;
+                return parseInt(rawVal, 10) - strokes;
+            }
+        }
+
+        function renderKodakChallenge() {
+            const container = document.getElementById('main-view-container');
+            const sessionShortNames = {
+                1: 'D1-S1 (Scramble)',
+                2: 'D1-S2 (Better Ball)',
+                3: 'D1-S3 (Combined)',
+                4: 'D2-S1 (Shamble)',
+                5: 'D2-S2 (Alt Shot)',
+                6: 'D2-S3 (Singles)'
+            };
+
+            // Build 54-hole options list for Admin dropdowns
+            const all54Options = [];
+            for (let s = 1; s <= 6; s++) {
+                sessionCourses[s].holes.forEach((h, hIdx) => {
+                    all54Options.push({
+                        value: `${s}-${hIdx}`,
+                        label: `${sessionShortNames[s]} • Hole ${h.num} (Par ${h.par}, HCP ${h.hcp})`
+                    });
+                });
+            }
+
+            // Admin 9-Hole Signature Selector Cards
+            let selectorHtml = '';
+            if (isAdmin) {
+                selectorHtml = `
+                    <div class="bg-slate-900/90 border border-amber-500/40 rounded-xl p-3 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wide">
+                                <i class="fa-solid fa-sliders mr-1"></i>Admin: Select 9 Signature Holes (From 54 Holes)
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-1 gap-2">
+                            ${kodakHoles.map((slot, idx) => {
+                                const currentVal = `${slot.session}-${slot.holeIdx}`;
+                                return `
+                                    <div class="flex items-center space-x-2">
+                                        <span class="w-12 text-[11px] font-extrabold text-slate-300 flex-shrink-0">Hole #${idx + 1}</span>
+                                        <select onchange="updateKodakHole(${idx}, this.value)" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-amber-400">
+                                            ${all54Options.map(opt => `<option value="${opt.value}" ${opt.value === currentVal ? 'selected' : ''}>${opt.label}</option>`).join('')}
+                                        </select>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Calculate total Par across the 9 selected holes
+            let totalKodakPar = 0;
+            kodakHoles.forEach(slot => {
+                const hObj = sessionCourses[slot.session].holes[slot.holeIdx];
+                totalKodakPar += (Number(hObj.par) || 4);
+            });
+
+            // Compute each player's 9-hole NET scores & total
+            const allPlayers = [
+                ...rosters.burnie.map(p => ({ ...p, team: 'burnie' })),
+                ...rosters.port.map(p => ({ ...p, team: 'port' }))
+            ];
+
+            const standings = allPlayers.map(p => {
+                const holeNets = kodakHoles.map(slot => getPlayerKodakHoleNet(p.id, slot.session, slot.holeIdx));
+                const completedCount = holeNets.filter(v => v !== null).length;
+                const totalNet = holeNets.reduce((sum, v) => sum + (v !== null ? v : 0), 0);
+                // Compute to-par across completed holes so incomplete cards rank accurately alongside completed ones
+                let completedPar = 0;
+                kodakHoles.forEach((slot, idx) => {
+                    if (holeNets[idx] !== null) {
+                        completedPar += (Number(sessionCourses[slot.session].holes[slot.holeIdx].par) || 4);
+                    }
+                });
+                const toPar = completedCount > 0 ? totalNet - completedPar : 999;
+
+                return {
+                    ...p,
+                    holeNets,
+                    completedCount,
+                    totalNet,
+                    toPar
+                };
+            });
+
+            // Rank players from low to high score (completed holes first, then lowest To-Par / Total Net)
+            standings.sort((a, b) => {
+                if (a.completedCount === 0 && b.completedCount === 0) return a.name.localeCompare(b.name);
+                if (a.completedCount === 0) return 1;
+                if (b.completedCount === 0) return -1;
+                if (a.toPar !== b.toPar) return a.toPar - b.toPar;
+                if (b.completedCount !== a.completedCount) return b.completedCount - a.completedCount;
+                return a.name.localeCompare(b.name);
+            });
+
+            // Build table rows with competition tie ranking (e.g., #1, T2, T2, #4)
+            let rowsHtml = '';
+            standings.forEach((p, idx) => {
+                let rankLabel = '—';
+                let isTied = false;
+                if (p.completedCount > 0) {
+                    const samePrev = idx > 0 && standings[idx - 1].completedCount > 0 && standings[idx - 1].toPar === p.toPar && standings[idx - 1].completedCount === p.completedCount;
+                    const sameNext = idx < standings.length - 1 && standings[idx + 1].completedCount > 0 && standings[idx + 1].toPar === p.toPar && standings[idx + 1].completedCount === p.completedCount;
+                    isTied = samePrev || sameNext;
+
+                    let rankPlace = idx + 1;
+                    if (samePrev) {
+                        rankPlace = standings[idx - 1].rankPlace;
+                    }
+                    p.rankPlace = rankPlace;
+                    rankLabel = isTied ? `T${rankPlace}` : `#${rankPlace}`;
+                }
+
+                const toParStr = p.completedCount === 0
+                    ? '--'
+                    : (p.toPar === 0 ? 'E' : (p.toPar > 0 ? `+${p.toPar}` : `${p.toPar}`));
+                const toParColor = p.completedCount === 0
+                    ? 'text-slate-500'
+                    : (p.toPar < 0 ? 'text-emerald-400' : (p.toPar === 0 ? 'text-amber-300' : 'text-rose-300'));
+
+                const holeCellsHtml = p.holeNets.map((netVal, sIdx) => {
+                    const slot = kodakHoles[sIdx];
+                    const par = Number(sessionCourses[slot.session].holes[slot.holeIdx].par) || 4;
+                    let cellColor = 'text-slate-300';
+                    if (netVal !== null) {
+                        if (netVal < par) cellColor = 'text-emerald-400 font-extrabold';
+                        else if (netVal > par) cellColor = 'text-rose-300';
+                    }
+                    return `<td class="px-2 py-2 text-center border-l border-slate-800 ${cellColor}">${netVal !== null ? netVal : '—'}</td>`;
+                }).join('');
+
+                rowsHtml += `
+                    <tr class="border-b border-slate-800/80 hover:bg-slate-800/40">
+                        <td class="sticky left-0 bg-slate-900 px-2 py-2 font-black text-center ${isTied ? 'text-amber-400' : 'text-slate-400'}">${rankLabel}</td>
+                        <td class="sticky left-8 bg-slate-900 px-2.5 py-2 font-bold whitespace-nowrap ${p.team === 'burnie' ? 'text-emerald-300' : 'text-purple-300'}">
+                            ${p.name}
+                        </td>
+                        ${holeCellsHtml}
+                        <td class="px-2 py-2 text-center border-l border-slate-700 font-bold text-slate-300">${p.completedCount}/9</td>
+                        <td class="px-2 py-2 text-center font-extrabold ${toParColor}">${toParStr}</td>
+                        <td class="px-2.5 py-2 text-right font-black border-l border-slate-700 text-white">
+                            ${p.completedCount > 0 ? p.totalNet : '—'}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
+                    <div class="border-b border-slate-700 pb-2.5 flex justify-between items-center">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400">2-Day Signature Hole Challenge (Net PH)</span>
+                            <h2 class="text-base font-extrabold text-white">Lucky Spa 9 Challenge</h2>
+                        </div>
+                        <span class="text-[10px] bg-slate-900 border border-slate-700 px-2 py-1 rounded-lg text-slate-300">Par <strong class="text-white">${totalKodakPar}</strong></span>
+                    </div>
+
+                    <p class="text-[11px] text-slate-300 leading-relaxed">
+                        9 signature holes selected across the 2-day, 54-hole championship. Scores reflect each player's <strong class="text-white">NET score using Playing Handicap (PH)</strong>—lowest 9-hole NET total wins!
+                    </p>
+
+                    ${selectorHtml}
+
+                    <div class="overflow-x-auto rounded-xl border border-slate-700 bg-slate-900">
+                        <table class="w-full text-left border-collapse text-[11px]">
+                            <thead>
+                                <tr class="bg-slate-950 text-slate-300 border-b border-slate-700">
+                                    <th class="sticky left-0 bg-slate-950 px-2 py-2 font-bold text-center">Rank</th>
+                                    <th class="sticky left-8 bg-slate-950 px-2.5 py-2 font-bold">Player</th>
+                                    ${kodakHoles.map((slot, idx) => {
+                                        const hObj = sessionCourses[slot.session].holes[slot.holeIdx];
+                                        return `
+                                            <th class="px-2 py-1.5 text-center border-l border-slate-800 whitespace-nowrap">
+                                                <span class="text-amber-400 font-extrabold block">#${idx + 1} • H${hObj.num}</span>
+                                                <span class="text-[9px] text-slate-400 font-normal block">D${slot.session <= 3 ? 1 : 2}-S${((slot.session - 1) % 3) + 1} • P${hObj.par}</span>
+                                            </th>
+                                        `;
+                                    }).join('')}
+                                    <th class="px-2 py-2 text-center border-l border-slate-700 font-bold">Thru</th>
+                                    <th class="px-2 py-2 text-center font-bold">To Par</th>
+                                    <th class="px-2.5 py-2 text-right border-l border-slate-700 font-extrabold text-emerald-400">NET</th>
+                                </tr>
+                            </thead>
+                            <tbody>${rowsHtml}</tbody>
+                        </table>
+                    </div>
                 </div>
             `;
         }
