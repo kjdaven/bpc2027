@@ -23,7 +23,7 @@
                     }
                 }
             }
-        };
+        }
     </script>
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -36,28 +36,36 @@
     <!-- Welcome Splash Screen -->
     <div id="splash-screen" class="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center p-6 transition-opacity duration-500">
         <div class="max-w-md w-full flex flex-col items-center text-center">
+            <!-- Exact Logo Image with SVG Fallback -->
             <div class="w-full max-w-[380px] mb-8 flex items-center justify-center">
                 <img id="splash-logo-img" src="./logo.png" alt="War at Walt's World - Burnie-Port Cup 2027"
                      class="w-full h-auto rounded-2xl shadow-2xl object-contain"
                      onerror="this.style.display='none'; document.getElementById('splash-svg-fallback').classList.remove('hidden');">
-
+                
+                <!-- Fallback Crest Graphic if logo.png is not uploaded alongside index.html -->
                 <div id="splash-svg-fallback" class="hidden w-full bg-black border border-slate-800 rounded-3xl p-5 shadow-2xl">
                     <p class="text-white font-black tracking-wider text-xl uppercase mb-2" style="text-shadow: 0 2px 10px rgba(255,255,255,0.25);">War at Walt's World</p>
                     <svg viewBox="0 0 360 220" class="w-full h-auto mx-auto">
+                        <!-- Green Driver Left -->
                         <line x1="85" y1="60" x2="145" y2="115" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
                         <path d="M85,35 C45,45 45,105 85,115 C110,120 125,95 110,60 Z" fill="#16a34a" stroke="#15803d" stroke-width="3"/>
+                        <!-- Purple Putter Right -->
                         <line x1="275" y1="60" x2="215" y2="115" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
                         <path d="M275,35 C315,45 315,105 275,115 C250,120 235,95 250,60 Z" fill="#7e22ce" stroke="#6b21a8" stroke-width="3"/>
+                        <!-- Geodesic Sphere Center -->
                         <circle cx="180" cy="115" r="56" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
                         <path d="M135,95 L180,65 L225,95 L210,150 L150,150 Z" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
                         <path d="M180,65 L180,165 M126,115 L234,115 M145,75 L215,155 M215,75 L145,155" stroke="#cbd5e1" stroke-width="1.2"/>
+                        <!-- Gold Trophy -->
                         <path d="M160,82 L200,82 L195,112 C192,122 168,122 165,112 Z" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
                         <rect x="176" y="118" width="8" height="16" fill="#eab308"/>
                         <rect x="166" y="134" width="28" height="8" rx="2" fill="#334155"/>
+                        <!-- Banner -->
                         <path d="M110,145 L250,145 L240,180 L120,180 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="3"/>
                         <text x="180" y="168" text-anchor="middle" font-weight="900" font-size="18" fill="#1e293b">
                             <tspan fill="#16a34a">Burnie</tspan>-<tspan fill="#7e22ce">Port</tspan> <tspan fill="#eab308">Cup</tspan>
                         </text>
+                        <!-- Year -->
                         <polygon points="145,183 215,183 180,208" fill="#facc15" stroke="#94a3b8" stroke-width="2"/>
                         <text x="180" y="198" text-anchor="middle" font-weight="900" font-size="13" fill="#0f172a">2027</text>
                     </svg>
@@ -104,7 +112,7 @@
     <!-- Main Content Container -->
     <main class="flex-1 max-w-md w-full mx-auto pb-24 overflow-y-auto px-4 pt-4">
 
-        <!-- Live Scoreboard Summary Banner -->
+        <!-- Live Scoreboard Summary Banner (Always Visible) -->
         <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-2xl p-4 border border-slate-700 shadow-xl mb-5 relative overflow-hidden">
             <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
             <div class="flex justify-between items-center mb-3">
@@ -113,18 +121,21 @@
                 </span>
                 <span id="cup-status-text" class="text-xs font-bold text-slate-300">Target: 21.5 pts to Win</span>
             </div>
-
+            
             <div class="grid grid-cols-5 gap-2 items-center text-center">
+                <!-- Team Burnie -->
                 <div class="col-span-2 bg-emerald-950/40 border border-emerald-900/50 rounded-xl p-3 flex flex-col items-center justify-center shadow-inner">
                     <span class="text-xs font-bold text-emerald-400 uppercase tracking-wide">Team Burnie</span>
                     <span id="score-burnie" class="text-3xl font-extrabold text-emerald-100 my-0.5">0.0</span>
                     <span class="text-[10px] text-emerald-300/70">Points</span>
                 </div>
 
+                <!-- VS -->
                 <div class="col-span-1 flex flex-col items-center justify-center">
                     <span class="text-xs font-black text-slate-500 italic">VS</span>
                 </div>
 
+                <!-- Team Port -->
                 <div class="col-span-2 bg-purple-950/40 border border-purple-900/50 rounded-xl p-3 flex flex-col items-center justify-center shadow-inner">
                     <span class="text-xs font-bold text-purple-400 uppercase tracking-wide">Team Port</span>
                     <span id="score-port" class="text-3xl font-extrabold text-purple-100 my-0.5">0.0</span>
@@ -132,66 +143,59 @@
                 </div>
             </div>
 
+            <!-- Progress bar -->
             <div class="mt-4 w-full bg-slate-800 rounded-full h-2.5 overflow-hidden flex border border-slate-700">
                 <div id="progress-burnie" class="bg-gradient-to-r from-emerald-600 to-emerald-500 h-full transition-all duration-500" style="width: 50%"></div>
                 <div id="progress-port" class="bg-gradient-to-r from-purple-500 to-purple-600 h-full transition-all duration-500" style="width: 50%"></div>
             </div>
         </div>
 
-        <!-- Scorecards Controls (Only visible when Scorecards tab is selected) -->
-        <div id="sessions-controls-wrapper" class="hidden">
+        <!-- Sessions Controls (Only visible when Scorecards tab is selected) -->
+        <div id="sessions-controls-wrapper">
+            <!-- 6 Session Selector Tabs -->
             <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 mb-3 shadow-inner overflow-x-auto no-scrollbar space-x-1">
                 <button onclick="switchSession(1)" id="tab-session-1" class="flex-shrink-0 py-2 px-3 text-xs font-bold rounded-lg transition text-center bg-emerald-600 text-white shadow-md">
-                    <span id="lock-icon-1" class="hidden mr-1"><i class="fa-solid fa-lock text-amber-300 text-[10px]"></i></span>D1 S1: Scramble
+                    D1 S1: Scramble
                 </button>
                 <button onclick="switchSession(2)" id="tab-session-2" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                    <span id="lock-icon-2" class="hidden mr-1"><i class="fa-solid fa-lock text-amber-300 text-[10px]"></i></span>D1 S2: Better Score
+                    D1 S2: Better Score
                 </button>
                 <button onclick="switchSession(3)" id="tab-session-3" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                    <span id="lock-icon-3" class="hidden mr-1"><i class="fa-solid fa-lock text-amber-300 text-[10px]"></i></span>D1 S3: Combined
+                    D1 S3: Combined
                 </button>
                 <button onclick="switchSession(4)" id="tab-session-4" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                    <span id="lock-icon-4" class="hidden mr-1"><i class="fa-solid fa-lock text-amber-300 text-[10px]"></i></span>D2 S1: Shamble
+                    D2 S1: Shamble
                 </button>
                 <button onclick="switchSession(5)" id="tab-session-5" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                    <span id="lock-icon-5" class="hidden mr-1"><i class="fa-solid fa-lock text-amber-300 text-[10px]"></i></span>D2 S2: Alt Shot
+                    D2 S2: Alt Shot
                 </button>
                 <button onclick="switchSession(6)" id="tab-session-6" class="flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white">
-                    <span id="lock-icon-6" class="hidden mr-1"><i class="fa-solid fa-lock text-amber-300 text-[10px]"></i></span>D2 S3: Singles
+                    D2 S3: Singles
                 </button>
             </div>
 
+            <!-- Session Overview Info + Admin Lock Toggle -->
             <div id="session-description-card" class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-3 mb-4 text-xs text-slate-300 flex items-start space-x-2.5">
                 <i class="fa-solid fa-circle-info text-emerald-400 mt-0.5 text-sm"></i>
                 <div>
                     <span class="font-semibold text-white">Day 1 • Session 1 (Scramble):</span> 6 matches (2v2). Team plays from best shot on each stroke. Lowest score wins the hole.
                 </div>
             </div>
-
-            <!-- Admin Session Lock Toggle Bar -->
-            <div id="session-lock-admin-bar" class="hidden mb-4 bg-slate-900/90 border border-amber-500/40 rounded-xl px-3.5 py-2.5 flex items-center justify-between">
-                <div class="flex items-center space-x-2 text-xs">
-                    <i class="fa-solid fa-shield-halved text-amber-400"></i>
-                    <span id="session-lock-status-label" class="font-semibold text-slate-200">Session Unlocked for Scoring</span>
-                </div>
-                <button onclick="toggleCurrentSessionLock()" id="session-lock-toggle-btn" class="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 transition active:scale-95 flex items-center space-x-1.5">
-                    <i id="session-lock-toggle-icon" class="fa-solid fa-lock-open"></i>
-                    <span id="session-lock-toggle-text">Lock Session</span>
-                </button>
-            </div>
         </div>
 
         <!-- Dynamic Page Container -->
-        <div id="main-view-container" class="space-y-4"></div>
+        <div id="main-view-container" class="space-y-4">
+            <!-- Dynamically populated based on active tab -->
+        </div>
 
     </main>
 
-    <!-- Scrollable Bottom Navigation Bar -->
+    <!-- Scrollable Bottom Navigation Bar (Ordered as requested) -->
     <nav class="bg-slate-950 border-t border-slate-800 fixed bottom-0 left-0 right-0 z-40 py-2 px-2 shadow-lg">
         <div class="max-w-md mx-auto flex items-center overflow-x-auto no-scrollbar space-x-1">
-            <button onclick="switchTab('invitation')" id="nav-invitation" class="flex-shrink-0 flex flex-col items-center text-emerald-400 font-bold transition py-1 px-3 min-w-[68px]">
+            <button onclick="switchTab('invitation')" id="nav-invitation" class="flex-shrink-0 flex flex-col items-center text-emerald-400 transition py-1 px-3 min-w-[68px]">
                 <i class="fa-solid fa-envelope-open-text text-base mb-0.5"></i>
-                <span class="text-[10px]">Invitation</span>
+                <span class="text-[10px] font-bold">Invitation</span>
             </button>
             <button onclick="switchTab('eventatglance')" id="nav-eventatglance" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[82px]">
                 <i class="fa-solid fa-calendar-days text-base mb-0.5"></i>
@@ -201,6 +205,10 @@
                 <i class="fa-solid fa-calendar-week text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">WeekAtGlance</span>
             </button>
+            <button onclick="switchTab('venues')" id="nav-venues" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
+                <i class="fa-solid fa-map-location-dot text-base mb-0.5"></i>
+                <span class="text-[10px] font-medium">Venues</span>
+            </button>
             <button onclick="switchTab('format')" id="nav-format" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
                 <i class="fa-solid fa-list-check text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Format</span>
@@ -209,7 +217,7 @@
                 <i class="fa-solid fa-medal text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Past Results</span>
             </button>
-            <button onclick="switchTab('handicaps')" id="nav-handicaps" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[72px]">
+            <button onclick="switchTab('handicaps')" id="nav-handicaps" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
                 <i class="fa-solid fa-scale-balanced text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Handicaps</span>
             </button>
@@ -225,19 +233,23 @@
                 <i class="fa-solid fa-users text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Rosters</span>
             </button>
-            <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[80px]">
+            <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[76px]">
                 <i class="fa-solid fa-chart-bar text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Match Results</span>
             </button>
-            <button onclick="switchTab('indleaders')" id="nav-indleaders" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[76px]">
+            <button onclick="switchTab('indleaders')" id="nav-indleaders" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
                 <i class="fa-solid fa-ranking-star text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Ind. Leaders</span>
             </button>
-            <button onclick="switchTab('matches')" id="nav-matches" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[70px]">
+            <button onclick="switchTab('skins')" id="nav-skins" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
+                <i class="fa-solid fa-coins text-base mb-0.5"></i>
+                <span class="text-[10px] font-medium">BPC Skins</span>
+            </button>
+            <button onclick="switchTab('matches')" id="nav-matches" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
                 <i class="fa-solid fa-golf-ball-tee text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Scorecards</span>
             </button>
-            <button onclick="switchTab('picsvids')" id="nav-picsvids" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[70px]">
+            <button onclick="switchTab('picsvids')" id="nav-picsvids" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
                 <i class="fa-solid fa-camera-retro text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">Pics/Vids</span>
             </button>
@@ -268,8 +280,9 @@
                 <span id="modal-course-name" class="text-slate-400 text-[11px]">9-Hole Match Play</span>
             </div>
 
-            <div id="modal-session-locked-banner" class="hidden bg-amber-950/60 border-b border-amber-700/60 px-4 py-2 text-[11px] text-amber-300 font-semibold flex items-center space-x-2">
-                <i class="fa-solid fa-lock text-amber-400"></i>
+            <!-- Locked Session Warning Banner inside Modal -->
+            <div id="modal-locked-banner" class="hidden bg-rose-950/80 border-b border-rose-800/70 px-4 py-2 text-[11px] text-rose-200 flex items-center justify-center space-x-1.5 font-semibold">
+                <i class="fa-solid fa-lock text-rose-400"></i>
                 <span>This session is locked by Admin. Scores are view-only.</span>
             </div>
 
@@ -331,7 +344,7 @@
             <div id="admin-unlocked-view" class="hidden space-y-4">
                 <div class="bg-emerald-950/50 border border-emerald-800/60 rounded-xl p-3 text-xs text-emerald-300 flex items-center space-x-2">
                     <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                    <span>Admin Mode is active. You can edit rosters, pairings, session locks, and course holes.</span>
+                    <span>Admin Mode is active. You can lock/unlock sessions, edit rosters, pairings, and course holes.</span>
                 </div>
 
                 <div>
@@ -386,6 +399,24 @@
         </div>
     </div>
 
+    <!-- Directions Confirmation Modal -->
+    <div id="directions-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-xs w-full p-5 shadow-2xl text-center">
+            <div class="w-12 h-12 rounded-full bg-emerald-950/80 border border-emerald-800 text-emerald-400 flex items-center justify-center mx-auto mb-3">
+                <i class="fa-solid fa-diamond-turn-right text-lg"></i>
+            </div>
+            <h4 class="font-bold text-sm text-white mb-1">Open Directions?</h4>
+            <p id="directions-venue-name" class="text-xs font-bold text-emerald-400 mb-1"></p>
+            <p id="directions-venue-address" class="text-[11px] text-slate-300 mb-4"></p>
+            <div class="flex space-x-2">
+                <button onclick="closeDirectionsModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-semibold text-xs">Cancel</button>
+                <a id="directions-launch-link" href="#" target="_blank" rel="noopener noreferrer" onclick="closeDirectionsModal()" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center">
+                    Get Directions
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification Toast -->
     <div id="toast" class="fixed top-16 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs font-medium px-4 py-2.5 rounded-xl border border-slate-700 shadow-2xl transition-all duration-300 opacity-0 pointer-events-none z-50 flex items-center space-x-2">
         <i class="fa-solid fa-circle-check text-emerald-400"></i>
@@ -395,7 +426,7 @@
     <script>
         // --- State & Persistence ---
         const STORAGE_KEY = 'bpc_2027_2day_42pt_v1';
-        const MEDIA_STORAGE_KEY = 'bpc_2027_cloudinary_media_v1';
+        const MEDIA_STORAGE_KEY = 'bpc_2027_media_v1';
         const CLOUDINARY_CLOUD_NAME = 'mrcuhnqn';
         const CLOUDINARY_UPLOAD_PRESET = 'golf_trip_unsigned';
 
@@ -404,23 +435,29 @@
         let activeTab = 'invitation';
         let currentMatchId = null;
         let editingPairingMatchId = null;
-        let activeHoleIdx = 0;
+        let activeHoleIdx = 0; // 0 to 8 within the 9-hole session
         let isAdmin = false;
         let adminPin = '5998';
-
-        // Per-session lock flags (only Admin can toggle)
-        let sessionLocks = {
-            1: false,
-            2: false,
-            3: false,
-            4: false,
-            5: false,
-            6: false
+        let uploadedMedia = [];
+        let sessionLocks = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false };
+        let activeSkinsSession = 1;
+        let skinsViewMode = 'session'; // 'session' or 'matrix'
+        let skinsConfig = {
+            entryFees: { 1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10 },
+            participants: { 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {} }
+        };
+        let venueHouses = {
+            house1: {
+                address: '2560 Shanti Dr, Kissimmee, FL 34746',
+                instructions: 'Sat 9/25 (4:00 PM Check-In) to Sat 10/2 (10:00 AM Check-Out). 12 BR / 11 BA — Door code & Wi-Fi details will be posted here prior to arrival.'
+            },
+            house2: {
+                address: '2567 Shanti Dr, Kissimmee, FL 34746',
+                instructions: 'Sun 9/26 (4:00 PM Check-In) to Thu 9/30 (10:00 AM Check-Out). 12 BR / 11 BA — Door code & Wi-Fi details will be posted here prior to arrival.'
+            }
         };
 
-        // Uploaded trip photos/videos metadata stored locally + Cloudinary URLs
-        let uploadedMedia = [];
-
+        // 24 Total Players (12 per team)
         const defaultRosters = {
             burnie: [
                 { id: 'b1', name: 'Chris Burnett (C)', hcp: 6, photo: '' },
@@ -452,6 +489,7 @@
             ]
         };
 
+        // 6 Independent 9-Hole Session Course Configurations (with 9-Hole Rating & Slope)
         const makeDefaultNine = (startNum) => Array.from({ length: 9 }, (_, i) => ({
             num: startNum + i,
             par: [4, 4, 5, 3, 4, 4, 3, 5, 4][i],
@@ -459,14 +497,15 @@
         }));
 
         const defaultSessionCourses = {
-            1: { label: 'D1 • S1', courseName: 'Day 1 - First 9 (Scramble)', holes: makeDefaultNine(1) },
-            2: { label: 'D1 • S2', courseName: 'Day 1 - Second 9 (Better Score)', holes: makeDefaultNine(10) },
-            3: { label: 'D1 • S3', courseName: 'Day 1 - Third 9 (Combined)', holes: makeDefaultNine(19) },
-            4: { label: 'D2 • S1', courseName: 'Day 2 - First 9 (Shamble)', holes: makeDefaultNine(1) },
-            5: { label: 'D2 • S2', courseName: 'Day 2 - Second 9 (Alt Shot)', holes: makeDefaultNine(10) },
-            6: { label: 'D2 • S3', courseName: 'Day 2 - Third 9 (Singles)', holes: makeDefaultNine(19) }
+            1: { label: 'D1 • S1', courseName: 'Day 1 - First 9 (Scramble)', rating: 35.8, slope: 128, holes: makeDefaultNine(1) },
+            2: { label: 'D1 • S2', courseName: 'Day 1 - Second 9 (Better Score)', rating: 36.0, slope: 130, holes: makeDefaultNine(10) },
+            3: { label: 'D1 • S3', courseName: 'Day 1 - Third 9 (Combined)', rating: 35.9, slope: 129, holes: makeDefaultNine(19) },
+            4: { label: 'D2 • S1', courseName: 'Day 2 - First 9 (Shamble)', rating: 36.1, slope: 131, holes: makeDefaultNine(1) },
+            5: { label: 'D2 • S2', courseName: 'Day 2 - Second 9 (Alt Shot)', rating: 36.2, slope: 132, holes: makeDefaultNine(10) },
+            6: { label: 'D2 • S3', courseName: 'Day 2 - Third 9 (Singles)', rating: 36.0, slope: 130, holes: makeDefaultNine(19) }
         };
 
+        // 42 Total Matches = 42 Total Points (21.5 to Win)
         function createDefaultMatches() {
             const list = [];
             for (let i = 0; i < 6; i++) {
@@ -530,19 +569,31 @@
                 if (raw) {
                     const parsed = JSON.parse(raw);
                     if (parsed.rosters) rosters = parsed.rosters;
-                    if (parsed.sessionCourses) sessionCourses = parsed.sessionCourses;
+                    if (parsed.sessionCourses) {
+                        sessionCourses = parsed.sessionCourses;
+                        for (let s = 1; s <= 6; s++) {
+                            if (sessionCourses[s].rating === undefined) sessionCourses[s].rating = defaultSessionCourses[s].rating;
+                            if (sessionCourses[s].slope === undefined) sessionCourses[s].slope = defaultSessionCourses[s].slope;
+                        }
+                    }
                     if (parsed.matches && parsed.matches.length === 42) matches = parsed.matches;
                     if (parsed.adminPin) adminPin = parsed.adminPin;
                     if (parsed.sessionLocks) sessionLocks = Object.assign({ 1: false, 2: false, 3: false, 4: false, 5: false, 6: false }, parsed.sessionLocks);
+                    if (parsed.skinsConfig) {
+                        skinsConfig.entryFees = Object.assign({ 1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10 }, parsed.skinsConfig.entryFees || {});
+                        skinsConfig.participants = Object.assign({ 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {} }, parsed.skinsConfig.participants || {});
+                    }
+                    if (parsed.venueHouses) {
+                        venueHouses = Object.assign(venueHouses, parsed.venueHouses);
+                    }
                 }
             } catch (e) {
                 console.error('Failed to load saved state', e);
             }
-
             try {
-                const rawMedia = localStorage.getItem(MEDIA_STORAGE_KEY);
-                if (rawMedia) {
-                    const parsedMedia = JSON.parse(rawMedia);
+                const mediaRaw = localStorage.getItem(MEDIA_STORAGE_KEY);
+                if (mediaRaw) {
+                    const parsedMedia = JSON.parse(mediaRaw);
                     if (Array.isArray(parsedMedia)) uploadedMedia = parsedMedia;
                 }
             } catch (e) {
@@ -557,7 +608,9 @@
                     sessionCourses,
                     matches,
                     adminPin,
-                    sessionLocks
+                    sessionLocks,
+                    skinsConfig,
+                    venueHouses
                 }));
                 updateOverallStandings();
             } catch (e) {
@@ -585,6 +638,106 @@
             return `<div class="w-8 h-8 rounded-full bg-slate-800 border ${ringClass} flex items-center justify-center text-[11px] font-bold text-white flex-shrink-0">${player.name.charAt(0)}</div>`;
         }
 
+        // --- USGA 9-Hole Handicap Calculation Engine (CH -> Appendix C PH -> Off-Low-Man MH) ---
+        function getNineHolePar(sessionNum) {
+            const c = sessionCourses[sessionNum];
+            return c.holes.reduce((sum, h) => sum + (Number(h.par) || 4), 0);
+        }
+
+        // USGA 9-Hole Course Handicap: CH = (HI / 2) * (9H Slope / 113) + (9H Rating - 9H Par)
+        function calculateNineHoleCH(handicapIndex, sessionNum) {
+            const c = sessionCourses[sessionNum];
+            const par9 = getNineHolePar(sessionNum);
+            const slope9 = Number(c.slope) || 113;
+            const rating9 = Number(c.rating) || par9;
+            const rawCH = ((Number(handicapIndex) || 0) / 2) * (slope9 / 113) + (rating9 - par9);
+            return Math.max(0, Math.round(rawCH));
+        }
+
+        // Calculates CH, Playing Handicap (PH) per USGA Appendix C, and Match Handicap (MH) off the lowest PH
+        function calculateMatchHandicaps(match) {
+            const s = match.session;
+            const fmt = match.format;
+            const bPlayers = match.burnie.map(id => getPlayerById(id));
+            const pPlayers = match.port.map(id => getPlayerById(id));
+
+            const bCHs = bPlayers.map(p => calculateNineHoleCH(p.hcp, s));
+            const pCHs = pPlayers.map(p => calculateNineHoleCH(p.hcp, s));
+
+            if (fmt === 'Scramble') {
+                // USGA Appendix C Scramble: 35% Low + 15% High
+                const calcScrambleTeamPH = (chs) => {
+                    if (chs.length < 2) return Math.round((chs[0] || 0) * 0.35);
+                    const sorted = [...chs].sort((a, b) => a - b);
+                    return Math.round(sorted[0] * 0.35 + sorted[1] * 0.15);
+                };
+                const bPH = calcScrambleTeamPH(bCHs);
+                const pPH = calcScrambleTeamPH(pCHs);
+                const lowPH = Math.min(bPH, pPH);
+                return {
+                    isTeam: true,
+                    burnieTeam: { ch: bCHs.join('/'), ph: bPH, mh: Math.max(0, bPH - lowPH) },
+                    portTeam: { ch: pCHs.join('/'), ph: pPH, mh: Math.max(0, pPH - lowPH) }
+                };
+            }
+
+            if (fmt === 'Alternate Shot') {
+                // USGA Appendix C Foursomes (Alternate Shot): 50% of combined partners' Course Handicaps
+                const bSum = bCHs.reduce((a, b) => a + b, 0);
+                const pSum = pCHs.reduce((a, b) => a + b, 0);
+                const bPH = Math.round(bSum * 0.50);
+                const pPH = Math.round(pSum * 0.50);
+                const lowPH = Math.min(bPH, pPH);
+                return {
+                    isTeam: true,
+                    burnieTeam: { ch: bSum, ph: bPH, mh: Math.max(0, bPH - lowPH) },
+                    portTeam: { ch: pSum, ph: pPH, mh: Math.max(0, pPH - lowPH) }
+                };
+            }
+
+            // Individual-ball formats: Singles (100%), Better Score / Four-Ball (90%), Combined Score (100%), Shamble (70%)
+            let allowance = 1.0;
+            if (fmt === 'Better Score') allowance = 0.90;
+            else if (fmt === 'Shamble') allowance = 0.70;
+            else allowance = 1.0; // Singles & Combined Score
+
+            const bPHs = bCHs.map(ch => Math.round(ch * allowance));
+            const pPHs = pCHs.map(ch => Math.round(ch * allowance));
+            const allPHs = [...bPHs, ...pPHs];
+            const lowPH = allPHs.length > 0 ? Math.min(...allPHs) : 0;
+
+            const burnieMap = {};
+            match.burnie.forEach((id, idx) => {
+                burnieMap[id] = { ch: bCHs[idx], ph: bPHs[idx], mh: Math.max(0, bPHs[idx] - lowPH) };
+            });
+
+            const portMap = {};
+            match.port.forEach((id, idx) => {
+                portMap[id] = { ch: pCHs[idx], ph: pPHs[idx], mh: Math.max(0, pPHs[idx] - lowPH) };
+            });
+
+            return {
+                isTeam: false,
+                burnie: burnieMap,
+                port: portMap
+            };
+        }
+
+        // Allocates handicap strokes on a 9-hole card ranked by each hole's HCP Index (lowest HCP index = hardest hole)
+        function getHoleStrokesForMH(matchHandicap, sessionNum, holeIdx) {
+            const mh = Math.max(0, Math.round(Number(matchHandicap) || 0));
+            if (mh === 0) return 0;
+            const holes = sessionCourses[sessionNum].holes;
+            const ranked = holes
+                .map((h, idx) => ({ idx, hcp: Number(h.hcp) || 99 }))
+                .sort((a, b) => a.hcp - b.hcp);
+            const rankPos = ranked.findIndex(item => item.idx === holeIdx); // 0 to 8
+            if (rankPos === -1) return 0;
+            const fullRounds = Math.floor(mh / 9);
+            const remainder = mh % 9;
+            return fullRounds + (rankPos < remainder ? 1 : 0);
+        }
+
         // --- Splash Screen ---
         function enterApp() {
             const splash = document.getElementById('splash-screen');
@@ -594,91 +747,66 @@
         }
         window.enterApp = enterApp;
 
-        // --- Session Lock Controls ---
-        function updateSessionLockUI() {
-            for (let s = 1; s <= 6; s++) {
-                const iconEl = document.getElementById(`lock-icon-${s}`);
-                if (iconEl) {
-                    if (sessionLocks[s]) iconEl.classList.remove('hidden');
-                    else iconEl.classList.add('hidden');
-                }
-            }
-
-            const adminBar = document.getElementById('session-lock-admin-bar');
-            if (!adminBar) return;
-
-            if (isAdmin) {
-                adminBar.classList.remove('hidden');
-                const locked = !!sessionLocks[currentSession];
-                const statusLabel = document.getElementById('session-lock-status-label');
-                const toggleBtn = document.getElementById('session-lock-toggle-btn');
-                const toggleIcon = document.getElementById('session-lock-toggle-icon');
-                const toggleText = document.getElementById('session-lock-toggle-text');
-
-                if (locked) {
-                    statusLabel.innerHTML = `Session ${currentSession} is <span class="text-amber-400">Locked</span> (Read-Only)`;
-                    toggleBtn.className = 'text-[11px] font-bold px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition active:scale-95 flex items-center space-x-1.5';
-                    toggleIcon.className = 'fa-solid fa-lock-open';
-                    toggleText.innerText = 'Unlock Session';
-                } else {
-                    statusLabel.innerHTML = `Session ${currentSession} is <span class="text-emerald-400">Unlocked</span> for Scoring`;
-                    toggleBtn.className = 'text-[11px] font-bold px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 transition active:scale-95 flex items-center space-x-1.5';
-                    toggleIcon.className = 'fa-solid fa-lock';
-                    toggleText.innerText = 'Lock Session';
-                }
-            } else {
-                adminBar.classList.add('hidden');
-            }
-        }
-
-        function toggleCurrentSessionLock() {
+        // --- Session Lock Toggle (Admin Only) ---
+        function toggleSessionLock(sessionNum) {
             if (!isAdmin) return;
-            sessionLocks[currentSession] = !sessionLocks[currentSession];
+            sessionLocks[sessionNum] = !sessionLocks[sessionNum];
             saveState();
-            updateSessionLockUI();
-            renderMatches();
-            showToast(sessionLocks[currentSession] ? `Session ${currentSession} locked` : `Session ${currentSession} unlocked`);
+            switchSession(sessionNum);
+            showToast(sessionLocks[sessionNum] ? `Session ${sessionNum} locked` : `Session ${sessionNum} unlocked`);
         }
-        window.toggleCurrentSessionLock = toggleCurrentSessionLock;
+        window.toggleSessionLock = toggleSessionLock;
 
-        // --- Match Scoring & Status Engine ---
+        // --- Match Scoring & Status Engine (Net Match Play) ---
         function calculateMatchStatus(match) {
             let burnieHoles = 0;
             let portHoles = 0;
             let completed = 0;
             const totalHoles = 9;
+            const hdcpInfo = calculateMatchHandicaps(match);
 
             for (let idx = 0; idx < totalHoles; idx++) {
                 const hScore = match.scores[idx];
                 if (!hScore) continue;
 
-                let bVal = null;
-                let pVal = null;
+                let bNet = null;
+                let pNet = null;
 
                 if (match.teamEntryOnly) {
                     if (hScore.burnieTeam !== undefined && hScore.burnieTeam !== '' &&
                         hScore.portTeam !== undefined && hScore.portTeam !== '') {
-                        bVal = parseInt(hScore.burnieTeam, 10);
-                        pVal = parseInt(hScore.portTeam, 10);
+                        const bStrokes = getHoleStrokesForMH(hdcpInfo.burnieTeam.mh, match.session, idx);
+                        const pStrokes = getHoleStrokesForMH(hdcpInfo.portTeam.mh, match.session, idx);
+                        bNet = parseInt(hScore.burnieTeam, 10) - bStrokes;
+                        pNet = parseInt(hScore.portTeam, 10) - pStrokes;
                     }
                 } else {
                     const allB = match.burnie.every(id => hScore.burnie && hScore.burnie[id] !== undefined && hScore.burnie[id] !== '');
                     const allP = match.port.every(id => hScore.port && hScore.port[id] !== undefined && hScore.port[id] !== '');
                     if (allB && allP) {
+                        const bPlayerNets = match.burnie.map(id => {
+                            const strokes = getHoleStrokesForMH(hdcpInfo.burnie[id].mh, match.session, idx);
+                            return parseInt(hScore.burnie[id], 10) - strokes;
+                        });
+                        const pPlayerNets = match.port.map(id => {
+                            const strokes = getHoleStrokesForMH(hdcpInfo.port[id].mh, match.session, idx);
+                            return parseInt(hScore.port[id], 10) - strokes;
+                        });
+
                         if (match.format === 'Combined Score') {
-                            bVal = match.burnie.reduce((acc, id) => acc + parseInt(hScore.burnie[id], 10), 0);
-                            pVal = match.port.reduce((acc, id) => acc + parseInt(hScore.port[id], 10), 0);
+                            bNet = bPlayerNets.reduce((acc, v) => acc + v, 0);
+                            pNet = pPlayerNets.reduce((acc, v) => acc + v, 0);
                         } else {
-                            bVal = Math.min(...match.burnie.map(id => parseInt(hScore.burnie[id], 10)));
-                            pVal = Math.min(...match.port.map(id => parseInt(hScore.port[id], 10)));
+                            bNet = Math.min(...bPlayerNets);
+                            pNet = Math.min(...pPlayerNets);
                         }
                     }
                 }
 
-                if (bVal !== null && pVal !== null && !isNaN(bVal) && !isNaN(pVal)) {
+                if (bNet !== null && pNet !== null && !isNaN(bNet) && !isNaN(pNet)) {
                     completed++;
-                    if (bVal < pVal) burnieHoles++;
-                    else if (pVal < bVal) portHoles++;
+                    if (bNet < pNet) burnieHoles++;
+                    else if (pNet < bNet) portHoles++;
                 }
             }
 
@@ -737,9 +865,19 @@
         // --- Navigation & View Rendering ---
         function switchSession(sessionNum) {
             currentSession = sessionNum;
+            const tabLabels = {
+                1: 'D1 S1: Scramble',
+                2: 'D1 S2: Better Score',
+                3: 'D1 S3: Combined',
+                4: 'D2 S1: Shamble',
+                5: 'D2 S2: Alt Shot',
+                6: 'D2 S3: Singles'
+            };
             for (let i = 1; i <= 6; i++) {
                 const btn = document.getElementById(`tab-session-${i}`);
                 if (!btn) continue;
+                const lockedBadge = sessionLocks[i] ? ' <i class="fa-solid fa-lock text-[10px] ml-1 text-rose-300"></i>' : '';
+                btn.innerHTML = `${tabLabels[i]}${lockedBadge}`;
                 btn.className = i === sessionNum
                     ? 'flex-shrink-0 py-2 px-3 text-xs font-bold rounded-lg transition text-center bg-emerald-600 text-white shadow-md'
                     : 'flex-shrink-0 py-2 px-3 text-xs font-semibold rounded-lg transition text-center text-slate-400 hover:text-white';
@@ -754,18 +892,44 @@
                 6: 'Day 2 • Session 3 (Singles - 12 Matches): Head-to-head 1v1 match play across all 24 players for the final 12 points!'
             };
             const cInfo = sessionCourses[sessionNum];
+            const isLocked = !!sessionLocks[sessionNum];
+
+            let lockControlHtml = '';
+            if (isAdmin) {
+                lockControlHtml = `
+                    <div class="mt-2.5 pt-2 border-t border-slate-700/70 flex items-center justify-between">
+                        <span class="text-[11px] font-semibold ${isLocked ? 'text-rose-300' : 'text-emerald-300'}">
+                            <i class="fa-solid ${isLocked ? 'fa-lock' : 'fa-lock-open'} mr-1"></i>
+                            ${isLocked ? 'Session Locked (Scores Protected)' : 'Session Open for Score Entry'}
+                        </span>
+                        <button onclick="toggleSessionLock(${sessionNum})" class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${isLocked ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-rose-600 hover:bg-rose-500 text-white'}">
+                            ${isLocked ? 'Unlock Session' : 'Lock Session'}
+                        </button>
+                    </div>
+                `;
+            } else if (isLocked) {
+                lockControlHtml = `
+                    <div class="mt-2 pt-2 border-t border-rose-800/50 text-[11px] font-semibold text-rose-300 flex items-center">
+                        <i class="fa-solid fa-lock mr-1.5 text-rose-400"></i>
+                        <span>Session Locked by Admin — Score entry is disabled.</span>
+                    </div>
+                `;
+            }
+
             document.getElementById('session-description-card').innerHTML = `
                 <i class="fa-solid fa-circle-info text-emerald-400 mt-0.5 text-sm"></i>
-                <div><span class="font-semibold text-white">${cInfo.courseName}:</span> ${descriptions[sessionNum]}</div>
+                <div class="flex-1">
+                    <div><span class="font-semibold text-white">${cInfo.courseName} (CR ${cInfo.rating} / Slope ${cInfo.slope}):</span> ${descriptions[sessionNum]}</div>
+                    ${lockControlHtml}
+                </div>
             `;
-            updateSessionLockUI();
-            if (activeTab === 'matches') renderMatches();
+            renderCurrentView();
         }
         window.switchSession = switchSession;
 
         function switchTab(tabName) {
             activeTab = tabName;
-            const navIds = ['invitation', 'eventatglance', 'weekatglance', 'format', 'pastresults', 'handicaps', 'bpcname', 'bpclogo', 'roster', 'leaderboard', 'indleaders', 'matches', 'picsvids', 'course'];
+            const navIds = ['invitation', 'eventatglance', 'weekatglance', 'venues', 'format', 'pastresults', 'handicaps', 'bpcname', 'bpclogo', 'roster', 'leaderboard', 'indleaders', 'skins', 'matches', 'picsvids', 'course'];
             navIds.forEach(id => {
                 const el = document.getElementById(`nav-${id}`);
                 if (!el) return;
@@ -778,10 +942,12 @@
                 }
             });
 
+            // Only display the 6-session strip when on the Scorecards ('matches') tab
             const sessionWrapper = document.getElementById('sessions-controls-wrapper');
             if (tabName === 'matches') {
                 sessionWrapper.classList.remove('hidden');
-                updateSessionLockUI();
+                switchSession(currentSession);
+                return;
             } else {
                 sessionWrapper.classList.add('hidden');
             }
@@ -795,13 +961,15 @@
             else if (activeTab === 'roster') renderRosters();
             else if (activeTab === 'leaderboard') renderLeaderboard();
             else if (activeTab === 'indleaders') renderIndLeaders();
+            else if (activeTab === 'skins') renderSkins();
             else if (activeTab === 'eventatglance') renderEventAtGlance();
             else if (activeTab === 'weekatglance') renderWeekAtGlance();
+            else if (activeTab === 'venues') renderVenues();
+            else if (activeTab === 'handicaps') renderHandicaps();
             else if (activeTab === 'bpcname') renderBpcName();
             else if (activeTab === 'format') renderFormat();
             else if (activeTab === 'bpclogo') renderBpcLogo();
             else if (activeTab === 'pastresults') renderPastResults();
-            else if (activeTab === 'handicaps') renderHandicaps();
             else if (activeTab === 'invitation') renderInvitation();
             else if (activeTab === 'picsvids') renderPicsVids();
             else if (activeTab === 'course') renderCourseEditor();
@@ -813,28 +981,30 @@
             const isLocked = !!sessionLocks[currentSession];
             let html = '';
 
-            if (isLocked) {
-                html += `
-                    <div class="bg-amber-950/50 border border-amber-700/60 rounded-xl px-3.5 py-2.5 text-xs text-amber-300 flex items-center space-x-2">
-                        <i class="fa-solid fa-lock text-amber-400"></i>
-                        <span>Session ${currentSession} is locked by Admin. Scores can be viewed but not edited.</span>
-                    </div>
-                `;
-            }
-
             sessionMatches.forEach((m, idx) => {
                 const st = calculateMatchStatus(m);
+                const hdcpInfo = calculateMatchHandicaps(m);
                 const bPlayers = m.burnie.map(id => getPlayerById(id));
                 const pPlayers = m.port.map(id => getPlayerById(id));
+
+                const bLabel = hdcpInfo.isTeam
+                    ? `${bPlayers.map(p => p.name).join(' & ')} <span class="text-[10px] font-normal text-emerald-300/80">(PH ${hdcpInfo.burnieTeam.ph} • MH ${hdcpInfo.burnieTeam.mh})</span>`
+                    : bPlayers.map(p => `${p.name} <span class="text-[10px] font-normal text-emerald-300/80">(PH ${hdcpInfo.burnie[p.id].ph} • MH ${hdcpInfo.burnie[p.id].mh})</span>`).join(' & ');
+
+                const pLabel = hdcpInfo.isTeam
+                    ? `${pPlayers.map(p => p.name).join(' & ')} <span class="text-[10px] font-normal text-purple-300/80">(PH ${hdcpInfo.portTeam.ph} • MH ${hdcpInfo.portTeam.mh})</span>`
+                    : pPlayers.map(p => `${p.name} <span class="text-[10px] font-normal text-purple-300/80">(PH ${hdcpInfo.port[p.id].ph} • MH ${hdcpInfo.port[p.id].mh})</span>`).join(' & ');
 
                 html += `
                     <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 hover:border-emerald-500/60 transition shadow-lg">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded-md border border-emerald-900">
-                                Match ${idx + 1} • ${m.format}
-                            </span>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded-md border border-emerald-900">
+                                    Match ${idx + 1} • ${m.format}
+                                </span>
+                                ${isLocked ? '<span class="text-[10px] font-bold text-rose-300 bg-rose-950/80 border border-rose-800/60 px-2 py-0.5 rounded-md"><i class="fa-solid fa-lock mr-1"></i>Locked</span>' : ''}
+                            </div>
                             <div class="flex items-center space-x-2">
-                                ${isLocked ? `<span class="text-[10px] bg-amber-950/90 text-amber-300 border border-amber-700/60 px-2 py-0.5 rounded-md font-bold"><i class="fa-solid fa-lock mr-1"></i>Locked</span>` : ''}
                                 ${isAdmin ? `<button onclick="openPairingModal('${m.id}')" class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-md font-bold hover:bg-amber-500/30">Edit Pairings</button>` : ''}
                                 <span onclick="openMatchModal('${m.id}')" class="text-xs ${st.color} cursor-pointer flex items-center">
                                     ${st.text} <i class="fa-solid fa-chevron-right text-[10px] ml-1.5 text-slate-500"></i>
@@ -847,18 +1017,18 @@
                                     <div class="flex -space-x-2">
                                         ${bPlayers.map(p => getAvatarHtml(p, 'border-emerald-500')).join('')}
                                     </div>
-                                    <span class="text-xs font-bold text-emerald-200">${bPlayers.map(p => p.name).join(' & ')}</span>
+                                    <span class="text-xs font-bold text-emerald-200">${bLabel}</span>
                                 </div>
-                                <span class="text-[10px] font-bold text-emerald-400 uppercase">Burnie</span>
+                                <span class="text-[10px] font-bold text-emerald-400 uppercase ml-2">Burnie</span>
                             </div>
                             <div class="flex justify-between items-center bg-purple-950/35 border border-purple-900/50 rounded-xl px-3 py-2">
                                 <div class="flex items-center space-x-2">
                                     <div class="flex -space-x-2">
                                         ${pPlayers.map(p => getAvatarHtml(p, 'border-purple-500')).join('')}
                                     </div>
-                                    <span class="text-xs font-bold text-purple-200">${pPlayers.map(p => p.name).join(' & ')}</span>
+                                    <span class="text-xs font-bold text-purple-200">${pLabel}</span>
                                 </div>
-                                <span class="text-[10px] font-bold text-purple-400 uppercase">Port</span>
+                                <span class="text-[10px] font-bold text-purple-400 uppercase ml-2">Port</span>
                             </div>
                         </div>
                     </div>
@@ -886,8 +1056,8 @@
                                     ${getAvatarHtml(p, ringClass)}
                                     <input type="text" value="${p.name}" onchange="updatePlayerField('${teamKey}', ${i}, 'name', this.value)" placeholder="Player Name" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-semibold focus:outline-none focus:border-emerald-500">
                                     <div class="flex items-center space-x-1">
-                                        <span class="text-[10px] text-slate-400">HCP</span>
-                                        <input type="number" value="${p.hcp}" onchange="updatePlayerField('${teamKey}', ${i}, 'hcp', parseInt(this.value)||0)" class="w-12 bg-slate-950 border border-slate-700 rounded-lg px-1.5 py-1.5 text-xs text-center text-white font-bold">
+                                        <span class="text-[10px] text-slate-400">HI</span>
+                                        <input type="number" step="0.1" value="${p.hcp}" onchange="updatePlayerField('${teamKey}', ${i}, 'hcp', parseFloat(this.value)||0)" class="w-14 bg-slate-950 border border-slate-700 rounded-lg px-1.5 py-1.5 text-xs text-center text-white font-bold">
                                     </div>
                                 </div>
                                 <input type="text" value="${p.photo || ''}" onchange="updatePlayerField('${teamKey}', ${i}, 'photo', this.value)" placeholder="Paste Headshot Image URL (optional)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-[11px] text-slate-300 focus:outline-none focus:border-emerald-500">
@@ -900,7 +1070,7 @@
                                     ${getAvatarHtml(p, ringClass)}
                                     <span class="font-medium text-white">${p.name}</span>
                                 </div>
-                                <span class="bg-slate-800 text-slate-300 px-2 py-1 rounded-lg">HCP: <strong class="${colorText}">${p.hcp}</strong></span>
+                                <span class="bg-slate-800 text-slate-300 px-2 py-1 rounded-lg">HI: <strong class="${colorText}">${p.hcp}</strong></span>
                             </div>
                         `;
                     }
@@ -974,8 +1144,10 @@
             container.innerHTML = html;
         }
 
+        // --- Individual Player Standings (Ranked by Total Points) ---
         function renderIndLeaders() {
             const container = document.getElementById('main-view-container');
+
             const statsMap = {};
             rosters.burnie.forEach(p => {
                 statsMap[p.id] = { id: p.id, name: p.name, team: 'burnie', photo: p.photo || '', played: 0, wins: 0, losses: 0, ties: 0, points: 0 };
@@ -1097,6 +1269,449 @@
             `;
         }
 
+        // --- BPC Skins Engine (Field Net Skins using Playing Handicap PH) ---
+        function calculateSessionSkins(sessionNum) {
+            const sessionMatches = matches.filter(m => m.session === sessionNum);
+            const partMap = skinsConfig.participants[sessionNum] || {};
+            const entryFee = Math.max(0, Number(skinsConfig.entryFees[sessionNum]) || 0);
+            const isTeamFormat = (sessionNum === 1 || sessionNum === 5); // D1-S1 Scramble & D2-S2 Alt Shot
+
+            const allPlayers = [
+                ...rosters.burnie.map(p => ({ ...p, team: 'burnie' })),
+                ...rosters.port.map(p => ({ ...p, team: 'port' }))
+            ];
+
+            const playerResults = {};
+            allPlayers.forEach(p => {
+                playerResults[p.id] = {
+                    ...p,
+                    participating: !!partMap[p.id],
+                    ph: 0,
+                    skinsWon: 0,
+                    wonHoles: [],
+                    winnings: 0,
+                    soloTeamCover: false,
+                    entryOwed: partMap[p.id] ? entryFee : 0
+                };
+            });
+
+            let totalPot = 0;
+            const holeWinners = []; // { holeNum, netScore, winners: [pId...] }
+
+            if (isTeamFormat) {
+                // Build participating team entries from matches in this session
+                const teamEntries = [];
+                sessionMatches.forEach(m => {
+                    const hdcpInfo = calculateMatchHandicaps(m);
+                    ['burnie', 'port'].forEach(side => {
+                        const pairIds = m[side];
+                        const p1In = !!partMap[pairIds[0]];
+                        const p2In = pairIds[1] ? !!partMap[pairIds[1]] : false;
+                        const teamPH = side === 'burnie' ? hdcpInfo.burnieTeam.ph : hdcpInfo.portTeam.ph;
+
+                        pairIds.forEach(pid => {
+                            if (playerResults[pid]) playerResults[pid].ph = teamPH;
+                        });
+
+                        if (p1In && p2In) {
+                            totalPot += entryFee * 2;
+                            teamEntries.push({
+                                match: m,
+                                side,
+                                ph: teamPH,
+                                recipients: [...pairIds]
+                            });
+                        } else if (p1In || p2In) {
+                            // One partner opted out -> participating partner pays full 2x team entry and wins 100% of team skins
+                            const soloId = p1In ? pairIds[0] : pairIds[1];
+                            totalPot += entryFee * 2;
+                            if (playerResults[soloId]) {
+                                playerResults[soloId].soloTeamCover = true;
+                                playerResults[soloId].entryOwed = entryFee * 2;
+                            }
+                            teamEntries.push({
+                                match: m,
+                                side,
+                                ph: teamPH,
+                                recipients: [soloId]
+                            });
+                        }
+                    });
+                });
+
+                // Compare Net team scores across all 9 holes
+                for (let hIdx = 0; hIdx < 9; hIdx++) {
+                    const holeNum = sessionCourses[sessionNum].holes[hIdx].num;
+                    const contenders = [];
+                    teamEntries.forEach(entry => {
+                        const hScore = entry.match.scores[hIdx];
+                        if (!hScore) return;
+                        const rawVal = entry.side === 'burnie' ? hScore.burnieTeam : hScore.portTeam;
+                        if (rawVal === undefined || rawVal === '' || isNaN(parseInt(rawVal, 10))) return;
+                        const strokes = getHoleStrokesForMH(entry.ph, sessionNum, hIdx);
+                        const netScore = parseInt(rawVal, 10) - strokes;
+                        contenders.push({ entry, netScore });
+                    });
+
+                    if (contenders.length >= 2) {
+                        const minNet = Math.min(...contenders.map(c => c.netScore));
+                        const tiedLow = contenders.filter(c => c.netScore === minNet);
+                        if (tiedLow.length === 1) {
+                            const winEntry = tiedLow[0].entry;
+                            const share = 1 / winEntry.recipients.length;
+                            winEntry.recipients.forEach(pid => {
+                                if (playerResults[pid]) {
+                                    playerResults[pid].skinsWon += share;
+                                    playerResults[pid].wonHoles.push(holeNum);
+                                }
+                            });
+                            holeWinners.push({ holeNum, netScore: minNet, recipients: winEntry.recipients });
+                        }
+                    }
+                }
+            } else {
+                // Individual-ball formats: D1-S2 Better Score (90%), D1-S3 Combined (100%), D2-S1 Shamble (70%), D2-S3 Singles (100%)
+                let allowance = 1.0;
+                if (sessionNum === 2) allowance = 0.90;
+                else if (sessionNum === 4) allowance = 0.70;
+
+                const playerMatchLookup = {};
+                sessionMatches.forEach(m => {
+                    m.burnie.forEach(pid => { playerMatchLookup[pid] = { match: m, side: 'burnie' }; });
+                    m.port.forEach(pid => { playerMatchLookup[pid] = { match: m, side: 'port' }; });
+                });
+
+                const activePlayers = allPlayers.filter(p => {
+                    const ch = calculateNineHoleCH(p.hcp, sessionNum);
+                    const ph = Math.round(ch * allowance);
+                    playerResults[p.id].ph = ph;
+                    if (partMap[p.id]) {
+                        totalPot += entryFee;
+                        return true;
+                    }
+                    return false;
+                });
+
+                for (let hIdx = 0; hIdx < 9; hIdx++) {
+                    const holeNum = sessionCourses[sessionNum].holes[hIdx].num;
+                    const contenders = [];
+                    activePlayers.forEach(p => {
+                        const ref = playerMatchLookup[p.id];
+                        if (!ref) return;
+                        const hScore = ref.match.scores[hIdx];
+                        if (!hScore || !hScore[ref.side]) return;
+                        const rawVal = hScore[ref.side][p.id];
+                        if (rawVal === undefined || rawVal === '' || isNaN(parseInt(rawVal, 10))) return;
+                        const strokes = getHoleStrokesForMH(playerResults[p.id].ph, sessionNum, hIdx);
+                        const netScore = parseInt(rawVal, 10) - strokes;
+                        contenders.push({ pid: p.id, netScore });
+                    });
+
+                    if (contenders.length >= 2) {
+                        const minNet = Math.min(...contenders.map(c => c.netScore));
+                        const tiedLow = contenders.filter(c => c.netScore === minNet);
+                        if (tiedLow.length === 1) {
+                            const winPid = tiedLow[0].pid;
+                            playerResults[winPid].skinsWon += 1;
+                            playerResults[winPid].wonHoles.push(holeNum);
+                            holeWinners.push({ holeNum, netScore: minNet, recipients: [winPid] });
+                        }
+                    }
+                }
+            }
+
+            const totalSkinsCount = holeWinners.length;
+            const valuePerSkin = totalSkinsCount > 0 ? totalPot / totalSkinsCount : 0;
+
+            Object.values(playerResults).forEach(pr => {
+                pr.winnings = pr.skinsWon * valuePerSkin;
+            });
+
+            return {
+                sessionNum,
+                isTeamFormat,
+                entryFee,
+                totalPot,
+                totalSkinsCount,
+                valuePerSkin,
+                playerResults,
+                holeWinners
+            };
+        }
+
+        function setActiveSkinsSession(s) {
+            activeSkinsSession = s;
+            renderSkins();
+        }
+        window.setActiveSkinsSession = setActiveSkinsSession;
+
+        function setSkinsViewMode(mode) {
+            skinsViewMode = mode;
+            renderSkins();
+        }
+        window.setSkinsViewMode = setSkinsViewMode;
+
+        function toggleSkinParticipant(sessionNum, playerId) {
+            if (!isAdmin) return;
+            if (!skinsConfig.participants[sessionNum]) skinsConfig.participants[sessionNum] = {};
+            skinsConfig.participants[sessionNum][playerId] = !skinsConfig.participants[sessionNum][playerId];
+            saveState();
+            renderSkins();
+        }
+        window.toggleSkinParticipant = toggleSkinParticipant;
+
+        function setAllSkinsParticipants(sessionNum, stateBool) {
+            if (!isAdmin) return;
+            const nextMap = {};
+            if (stateBool) {
+                [...rosters.burnie, ...rosters.port].forEach(p => { nextMap[p.id] = true; });
+            }
+            skinsConfig.participants[sessionNum] = nextMap;
+            saveState();
+            renderSkins();
+            showToast(stateBool ? 'All 24 players added to Skins' : 'Cleared Skins participants');
+        }
+        window.setAllSkinsParticipants = setAllSkinsParticipants;
+
+        function updateSkinsEntryFee(sessionNum, val) {
+            if (!isAdmin) return;
+            skinsConfig.entryFees[sessionNum] = Math.max(0, parseFloat(val) || 0);
+            saveState();
+            renderSkins();
+            showToast('Skins entry fee updated');
+        }
+        window.updateSkinsEntryFee = updateSkinsEntryFee;
+
+        function renderSkins() {
+            const container = document.getElementById('main-view-container');
+            const sessionLabels = {
+                1: 'D1-S1',
+                2: 'D1-S2',
+                3: 'D1-S3',
+                4: 'D2-S1',
+                5: 'D2-S2',
+                6: 'D2-S3'
+            };
+            const sessionFullNames = {
+                1: 'D1-S1 • Scramble (Team Net)',
+                2: 'D1-S2 • Better Score (Ind. Net)',
+                3: 'D1-S3 • Combined (Ind. Net)',
+                4: 'D2-S1 • Shamble (Ind. Net)',
+                5: 'D2-S2 • Alt Shot (Team Net)',
+                6: 'D2-S3 • Singles (Ind. Net)'
+            };
+
+            const modeToggleHtml = `
+                <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+                    <button onclick="setSkinsViewMode('session')" class="flex-1 py-1.5 px-2.5 rounded-lg font-bold transition ${skinsViewMode === 'session' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'}">
+                        Session Setup & Payouts
+                    </button>
+                    <button onclick="setSkinsViewMode('matrix')" class="flex-1 py-1.5 px-2.5 rounded-lg font-bold transition ${skinsViewMode === 'matrix' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'}">
+                        All-Sessions Matrix
+                    </button>
+                </div>
+            `;
+
+            if (skinsViewMode === 'matrix') {
+                const allCalcs = {};
+                for (let s = 1; s <= 6; s++) allCalcs[s] = calculateSessionSkins(s);
+
+                const allPlayers = [
+                    ...rosters.burnie.map(p => ({ ...p, team: 'burnie' })),
+                    ...rosters.port.map(p => ({ ...p, team: 'port' }))
+                ];
+
+                let rowsHtml = '';
+                allPlayers.forEach(p => {
+                    let grandTotal = 0;
+                    let colsHtml = '';
+                    for (let s = 1; s <= 6; s++) {
+                        const pr = allCalcs[s].playerResults[p.id];
+                        grandTotal += pr.winnings;
+                        const skinsLabel = pr.skinsWon > 0 ? (Number.isInteger(pr.skinsWon) ? pr.skinsWon : pr.skinsWon.toFixed(1)) : '0';
+                        colsHtml += `
+                            <td class="px-2 py-2 text-center border-l border-slate-800">
+                                ${pr.participating
+                                    ? `<span class="text-emerald-400 font-bold">✓</span>`
+                                    : `<span class="text-slate-600">—</span>`}
+                            </td>
+                            <td class="px-2 py-2 text-center font-semibold ${pr.skinsWon > 0 ? 'text-amber-300' : 'text-slate-400'}">
+                                ${pr.participating ? skinsLabel : ''}
+                            </td>
+                            <td class="px-2 py-2 text-right font-bold ${pr.winnings > 0 ? 'text-emerald-400' : 'text-slate-500'}">
+                                ${pr.winnings > 0 ? `$${pr.winnings.toFixed(2)}` : ''}
+                            </td>
+                        `;
+                    }
+
+                    rowsHtml += `
+                        <tr class="border-b border-slate-800/80 hover:bg-slate-800/40">
+                            <td class="sticky left-0 bg-slate-900 px-2.5 py-2 font-bold whitespace-nowrap ${p.team === 'burnie' ? 'text-emerald-300' : 'text-purple-300'}">
+                                ${p.name}
+                            </td>
+                            ${colsHtml}
+                            <td class="px-2.5 py-2 text-right font-black border-l border-slate-700 ${grandTotal > 0 ? 'text-amber-300' : 'text-slate-500'}">
+                                $${grandTotal.toFixed(2)}
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                container.innerHTML = `
+                    <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
+                        <div class="border-b border-slate-700 pb-2.5">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Net Skins (Using PH)</span>
+                            <h2 class="text-base font-extrabold text-white">BPC Skins — Full 6-Session Matrix</h2>
+                        </div>
+                        ${modeToggleHtml}
+                        <div class="overflow-x-auto rounded-xl border border-slate-700 bg-slate-900">
+                            <table class="w-full text-left border-collapse text-[11px]">
+                                <thead>
+                                    <tr class="bg-slate-950 text-slate-300 border-b border-slate-700">
+                                        <th class="sticky left-0 bg-slate-950 px-2.5 py-2 font-bold">Session</th>
+                                        ${[1, 2, 3, 4, 5, 6].map(s => `
+                                            <th colspan="3" class="px-2 py-2 text-center border-l border-slate-800 font-extrabold text-amber-300">
+                                                ${sessionLabels[s]} ($${allCalcs[s].entryFee}/player • Pot $${allCalcs[s].totalPot})
+                                            </th>
+                                        `).join('')}
+                                        <th class="px-2.5 py-2 text-right border-l border-slate-700 font-extrabold text-white">Total</th>
+                                    </tr>
+                                    <tr class="bg-slate-950/70 text-[10px] text-slate-400 border-b border-slate-800">
+                                        <th class="sticky left-0 bg-slate-950 px-2.5 py-1.5">Player</th>
+                                        ${[1, 2, 3, 4, 5, 6].map(() => `
+                                            <th class="px-2 py-1.5 text-center border-l border-slate-800">In?</th>
+                                            <th class="px-2 py-1.5 text-center">Skins</th>
+                                            <th class="px-2 py-1.5 text-right">Win $</th>
+                                        `).join('')}
+                                        <th class="px-2.5 py-1.5 text-right border-l border-slate-700">Winnings</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${rowsHtml}</tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Default: Single Session Setup & Payout View
+            const calc = calculateSessionSkins(activeSkinsSession);
+            const sessionPillsHtml = [1, 2, 3, 4, 5, 6].map(s => `
+                <button onclick="setActiveSkinsSession(${s})" class="flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold border transition ${s === activeSkinsSession ? 'bg-emerald-600 text-white border-emerald-400 shadow' : 'bg-slate-900 text-slate-300 border-slate-700 hover:text-white'}">
+                    ${sessionLabels[s]}
+                </button>
+            `).join('');
+
+            const allPlayers = [
+                ...rosters.burnie.map(p => ({ ...p, team: 'burnie' })),
+                ...rosters.port.map(p => ({ ...p, team: 'port' }))
+            ];
+
+            let playersHtml = '';
+            allPlayers.forEach(p => {
+                const pr = calc.playerResults[p.id];
+                const isBurnie = p.team === 'burnie';
+                const ringClass = isBurnie ? 'border-emerald-500' : 'border-purple-500';
+                const skinsDisp = pr.skinsWon > 0 ? (Number.isInteger(pr.skinsWon) ? pr.skinsWon : pr.skinsWon.toFixed(1)) : '0';
+
+                playersHtml += `
+                    <div class="flex items-center justify-between bg-slate-900/80 border ${pr.participating ? 'border-slate-700' : 'border-slate-800/60 opacity-75'} rounded-xl p-2.5 text-xs">
+                        <div class="flex items-center space-x-2.5 min-w-0 pr-2">
+                            <input type="checkbox"
+                                ${pr.participating ? 'checked' : ''}
+                                ${isAdmin ? '' : 'disabled'}
+                                onchange="toggleSkinParticipant(${activeSkinsSession}, '${p.id}')"
+                                class="w-4 h-4 rounded accent-emerald-500 cursor-pointer disabled:cursor-not-allowed flex-shrink-0">
+                            ${getAvatarHtml(p, ringClass)}
+                            <div class="truncate">
+                                <div class="font-bold text-white truncate">${p.name}</div>
+                                <div class="text-[10px] text-slate-400 flex flex-wrap items-center gap-1">
+                                    <span class="${isBurnie ? 'text-emerald-400' : 'text-purple-400'} font-semibold uppercase">${isBurnie ? 'Burnie' : 'Port'}</span>
+                                    <span>• PH ${pr.ph}</span>
+                                    ${pr.soloTeamCover ? `<span class="text-amber-300 font-bold">• Covering Full Team ($${pr.entryOwed})</span>` : ''}
+                                    ${pr.wonHoles.length > 0 ? `<span class="text-emerald-300 font-semibold">• Hole${pr.wonHoles.length > 1 ? 's' : ''} ${pr.wonHoles.join(', ')}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2 flex-shrink-0 text-right">
+                            <div class="bg-slate-800/90 border border-slate-700 rounded-lg px-2 py-1 text-center min-w-[44px]">
+                                <span class="text-[9px] text-slate-400 block leading-none">SKINS</span>
+                                <span class="font-extrabold ${pr.skinsWon > 0 ? 'text-amber-300' : 'text-slate-300'}">${skinsDisp}</span>
+                            </div>
+                            <div class="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-right min-w-[62px]">
+                                <span class="text-[9px] text-slate-400 block leading-none">PAYOUT</span>
+                                <span class="font-black ${pr.winnings > 0 ? 'text-emerald-400' : 'text-slate-500'}">$${pr.winnings.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
+                    <div class="border-b border-slate-700 pb-2.5 flex justify-between items-center">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Net Skins (Playing Handicap)</span>
+                            <h2 class="text-base font-extrabold text-white">BPC Skins</h2>
+                        </div>
+                        <span class="text-[10px] text-slate-400">${isAdmin ? 'Admin Edit On' : 'Unlock Admin to Edit'}</span>
+                    </div>
+
+                    ${modeToggleHtml}
+
+                    <div class="flex space-x-1.5 overflow-x-auto no-scrollbar pb-1">${sessionPillsHtml}</div>
+
+                    <div class="bg-slate-900/90 border border-slate-700/80 rounded-xl p-3 space-y-2.5">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-white">${sessionFullNames[activeSkinsSession]}</span>
+                            <div class="flex items-center space-x-1.5">
+                                <span class="text-[11px] text-slate-400">Entry Fee: $</span>
+                                ${isAdmin
+                                    ? `<input type="number" min="0" step="1" value="${calc.entryFee}" onchange="updateSkinsEntryFee(${activeSkinsSession}, this.value)" class="w-16 bg-slate-950 border border-amber-500/60 rounded-lg px-2 py-1 text-xs text-center font-bold text-amber-300">`
+                                    : `<strong class="text-xs text-amber-300">${calc.entryFee}</strong>`}
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2 text-center pt-1">
+                            <div class="bg-slate-950 border border-slate-800 rounded-lg p-2">
+                                <span class="text-[9px] uppercase text-slate-400 block">Total Pot</span>
+                                <span class="text-sm font-black text-emerald-400">$${calc.totalPot.toFixed(0)}</span>
+                            </div>
+                            <div class="bg-slate-950 border border-slate-800 rounded-lg p-2">
+                                <span class="text-[9px] uppercase text-slate-400 block">Skins Won</span>
+                                <span class="text-sm font-black text-amber-300">${calc.totalSkinsCount}</span>
+                            </div>
+                            <div class="bg-slate-950 border border-slate-800 rounded-lg p-2">
+                                <span class="text-[9px] uppercase text-slate-400 block">Per Skin</span>
+                                <span class="text-sm font-black text-white">$${calc.valuePerSkin.toFixed(2)}</span>
+                            </div>
+                        </div>
+
+                        ${calc.isTeamFormat ? `
+                            <p class="text-[10px] text-amber-300/90 bg-amber-950/30 border border-amber-800/40 rounded-lg px-2.5 py-1.5">
+                                <i class="fa-solid fa-circle-info mr-1"></i>
+                                <strong>Team Format Rule:</strong> Full team entry is $${calc.entryFee * 2} ($${calc.entryFee}/player). If one partner opts out, the participating partner covers the full $${calc.entryFee * 2} team fee and receives 100% of any skins won by their team.
+                            </p>
+                        ` : ''}
+
+                        ${isAdmin ? `
+                            <div class="flex space-x-2 pt-1">
+                                <button onclick="setAllSkinsParticipants(${activeSkinsSession}, true)" class="flex-1 py-1.5 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/70 border border-emerald-800/60 text-emerald-300 text-[11px] font-bold">
+                                    Select All 24
+                                </button>
+                                <button onclick="setAllSkinsParticipants(${activeSkinsSession}, false)" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[11px] font-semibold">
+                                    Clear All
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="space-y-2">${playersHtml}</div>
+                </div>
+            `;
+        }
+
+        // --- Informational Pages ---
         function renderEventAtGlance() {
             document.getElementById('main-view-container').innerHTML = `
                 <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 shadow-lg space-y-4 text-xs text-slate-300 leading-relaxed">
@@ -1146,6 +1761,7 @@
                         <h2 class="text-lg font-extrabold text-white mt-0.5">The Week at a Glance</h2>
                     </div>
 
+                    <!-- Quick Trip Summary -->
                     <div class="bg-slate-900/80 border border-slate-700/70 rounded-xl p-3.5 space-y-2">
                         <div class="flex justify-between gap-2"><span class="text-slate-400 flex-shrink-0">Who:</span><strong class="text-white text-right">(24) lucky invites</strong></div>
                         <div class="flex justify-between gap-2"><span class="text-slate-400 flex-shrink-0">What:</span><span class="text-white text-right">Fun week hanging out playing friendly & semi-competitive golf</span></div>
@@ -1153,6 +1769,7 @@
                         <div class="flex justify-between gap-2"><span class="text-slate-400 flex-shrink-0">Where:</span><strong class="text-emerald-400 text-right">Orlando, FL Area</strong></div>
                     </div>
 
+                    <!-- Lodging -->
                     <div class="bg-slate-900/80 border border-slate-700/70 rounded-xl p-3.5 space-y-2">
                         <h3 class="font-bold text-amber-400 text-sm">Lodging Overview</h3>
                         <p>2 houses rented across the street from each other—each is a <strong class="text-white">12 bedroom / 11 bathroom</strong> house. (<a href="https://www.upstay.com/rentals/2547" target="_blank" rel="noopener noreferrer" class="underline text-amber-300 hover:text-amber-200">House #1</a> • <a href="https://www.upstay.com/rentals/2403" target="_blank" rel="noopener noreferrer" class="underline text-amber-300 hover:text-amber-200">House #2</a>)</p>
@@ -1162,9 +1779,10 @@
                         </ul>
                     </div>
 
+                    <!-- Golf Courses -->
                     <div class="bg-slate-900/80 border border-emerald-900/60 rounded-xl p-3.5 space-y-2">
                         <h3 class="font-bold text-emerald-400 text-sm">Golf Courses</h3>
-                        <p><strong class="text-white">BPC Course 1 (Warm-Up & Skills):</strong> <a href="https://www.shinglecreekgolf.com/wp-content/uploads/SNC-SC-web.pdf" target="_blank" rel="noopener noreferrer" class="underline text-emerald-300 hover:text-emerald-200">Shingles Creek</a> / <a href="https://www.championsgatecountryclub.com/golf/about-the-club" target="_blank" rel="noopener noreferrer" class="underline text-emerald-300 hover:text-emerald-200">Championsgate</a> (18 Holes) – Mon 9/27</p>
+                        <p><strong class="text-white">BPC Course 1 (Warm-Up & Skills):</strong> <a href="https://www.shinglecreekgolf.com/wp-content/uploads/SNC-SC-web.pdf" target="_blank" rel="noopener noreferrer" class="underline text-emerald-300 hover:text-emerald-200">Shingles Creek</a> (18 Holes) – Mon 9/27</p>
                         <p><strong class="text-white">BPC Course 2 (Day 1 of BPC):</strong> <a href="https://www.royalstcloudgolflinks.com/wp-content/uploads/2023/08/ScoreCard.pdf" target="_blank" rel="noopener noreferrer" class="underline text-emerald-300 hover:text-emerald-200">Royal Saint Cloud</a> (27 Holes) – Tue 9/28</p>
                         <p><strong class="text-white">BPC Course 3 (Day 2 of BPC):</strong> <a href="https://www.providence-golf.com/scorecard/" target="_blank" rel="noopener noreferrer" class="underline text-emerald-300 hover:text-emerald-200">Providence Club</a> (27 Holes) – Wed 9/29</p>
                         <div class="pt-1 border-t border-slate-800">
@@ -1173,6 +1791,7 @@
                         </div>
                     </div>
 
+                    <!-- Detailed Itinerary -->
                     <div class="space-y-2.5">
                         <h3 class="font-bold text-white text-sm">Detailed Itinerary</h3>
 
@@ -1264,6 +1883,285 @@
                             <ul class="list-disc pl-4 space-y-1">
                                 <li>House #1 check-out no later than 10:00 AM and travel home.</li>
                             </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Venues Page (Houses, BPC Courses, Optional Courses & Directions Prompt) ---
+        function promptVenueDirections(name, address) {
+            document.getElementById('directions-venue-name').innerText = name;
+            document.getElementById('directions-venue-address').innerText = address;
+            const query = encodeURIComponent(`${name}, ${address}`);
+            document.getElementById('directions-launch-link').href = `https://maps.google.com/?q=${query}`;
+            document.getElementById('directions-modal').classList.remove('opacity-0', 'pointer-events-none');
+        }
+        window.promptVenueDirections = promptVenueDirections;
+
+        function closeDirectionsModal() {
+            document.getElementById('directions-modal').classList.add('opacity-0', 'pointer-events-none');
+        }
+        window.closeDirectionsModal = closeDirectionsModal;
+
+        function updateVenueHouseField(houseKey, field, val) {
+            if (!isAdmin) return;
+            venueHouses[houseKey][field] = val;
+            saveState();
+            showToast('House details saved');
+        }
+        window.updateVenueHouseField = updateVenueHouseField;
+
+        function renderVenues() {
+            const bpcCourses = [
+                {
+                    tag: 'Course 1 • Mon 9/27 (Warm-Up & Skills)',
+                    name: 'Shingle Creek Golf Club',
+                    address: '9939 Universal Blvd, Orlando, FL 32819',
+                    phone: '(407) 996-1559',
+                    tel: '+14079961559',
+                    mapX: '48%',
+                    mapY: '26%',
+                    pinColor: 'bg-amber-400'
+                },
+                {
+                    tag: 'Course 2 • Tue 9/28 (BPC Day 1 - 27 Holes)',
+                    name: 'Royal St. Cloud Golf Links',
+                    address: '5310 Michigan Ave, St. Cloud, FL 34769',
+                    phone: '(407) 891-7010',
+                    tel: '+14078917010',
+                    mapX: '76%',
+                    mapY: '62%',
+                    pinColor: 'bg-emerald-400'
+                },
+                {
+                    tag: 'Course 3 • Wed 9/29 (BPC Day 2 - 27 Holes)',
+                    name: 'Providence Golf Club',
+                    address: '1518 Clubhouse Blvd, Davenport, FL 33837',
+                    phone: '(863) 424-7916',
+                    tel: '+18634247916',
+                    mapX: '26%',
+                    mapY: '72%',
+                    pinColor: 'bg-purple-400'
+                }
+            ];
+
+            const optionalCourses = [
+                { name: 'ChampionsGate Golf Club', address: '8575 White Shark Blvd, Championsgate, FL 33896', phone: '(407) 787-4653', tel: '+14077874653' },
+                { name: "Hawk's Landing Golf Club", address: '8701 World Center Dr, Orlando, FL 32821', phone: '(407) 238-8660', tel: '+14072388660' },
+                { name: 'Orange County National', address: '16301 Phil Ritson Way, Winter Garden, FL 34787', phone: '(407) 656-2626', tel: '+14076562626' },
+                { name: 'Disney Palm / Magnolia / Lake Buena Vista', address: '1950 W Magnolia Palm Dr, Lake Buena Vista, FL 32830', phone: '(407) 939-4653', tel: '+14079394653' },
+                { name: 'Reunion Resort Golf Courses', address: '7593 Gathering Dr, Kissimmee, FL 34747', phone: '(407) 396-3199', tel: '+14073963199' },
+                { name: 'Mystic Dunes Golf Club', address: '7600 Mystic Dunes Ln, Celebration, FL 34747', phone: '(407) 787-5678', tel: '+14077875678' },
+                { name: 'Celebration Golf Club', address: '701 Golfpark Dr, Celebration, FL 34747', phone: '(407) 566-4653', tel: '+14075664653' },
+                { name: 'The Reserve at Orange Lake Resort', address: '8505 W Irlo Bronson Memorial Hwy, Kissimmee, FL 34747', phone: '(407) 239-1050', tel: '+14072391050' }
+            ];
+
+            const renderHouseCard = (key, title, badgeText, listingUrl) => {
+                const h = venueHouses[key];
+                const safeName = title.replace(/'/g, "\\'");
+                const safeAddr = h.address.replace(/'/g, "\\'");
+                return `
+                    <div class="bg-slate-900/80 border border-slate-700/70 rounded-xl p-3.5 space-y-2">
+                        <div class="flex justify-between items-start gap-2">
+                            <div>
+                                <span class="text-[10px] font-bold uppercase text-amber-400 block">${badgeText}</span>
+                                <h4 class="font-bold text-white text-sm">${title}</h4>
+                            </div>
+                            <div class="flex items-center space-x-1.5 flex-shrink-0">
+                                <a href="${listingUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] font-bold text-amber-300">
+                                    Listing
+                                </a>
+                                <button onclick="promptVenueDirections('${safeName}', '${safeAddr}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-[10px] font-bold text-white flex items-center space-x-1">
+                                    <i class="fa-solid fa-location-dot"></i><span>Map</span>
+                                </button>
+                            </div>
+                        </div>
+                        ${isAdmin ? `
+                            <div class="space-y-2 pt-1">
+                                <input type="text" value="${h.address}" onchange="updateVenueHouseField('${key}', 'address', this.value)" placeholder="Street Address" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                                <textarea rows="2" onchange="updateVenueHouseField('${key}', 'instructions', this.value)" placeholder="Check-in & House Instructions" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-300">${h.instructions}</textarea>
+                            </div>
+                        ` : `
+                            <button onclick="promptVenueDirections('${safeName}', '${safeAddr}')" class="text-left text-xs text-emerald-300 underline hover:text-emerald-200 block">
+                                <i class="fa-solid fa-map-pin mr-1"></i>${h.address}
+                            </button>
+                            <p class="text-[11px] text-slate-300 bg-slate-950/60 border border-slate-800 rounded-lg p-2.5">${h.instructions}</p>
+                        `}
+                    </div>
+                `;
+            };
+
+            document.getElementById('main-view-container').innerHTML = `
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 shadow-lg space-y-4 text-xs text-slate-300 leading-relaxed">
+                    <div class="border-b border-slate-700 pb-3 flex justify-between items-center">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Orlando, FL Area Guide</span>
+                            <h2 class="text-lg font-extrabold text-white mt-0.5">BPC Venues & Directions</h2>
+                        </div>
+                        <span class="text-[10px] text-slate-400">Tap any pin or address</span>
+                    </div>
+
+                    <!-- Interactive Orlando Area Venue Map -->
+                    <div class="bg-slate-950 border border-slate-700/80 rounded-2xl p-3 space-y-2">
+                        <div class="flex justify-between items-center text-[10px] text-slate-400">
+                            <span class="font-bold uppercase tracking-wider text-slate-300"><i class="fa-solid fa-map text-emerald-400 mr-1"></i>Orlando Area Venue Map</span>
+                            <span>Tap Pin for Directions</span>
+                        </div>
+                        <div class="relative w-full h-48 rounded-xl overflow-hidden bg-slate-900 border border-slate-800">
+                            <svg viewBox="0 0 400 200" class="w-full h-full opacity-40">
+                                <rect width="400" height="200" fill="#0f172a"/>
+                                <path d="M0,45 Q180,55 400,30" stroke="#334155" stroke-width="4" fill="none"/>
+                                <path d="M40,180 Q160,110 380,95" stroke="#334155" stroke-width="5" fill="none"/>
+                                <path d="M135,0 L155,200" stroke="#334155" stroke-width="3" fill="none"/>
+                                <path d="M275,0 L295,200" stroke="#334155" stroke-width="3" fill="none"/>
+                                <circle cx="95" cy="95" r="18" fill="#1e293b"/>
+                                <circle cx="320" cy="145" r="22" fill="#1e293b"/>
+                                <text x="16" y="20" fill="#64748b" font-size="9" font-weight="bold">I-4 / ORLANDO CORRIDOR</text>
+                                <text x="295" y="185" fill="#64748b" font-size="9" font-weight="bold">ST. CLOUD</text>
+                                <text x="18" y="185" fill="#64748b" font-size="9" font-weight="bold">DAVENPORT / CHAMPIONSGATE</text>
+                            </svg>
+
+                            <!-- Rental Houses Pin -->
+                            <button onclick="promptVenueDirections('BPC Rental Houses (#1 & #2)', '${venueHouses.house1.address.replace(/'/g, "\\'")}')" style="left: 24%; top: 48%;" class="transform -translate-x-1/2 -translate-y-1/2 absolute flex flex-col items-center group">
+                                <span class="px-2 py-0.5 rounded-full bg-rose-500 text-white font-extrabold text-[9px] shadow-lg border border-white/40 whitespace-nowrap group-hover:scale-105 transition">
+                                    <i class="fa-solid fa-house mr-0.5"></i>Houses #1 & #2
+                                </span>
+                            </button>
+
+                            <!-- 3 BPC Event Courses Pins -->
+                            ${bpcCourses.map(c => `
+                                <button onclick="promptVenueDirections('${c.name.replace(/'/g, "\\'")}', '${c.address.replace(/'/g, "\\'")}')" style="left: ${c.mapX}; top: ${c.mapY};" class="transform -translate-x-1/2 -translate-y-1/2 absolute flex flex-col items-center group">
+                                    <span class="px-2 py-0.5 rounded-full ${c.pinColor} text-slate-950 font-extrabold text-[9px] shadow-lg border border-white/50 whitespace-nowrap group-hover:scale-105 transition">
+                                        <i class="fa-solid fa-flag mr-0.5"></i>${c.name.replace(' Golf Club', '').replace(' Golf Links', '')}
+                                    </span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Rental Houses Section -->
+                    <div class="space-y-2.5">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-amber-400 text-sm">Rental Houses</h3>
+                            ${isAdmin ? '<span class="text-[10px] text-amber-300 font-semibold">Admin Edit Active</span>' : ''}
+                        </div>
+                        ${renderHouseCard('house1', 'House #1 (Full Week)', 'Sat 9/25 – Sat 10/2', 'https://www.upstay.com/rentals/2547')}
+                        ${renderHouseCard('house2', 'House #2 (BPC Core Days)', 'Sun 9/26 – Thu 9/30', 'https://www.upstay.com/rentals/2403')}
+                    </div>
+
+                    <!-- Official BPC Event Courses -->
+                    <div class="space-y-2.5">
+                        <h3 class="font-bold text-emerald-400 text-sm">Official BPC Golf Courses</h3>
+                        ${bpcCourses.map(c => `
+                            <div class="bg-slate-900/80 border border-emerald-900/50 rounded-xl p-3.5 space-y-1.5">
+                                <span class="text-[10px] font-bold uppercase text-emerald-400 block">${c.tag}</span>
+                                <div class="flex justify-between items-center gap-2">
+                                    <h4 class="font-bold text-white text-sm">${c.name}</h4>
+                                    <div class="flex items-center space-x-1.5 flex-shrink-0">
+                                        <a href="tel:${c.tel}" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-[10px] font-bold text-slate-200 flex items-center space-x-1">
+                                            <i class="fa-solid fa-phone text-emerald-400"></i><span>Call</span>
+                                        </a>
+                                        <button onclick="promptVenueDirections('${c.name.replace(/'/g, "\\'")}', '${c.address.replace(/'/g, "\\'")}')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-[10px] font-bold text-white flex items-center space-x-1">
+                                            <i class="fa-solid fa-location-dot"></i><span>Map</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button onclick="promptVenueDirections('${c.name.replace(/'/g, "\\'")}', '${c.address.replace(/'/g, "\\'")}')" class="text-left text-xs text-slate-300 underline hover:text-white block">
+                                    ${c.address}
+                                </button>
+                                <p class="text-[11px] text-slate-400">Pro Shop: <a href="tel:${c.tel}" class="text-emerald-300 font-semibold">${c.phone}</a></p>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Optional Golf Round Possibilities -->
+                    <div class="space-y-2.5">
+                        <div>
+                            <h3 class="font-bold text-purple-400 text-sm">Optional Golf Courses (Possibilities)</h3>
+                            <p class="text-[11px] text-slate-400">Potential venues for optional pre/post-BPC rounds.</p>
+                        </div>
+                        <div class="space-y-2">
+                            ${optionalCourses.map(c => `
+                                <div class="bg-slate-900/70 border border-slate-700/60 rounded-xl p-3 flex justify-between items-center gap-2">
+                                    <div class="min-w-0">
+                                        <h4 class="font-bold text-white text-xs truncate">${c.name}</h4>
+                                        <button onclick="promptVenueDirections('${c.name.replace(/'/g, "\\'")}', '${c.address.replace(/'/g, "\\'")}')" class="text-left text-[11px] text-slate-300 underline hover:text-white truncate block max-w-full">
+                                            ${c.address}
+                                        </button>
+                                        <a href="tel:${c.tel}" class="text-[10px] text-purple-300 font-semibold">${c.phone}</a>
+                                    </div>
+                                    <div class="flex items-center space-x-1.5 flex-shrink-0">
+                                        <a href="tel:${c.tel}" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center justify-center text-purple-300" title="Call Pro Shop">
+                                            <i class="fa-solid fa-phone text-xs"></i>
+                                        </a>
+                                        <button onclick="promptVenueDirections('${c.name.replace(/'/g, "\\'")}', '${c.address.replace(/'/g, "\\'")}')" class="w-8 h-8 rounded-lg bg-emerald-600 hover:bg-emerald-500 flex items-center justify-center text-white" title="Get Directions">
+                                            <i class="fa-solid fa-diamond-turn-right text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderHandicaps() {
+            document.getElementById('main-view-container').innerHTML = `
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 shadow-lg space-y-4 text-xs text-slate-300 leading-relaxed">
+                    <div class="border-b border-slate-700 pb-3">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">USGA Rules of Handicapping</span>
+                        <h2 class="text-lg font-extrabold text-white mt-0.5">Handicaps Explained</h2>
+                    </div>
+
+                    <p>You're probably reading this because you asked me about how handicaps will be handled for this event and I redirected you here to read more. Handicaps will be used for the BPC in multiple ways. They will be applied in each Match Session and will also be used for individual contests (aka. NET Skins, etc.). Because USGA suggests playing off the lowest Playing Handicap within a match, the handicap strokes awarded on the Match Scorecard will differ from the handicap stroke allocation for a NET Skins competition. The app will consider all of this when the scores are entered into the Scorecards. Refer to USGA's website for more info if you so choose.</p>
+
+                    <p>Everyone will be assigned a <strong class="text-white">Handicap Index (HI)</strong> for this event. A HI is USGA's attempt to quantify a player's abilities using recent rounds results and it also considers the wide range of course variables (such as length, hazards, etc.). The USGA developed the <strong class="text-white">GHIN (Golf Handicap and Information Network)</strong> to calculate HI. However, 1.) very few golfers elect to pay an annual fee for GHIN to keep their HI, and 2.) even players who use GHIN actually understand how the system is supposed to be used. For one example, the GHIN has a "maximum stroke rule" in place to prevent players from reporting excessively bad scores on a hole...but very few people know or adhere to that rule.</p>
+
+                    <div class="bg-slate-900/80 border border-emerald-900/50 p-3.5 rounded-xl">
+                        <h4 class="font-bold text-emerald-400 mb-1">Non-GHIN Calculation (70% Rule)</h4>
+                        <p>From my experience, a player's HI is approximately <strong class="text-white">70% of the score they "typically" shoot on an "average" par 72 course</strong>. I know, there's still some subjectivity in there but that's what I've found from my days running a Men's Golf Association. So for those who don't have a GHIN to report, we will use 70% of their "self-reported" average round. I also know this relies on the honor system to responsibly report this score but golf is a game of integrity so anyone can cheat on their GHIN index just as one can when self-reporting their average score.</p>
+                    </div>
+
+                    <p>With a HI, a <strong class="text-white">Course Handicap (CH)</strong> can be calculated for any given course using USGA's equation along with the Course Par, Course Rating and Course Slope. That CH is then further modified based on whatever match format is being played to arrive at the Player's <strong class="text-white">Playing Handicap (PH)</strong>. The allowances come from USGA's Rules of Handicapping Appendix C. Then all players within a match are supposed to play off the lowest player's PH (meaning, the lowest handicap player should play as a 0 (zero). So refer to that as their <strong class="text-white">Match Handicap (MH)</strong>.</p>
+
+                    <div class="space-y-2 pt-1">
+                        <p class="font-semibold text-white">Here is a summary of the more common match formats played and the USGA Allowance for each Team format. The allowance for Singles matches is 100% (meaning PH = CH).</p>
+                        <div class="overflow-x-auto rounded-xl border border-slate-700 bg-slate-900/90">
+                            <table class="w-full text-left border-collapse text-[11px]">
+                                <thead>
+                                    <tr class="bg-slate-950 text-amber-400 border-b border-slate-700">
+                                        <th class="p-2.5 font-bold">Player on Team</th>
+                                        <th class="p-2.5 font-bold">Four-Ball<span class="block text-[9px] font-normal text-slate-400">(Best Score)</span></th>
+                                        <th class="p-2.5 font-bold">Combined<span class="block text-[9px] font-normal text-slate-400">(Total of 2)</span></th>
+                                        <th class="p-2.5 font-bold">Scramble<span class="block text-[9px] font-normal text-slate-400">(35%L / 15%H)</span></th>
+                                        <th class="p-2.5 font-bold">Greensomes<span class="block text-[9px] font-normal text-slate-400">(60%L / 40%H)</span></th>
+                                        <th class="p-2.5 font-bold">Foursomes<span class="block text-[9px] font-normal text-slate-400">(Alt Shot)</span></th>
+                                        <th class="p-2.5 font-bold">Shamble<span class="block text-[9px] font-normal text-slate-400">(70%)</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800">
+                                    <tr>
+                                        <td class="p-2.5 font-bold text-emerald-400">Lower handicap</td>
+                                        <td class="p-2.5 text-white font-semibold">90%</td>
+                                        <td class="p-2.5 text-white font-semibold">100%</td>
+                                        <td class="p-2.5 text-white font-semibold">35%</td>
+                                        <td class="p-2.5 text-white font-semibold">60%</td>
+                                        <td class="p-2.5 text-white font-semibold">50%</td>
+                                        <td class="p-2.5 text-white font-semibold">70%</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2.5 font-bold text-purple-400">Higher handicap</td>
+                                        <td class="p-2.5 text-white font-semibold">90%</td>
+                                        <td class="p-2.5 text-white font-semibold">100%</td>
+                                        <td class="p-2.5 text-white font-semibold">15%</td>
+                                        <td class="p-2.5 text-white font-semibold">40%</td>
+                                        <td class="p-2.5 text-white font-semibold">50%</td>
+                                        <td class="p-2.5 text-white font-semibold">70%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -1382,64 +2280,6 @@
             `;
         }
 
-        function renderHandicaps() {
-            document.getElementById('main-view-container').innerHTML = `
-                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 shadow-lg space-y-4 text-xs text-slate-300 leading-relaxed">
-                    <div class="border-b border-slate-700 pb-3">
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">USGA Rules of Handicapping • Appendix C</span>
-                        <h2 class="text-lg font-extrabold text-white mt-0.5">Handicaps Explained</h2>
-                    </div>
-
-                    <p>You're probably reading this because you asked me about how handicaps will be handled for this event and I redirected you here to read more. Handicaps will be used for the BPC in multiple ways. They will be applied in each Match Session and will also be used for individual contests (aka. NET Skins, etc.). Because USGA suggests playing off the lowest Playing Handicap within a match, the handicap strokes awarded on the Match Scorecard will differ from the handicap stroke allocation for a NET Skins competition. The app will consider all of this when the scores are entered into the Scorecards. Refer to USGA's website for more info if you so choose.</p>
-
-                    <p>Everyone will be assigned a Handicap Index (HI) for this event. A HI is USGA's attempt to quantify a player's abilities using recent rounds results and it also considers the wide range of course variables (such as length, hazards, etc.). The USGA developed the GHIN (Golf Handicap and Information Network) to calculate HI. However, 1.) very few golfers elect to pay an annual fee for GHIN to keep their HI, and 2.) even players who use GHIN actually understand how the system is supposed to be used. For one example, the GHIN has a "maximum stroke rule" in place to prevent players from reporting excessively bad scores on a hole...but very few people know or adhere to that rule.</p>
-
-                    <p>From my experience, a player's HI is approximately 70% of the score they "typically" shoot on an "average" par 72 course. I know, there's still some subjectivity in there but that's what I've found from my days running a Men's Golf Association. So for those who don't have a GHIN to report, we will use 70% of their "self-reported" average round. I also know this relies on the honor system to responsibly report this score but golf is a game of integrity so anyone can cheat on their GHIN index just as one can when self-reporting their average score.</p>
-
-                    <p>With a HI, a Course Handicap (CH) can be calculated for any given course using USGA's equation along with the Course Par, Course Rating and Course Slope. That CH is then further modified based on whatever match format is being played to arrive at the Player's Playing Handicap (PH). The allowances come from USGA's Rules of Handicapping Appendix C. Then all players within a match are supposed to play off the lowest player's PH (meaning, the lowest handicap player should play as a 0 (zero). SO refer to that as their Match Handicap (MH).</p>
-
-                    <div class="bg-slate-900/80 border border-slate-700/70 rounded-xl p-3 space-y-2.5">
-                        <p class="text-white font-semibold">Here is a summary of the more common match formats played and the USGA Allowance for each Team format. The allowance for Singles matches is 100% (meaning PH = CH).</p>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse text-[11px]">
-                                <thead>
-                                    <tr class="bg-slate-950 text-amber-400 border-b border-slate-700">
-                                        <th class="p-2 font-bold">Player on Team</th>
-                                        <th class="p-2 font-bold">Four-Ball (aka. Best Score)</th>
-                                        <th class="p-2 font-bold">Combined (aka. Total score of 2)</th>
-                                        <th class="p-2 font-bold">Scramble (aka. Captain's Choice) 35%L/15%H</th>
-                                        <th class="p-2 font-bold">Greensomes (aka. Select Drive Alternate Shot) 60%L/40%H</th>
-                                        <th class="p-2 font-bold">Foursomes (aka. Alternate Shot)</th>
-                                        <th class="p-2 font-bold">Shamble (aka. Select Drive, Best Score) 70%</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-800 text-slate-200">
-                                    <tr class="bg-slate-900/60">
-                                        <td class="p-2 font-semibold text-emerald-400">Lower handicap</td>
-                                        <td class="p-2">90%</td>
-                                        <td class="p-2">100%</td>
-                                        <td class="p-2">35%</td>
-                                        <td class="p-2">60%</td>
-                                        <td class="p-2">50%</td>
-                                        <td class="p-2">70%</td>
-                                    </tr>
-                                    <tr class="bg-slate-900/40">
-                                        <td class="p-2 font-semibold text-purple-400">Higher handicap</td>
-                                        <td class="p-2">90%</td>
-                                        <td class="p-2">100%</td>
-                                        <td class="p-2">15%</td>
-                                        <td class="p-2">40%</td>
-                                        <td class="p-2">50%</td>
-                                        <td class="p-2">70%</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
         function renderInvitation() {
             document.getElementById('main-view-container').innerHTML = `
                 <div class="bg-gradient-to-b from-slate-800 to-slate-900 border border-amber-500/40 rounded-2xl p-5 shadow-xl space-y-4 text-xs text-slate-200 leading-relaxed">
@@ -1460,37 +2300,83 @@
             `;
         }
 
-        // --- Pics/Vids Cloudinary Upload & Gallery ---
+        // --- Pics/Vids Page (Cloudinary Upload & Feed) ---
+        async function handleMediaUpload(event) {
+            const files = Array.from(event.target.files || []);
+            if (files.length === 0) return;
+
+            const statusEl = document.getElementById('upload-status-text');
+            statusEl.innerText = `Uploading ${files.length} file(s)...`;
+            statusEl.classList.remove('hidden');
+
+            for (const file of files) {
+                try {
+                    const isVideo = file.type.startsWith('video/');
+                    const resourceType = isVideo ? 'video' : 'image';
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+                    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await res.json();
+                    if (data.secure_url) {
+                        uploadedMedia.unshift({
+                            id: data.public_id || String(Date.now()),
+                            url: data.secure_url,
+                            type: resourceType,
+                            name: file.name,
+                            uploadedAt: new Date().toLocaleDateString()
+                        });
+                    }
+                } catch (err) {
+                    console.error('Upload error:', err);
+                    showToast('Upload failed for ' + file.name);
+                }
+            }
+
+            saveMedia();
+            statusEl.classList.add('hidden');
+            event.target.value = '';
+            renderPicsVids();
+            showToast('Upload complete!');
+        }
+        window.handleMediaUpload = handleMediaUpload;
+
+        function deleteMediaItem(idx) {
+            if (!isAdmin) return;
+            uploadedMedia.splice(idx, 1);
+            saveMedia();
+            renderPicsVids();
+            showToast('Media item removed');
+        }
+        window.deleteMediaItem = deleteMediaItem;
+
         function renderPicsVids() {
             const container = document.getElementById('main-view-container');
             let galleryHtml = '';
 
             if (uploadedMedia.length === 0) {
                 galleryHtml = `
-                    <div class="bg-slate-900/70 border border-slate-700/60 rounded-xl p-6 text-center text-xs text-slate-400">
-                        <i class="fa-solid fa-photo-film text-2xl text-slate-500 mb-2 block"></i>
-                        No photos or videos uploaded yet. Choose a photo or video above to share with the trip!
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-6 text-center text-xs text-slate-400">
+                        <i class="fa-solid fa-images text-2xl text-slate-600 mb-2 block"></i>
+                        No photos or videos uploaded yet. Be the first to share highlights from the trip!
                     </div>
                 `;
             } else {
                 galleryHtml = `<div class="grid grid-cols-1 gap-3">`;
                 uploadedMedia.forEach((item, idx) => {
-                    const isVideo = item.resourceType === 'video' || /\.(mp4|mov|webm|m4v)$/i.test(item.url);
                     galleryHtml += `
-                        <div class="bg-slate-900/85 border border-slate-700/70 rounded-xl overflow-hidden shadow">
-                            ${isVideo
-                                ? `<video src="${item.url}" controls playsinline class="w-full max-h-64 object-cover bg-black"></video>`
-                                : `<img src="${item.url}" alt="${item.caption || 'Trip Media'}" class="w-full max-h-64 object-cover bg-black" onerror="this.src='https://placehold.co/600x360/0f172a/e2e8f0?text=Media+Unavailable'">`
+                        <div class="bg-slate-900/90 border border-slate-700/80 rounded-xl overflow-hidden shadow">
+                            ${item.type === 'video'
+                                ? `<video src="${item.url}" controls playsinline class="w-full max-h-80 bg-black object-contain"></video>`
+                                : `<img src="${item.url}" alt="${item.name || 'BPC Photo'}" class="w-full max-h-96 object-cover">`
                             }
-                            <div class="p-3 flex items-center justify-between gap-2 text-xs">
-                                <div class="min-w-0">
-                                    <p class="font-semibold text-white truncate">${item.caption || (isVideo ? 'Trip Video' : 'Trip Photo')}</p>
-                                    <p class="text-[10px] text-slate-400">${item.uploadedBy ? `By ${item.uploadedBy} • ` : ''}${item.date || ''}</p>
-                                </div>
-                                <div class="flex items-center space-x-2 flex-shrink-0">
-                                    <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-emerald-400 px-2.5 py-1 rounded-lg border border-slate-700 font-semibold">Open</a>
-                                    ${isAdmin ? `<button onclick="removeMediaItem(${idx})" class="text-[11px] bg-red-950/70 hover:bg-red-900 text-red-300 px-2 py-1 rounded-lg border border-red-800/60"><i class="fa-solid fa-trash"></i></button>` : ''}
-                                </div>
+                            <div class="px-3 py-2 flex justify-between items-center text-[11px] text-slate-400">
+                                <span class="truncate pr-2">${item.name || 'Trip Highlight'} • ${item.uploadedAt || ''}</span>
+                                ${isAdmin ? `<button onclick="deleteMediaItem(${idx})" class="text-rose-400 hover:text-rose-300 font-semibold"><i class="fa-solid fa-trash"></i></button>` : ''}
                             </div>
                         </div>
                     `;
@@ -1499,117 +2385,25 @@
             }
 
             container.innerHTML = `
-                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-4 text-xs text-slate-200">
-                    <div class="border-b border-slate-700 pb-3">
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Trip Photo & Video Feed</span>
-                        <h2 class="text-lg font-extrabold text-white mt-0.5">Pics/Vids</h2>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Cloud: <strong class="text-slate-200">${CLOUDINARY_CLOUD_NAME}</strong> • Preset: <strong class="text-slate-200">${CLOUDINARY_UPLOAD_PRESET}</strong></p>
-                    </div>
-
-                    <div class="bg-slate-900/80 border border-slate-700/70 rounded-xl p-3.5 space-y-3">
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-4">
+                    <div class="border-b border-slate-700 pb-3 flex justify-between items-center">
                         <div>
-                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Your Name (Optional)</label>
-                            <input type="text" id="media-uploader-name" placeholder="e.g., Chris or Kevin" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Shared Trip Feed</span>
+                            <h2 class="text-lg font-extrabold text-white mt-0.5">BPC Pics & Vids</h2>
                         </div>
-                        <div>
-                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Caption (Optional)</label>
-                            <input type="text" id="media-caption-input" placeholder="e.g., Tap-in birdie on #5" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Select Photo or Video</label>
-                            <input type="file" id="cloudinary-file-input" accept="image/*,video/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500">
-                        </div>
-                        <button onclick="uploadMediaToCloudinary()" id="cloudinary-upload-btn" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-purple-600 hover:from-emerald-500 hover:to-purple-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition flex items-center justify-center space-x-2">
+                        <label class="cursor-pointer bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow transition active:scale-95 flex items-center space-x-1.5">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
-                            <span id="cloudinary-upload-btn-text">Upload Pic / Vid</span>
-                        </button>
-                        <p id="cloudinary-upload-status" class="text-[11px] text-slate-400 hidden"></p>
+                            <span>Upload</span>
+                            <input type="file" accept="image/*,video/*" multiple onchange="handleMediaUpload(event)" class="hidden">
+                        </label>
                     </div>
-
-                    <div class="space-y-2.5">
-                        <h3 class="text-xs font-bold uppercase tracking-wide text-slate-300">Uploaded Pics & Vids (${uploadedMedia.length})</h3>
-                        ${galleryHtml}
-                    </div>
+                    <p id="upload-status-text" class="hidden text-xs text-amber-400 font-semibold text-center animate-pulse">Uploading...</p>
+                    ${galleryHtml}
                 </div>
             `;
         }
 
-        async function uploadMediaToCloudinary() {
-            const fileInput = document.getElementById('cloudinary-file-input');
-            const captionInput = document.getElementById('media-caption-input');
-            const nameInput = document.getElementById('media-uploader-name');
-            const btn = document.getElementById('cloudinary-upload-btn');
-            const btnText = document.getElementById('cloudinary-upload-btn-text');
-            const statusEl = document.getElementById('cloudinary-upload-status');
-
-            if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-                showToast('Please select a photo or video first');
-                return;
-            }
-
-            const file = fileInput.files[0];
-            const isVideoFile = file.type && file.type.startsWith('video/');
-            const resourceType = isVideoFile ? 'video' : 'image';
-            const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`;
-
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-
-            btn.disabled = true;
-            btnText.innerText = 'Uploading...';
-            statusEl.classList.remove('hidden', 'text-red-400', 'text-emerald-400');
-            statusEl.classList.add('text-amber-300');
-            statusEl.innerText = `Uploading ${file.name} to Cloudinary...`;
-
-            try {
-                const resp = await fetch(endpoint, {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await resp.json();
-
-                if (!resp.ok || !data.secure_url) {
-                    throw new Error(data.error && data.error.message ? data.error.message : 'Upload failed');
-                }
-
-                uploadedMedia.unshift({
-                    url: data.secure_url,
-                    publicId: data.public_id || '',
-                    resourceType: data.resource_type || resourceType,
-                    caption: captionInput ? captionInput.value.trim() : '',
-                    uploadedBy: nameInput ? nameInput.value.trim() : '',
-                    date: new Date().toLocaleDateString()
-                });
-                saveMedia();
-
-                statusEl.classList.remove('text-amber-300', 'text-red-400');
-                statusEl.classList.add('text-emerald-400');
-                statusEl.innerText = 'Upload complete!';
-                showToast('Uploaded to Pics/Vids!');
-                renderPicsVids();
-            } catch (err) {
-                console.error('Cloudinary upload error:', err);
-                statusEl.classList.remove('text-amber-300', 'text-emerald-400');
-                statusEl.classList.add('text-red-400');
-                statusEl.innerText = `Upload error: ${err.message}`;
-                showToast('Upload failed');
-                btn.disabled = false;
-                btnText.innerText = 'Upload Pic / Vid';
-            }
-        }
-        window.uploadMediaToCloudinary = uploadMediaToCloudinary;
-
-        function removeMediaItem(idx) {
-            if (!isAdmin) return;
-            uploadedMedia.splice(idx, 1);
-            saveMedia();
-            renderPicsVids();
-            showToast('Item removed');
-        }
-        window.removeMediaItem = removeMediaItem;
-
-        // --- Admin Course Editor (6 Sessions x 9 Holes) ---
+        // --- Admin Course Editor (6 Sessions x 9 Holes + Rating & Slope) ---
         function renderCourseEditor() {
             if (!isAdmin) {
                 switchTab('matches');
@@ -1617,6 +2411,7 @@
             }
             const container = document.getElementById('main-view-container');
             const cData = sessionCourses[activeCourseSession];
+            const par9 = getNineHolePar(activeCourseSession);
 
             let tabsHtml = `<div class="flex space-x-1.5 overflow-x-auto no-scrollbar pb-2">`;
             for (let s = 1; s <= 6; s++) {
@@ -1661,6 +2456,20 @@
                         <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Course / Nine Name</label>
                         <input type="text" value="${cData.courseName}" onchange="updateCourseName(${activeCourseSession}, this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-semibold">
                     </div>
+                    <div class="grid grid-cols-3 gap-2 bg-slate-900/80 border border-slate-700/70 p-2.5 rounded-xl">
+                        <div class="text-center">
+                            <span class="text-[9px] text-slate-400 uppercase block">9-Hole Par</span>
+                            <span class="text-sm font-extrabold text-emerald-400">${par9}</span>
+                        </div>
+                        <div>
+                            <label class="text-[9px] text-slate-400 uppercase block text-center">9H Rating (CR)</label>
+                            <input type="number" step="0.1" value="${cData.rating}" onchange="updateCourseMeta(${activeCourseSession}, 'rating', parseFloat(this.value)||36.0)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-center font-bold text-white">
+                        </div>
+                        <div>
+                            <label class="text-[9px] text-slate-400 uppercase block text-center">9H Slope</label>
+                            <input type="number" step="1" value="${cData.slope}" onchange="updateCourseMeta(${activeCourseSession}, 'slope', parseInt(this.value, 10)||113)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-center font-bold text-amber-400">
+                        </div>
+                    </div>
                     <div class="space-y-2 pt-1">${holesHtml}</div>
                 </div>
             `;
@@ -1679,9 +2488,17 @@
         }
         window.updateCourseName = updateCourseName;
 
+        function updateCourseMeta(s, field, val) {
+            sessionCourses[s][field] = val;
+            saveState();
+            showToast(`9-Hole ${field === 'rating' ? 'Rating' : 'Slope'} updated`);
+        }
+        window.updateCourseMeta = updateCourseMeta;
+
         function updateCourseHole(s, idx, field, val) {
             sessionCourses[s].holes[idx][field] = val;
             saveState();
+            renderCourseEditor();
             showToast(`Hole ${idx + 1} updated`);
         }
         window.updateCourseHole = updateCourseHole;
@@ -1755,8 +2572,7 @@
             const cData = sessionCourses[match.session];
             const holeObj = cData.holes[activeHoleIdx];
             const isLocked = !!sessionLocks[match.session];
-            const disabledAttr = isLocked ? 'disabled' : '';
-            const disabledBtnClass = isLocked ? 'opacity-40 cursor-not-allowed' : '';
+            const hdcpInfo = calculateMatchHandicaps(match);
 
             document.getElementById('active-hole-num').innerText = holeObj.num;
             document.getElementById('active-hole-par').innerText = holeObj.par;
@@ -1765,7 +2581,7 @@
             document.getElementById('modal-course-name').innerText = cData.courseName;
             document.getElementById('modal-format-badge').innerText = match.teamEntryOnly ? 'Team Score Entry' : match.format;
 
-            const lockedBanner = document.getElementById('modal-session-locked-banner');
+            const lockedBanner = document.getElementById('modal-locked-banner');
             if (isLocked) lockedBanner.classList.remove('hidden');
             else lockedBanner.classList.add('hidden');
 
@@ -1779,32 +2595,42 @@
             if (!match.scores[activeHoleIdx]) match.scores[activeHoleIdx] = { burnie: {}, port: {} };
             const hScore = match.scores[activeHoleIdx];
 
+            const disabledAttr = isLocked ? 'disabled' : '';
+            const btnDisabledCls = isLocked ? 'opacity-40 cursor-not-allowed' : '';
+
             let html = '';
             if (match.teamEntryOnly) {
                 const bVal = hScore.burnieTeam !== undefined ? hScore.burnieTeam : '';
                 const pVal = hScore.portTeam !== undefined ? hScore.portTeam : '';
+                const bStrokes = getHoleStrokesForMH(hdcpInfo.burnieTeam.mh, match.session, activeHoleIdx);
+                const pStrokes = getHoleStrokesForMH(hdcpInfo.portTeam.mh, match.session, activeHoleIdx);
+                const bNetDisplay = bVal !== '' ? ` • Net <strong>${parseInt(bVal, 10) - bStrokes}</strong>` : '';
+                const pNetDisplay = pVal !== '' ? ` • Net <strong>${parseInt(pVal, 10) - pStrokes}</strong>` : '';
+
                 html = `
                     <div class="space-y-3">
                         <div class="flex justify-between items-center bg-slate-900/90 border border-emerald-900/50 p-3 rounded-xl">
                             <div>
                                 <span class="text-xs font-bold text-emerald-400 block">Team Burnie (${match.format})</span>
-                                <span class="text-[11px] text-slate-300">${bNames}</span>
+                                <span class="text-[11px] text-slate-300 block">${bNames}</span>
+                                <span class="text-[10px] text-emerald-300/80">PH ${hdcpInfo.burnieTeam.ph} • MH ${hdcpInfo.burnieTeam.mh}${bStrokes > 0 ? ` (+${bStrokes} str)` : ''}${bNetDisplay}</span>
                             </div>
                             <div class="flex items-center space-x-1.5">
-                                <button onclick="adjustTeamScore(-1, 'burnie')" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">-</button>
-                                <input type="number" id="team_score_burnie" value="${bVal}" placeholder="--" ${disabledAttr} onchange="saveTeamScore(this.value, 'burnie')" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${disabledBtnClass}">
-                                <button onclick="adjustTeamScore(1, 'burnie')" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">+</button>
+                                <button ${disabledAttr} onclick="adjustTeamScore(-1, 'burnie')" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${btnDisabledCls}">-</button>
+                                <input ${disabledAttr} type="number" id="team_score_burnie" value="${bVal}" placeholder="--" onchange="saveTeamScore(this.value, 'burnie')" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${btnDisabledCls}">
+                                <button ${disabledAttr} onclick="adjustTeamScore(1, 'burnie')" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${btnDisabledCls}">+</button>
                             </div>
                         </div>
                         <div class="flex justify-between items-center bg-slate-900/90 border border-purple-900/50 p-3 rounded-xl">
                             <div>
                                 <span class="text-xs font-bold text-purple-400 block">Team Port (${match.format})</span>
-                                <span class="text-[11px] text-slate-300">${pNames}</span>
+                                <span class="text-[11px] text-slate-300 block">${pNames}</span>
+                                <span class="text-[10px] text-purple-300/80">PH ${hdcpInfo.portTeam.ph} • MH ${hdcpInfo.portTeam.mh}${pStrokes > 0 ? ` (+${pStrokes} str)` : ''}${pNetDisplay}</span>
                             </div>
                             <div class="flex items-center space-x-1.5">
-                                <button onclick="adjustTeamScore(-1, 'port')" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">-</button>
-                                <input type="number" id="team_score_port" value="${pVal}" placeholder="--" ${disabledAttr} onchange="saveTeamScore(this.value, 'port')" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${disabledBtnClass}">
-                                <button onclick="adjustTeamScore(1, 'port')" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">+</button>
+                                <button ${disabledAttr} onclick="adjustTeamScore(-1, 'port')" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${btnDisabledCls}">-</button>
+                                <input ${disabledAttr} type="number" id="team_score_port" value="${pVal}" placeholder="--" onchange="saveTeamScore(this.value, 'port')" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${btnDisabledCls}">
+                                <button ${disabledAttr} onclick="adjustTeamScore(1, 'port')" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${btnDisabledCls}">+</button>
                             </div>
                         </div>
                     </div>
@@ -1813,17 +2639,20 @@
                 html += `<div class="space-y-2"><span class="text-[10px] font-bold text-emerald-400 uppercase">Team Burnie</span>`;
                 match.burnie.forEach(pId => {
                     const p = getPlayerById(pId);
+                    const pHdcp = hdcpInfo.burnie[pId];
+                    const strokes = getHoleStrokesForMH(pHdcp.mh, match.session, activeHoleIdx);
                     const val = hScore.burnie && hScore.burnie[pId] !== undefined ? hScore.burnie[pId] : '';
+                    const netStr = val !== '' ? ` • Net <strong class="text-emerald-300">${parseInt(val, 10) - strokes}</strong>` : '';
                     html += `
                         <div class="flex justify-between items-center bg-slate-900/80 border border-emerald-900/40 p-2.5 rounded-xl">
                             <div>
                                 <span class="text-xs font-semibold text-white block">${p.name}</span>
-                                <span class="text-[10px] text-slate-400">HCP ${p.hcp}</span>
+                                <span class="text-[10px] text-slate-400">CH ${pHdcp.ch} • PH ${pHdcp.ph} • MH ${pHdcp.mh}${strokes > 0 ? ` (+${strokes} str)` : ''}${netStr}</span>
                             </div>
                             <div class="flex items-center space-x-1.5">
-                                <button onclick="adjustPlayerScore('burnie', '${pId}', -1)" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">-</button>
-                                <input type="number" id="score_burnie_${pId}" value="${val}" placeholder="--" ${disabledAttr} onchange="savePlayerScore('burnie', '${pId}', this.value)" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${disabledBtnClass}">
-                                <button onclick="adjustPlayerScore('burnie', '${pId}', 1)" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">+</button>
+                                <button ${disabledAttr} onclick="adjustPlayerScore('burnie', '${pId}', -1)" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${btnDisabledCls}">-</button>
+                                <input ${disabledAttr} type="number" id="score_burnie_${pId}" value="${val}" placeholder="--" onchange="savePlayerScore('burnie', '${pId}', this.value)" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${btnDisabledCls}">
+                                <button ${disabledAttr} onclick="adjustPlayerScore('burnie', '${pId}', 1)" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${btnDisabledCls}">+</button>
                             </div>
                         </div>
                     `;
@@ -1831,17 +2660,20 @@
                 html += `</div><div class="space-y-2 pt-2"><span class="text-[10px] font-bold text-purple-400 uppercase">Team Port</span>`;
                 match.port.forEach(pId => {
                     const p = getPlayerById(pId);
+                    const pHdcp = hdcpInfo.port[pId];
+                    const strokes = getHoleStrokesForMH(pHdcp.mh, match.session, activeHoleIdx);
                     const val = hScore.port && hScore.port[pId] !== undefined ? hScore.port[pId] : '';
+                    const netStr = val !== '' ? ` • Net <strong class="text-purple-300">${parseInt(val, 10) - strokes}</strong>` : '';
                     html += `
                         <div class="flex justify-between items-center bg-slate-900/80 border border-purple-900/40 p-2.5 rounded-xl">
                             <div>
                                 <span class="text-xs font-semibold text-white block">${p.name}</span>
-                                <span class="text-[10px] text-slate-400">HCP ${p.hcp}</span>
+                                <span class="text-[10px] text-slate-400">CH ${pHdcp.ch} • PH ${pHdcp.ph} • MH ${pHdcp.mh}${strokes > 0 ? ` (+${strokes} str)` : ''}${netStr}</span>
                             </div>
                             <div class="flex items-center space-x-1.5">
-                                <button onclick="adjustPlayerScore('port', '${pId}', -1)" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">-</button>
-                                <input type="number" id="score_port_${pId}" value="${val}" placeholder="--" ${disabledAttr} onchange="savePlayerScore('port', '${pId}', this.value)" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${disabledBtnClass}">
-                                <button onclick="adjustPlayerScore('port', '${pId}', 1)" ${disabledAttr} class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${disabledBtnClass}">+</button>
+                                <button ${disabledAttr} onclick="adjustPlayerScore('port', '${pId}', -1)" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${btnDisabledCls}">-</button>
+                                <input ${disabledAttr} type="number" id="score_port_${pId}" value="${val}" placeholder="--" onchange="savePlayerScore('port', '${pId}', this.value)" class="w-12 h-8 bg-slate-950 border border-slate-700 rounded-lg text-center font-bold text-xs text-white ${btnDisabledCls}">
+                                <button ${disabledAttr} onclick="adjustPlayerScore('port', '${pId}', 1)" class="w-8 h-8 rounded-lg bg-slate-800 text-white font-bold ${btnDisabledCls}">+</button>
                             </div>
                         </div>
                     `;
@@ -1854,8 +2686,8 @@
 
         function saveTeamScore(val, team) {
             const match = matches.find(m => m.id === currentMatchId);
-            if (!match || sessionLocks[match.session]) {
-                showToast('Session is locked');
+            if (sessionLocks[match.session]) {
+                showToast('Session is locked by Admin');
                 return;
             }
             if (!match.scores[activeHoleIdx]) match.scores[activeHoleIdx] = {};
@@ -1863,16 +2695,15 @@
             match.scores[activeHoleIdx][key] = val === '' ? '' : parseInt(val, 10);
             saveState();
             renderHoleStrip();
-            const st = calculateMatchStatus(match);
-            document.getElementById('modal-match-state').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1.5"></span> ${st.text}`;
+            renderHoleScoring();
             showToast('Score saved');
         }
         window.saveTeamScore = saveTeamScore;
 
         function adjustTeamScore(delta, team) {
             const match = matches.find(m => m.id === currentMatchId);
-            if (!match || sessionLocks[match.session]) {
-                showToast('Session is locked');
+            if (sessionLocks[match.session]) {
+                showToast('Session is locked by Admin');
                 return;
             }
             const par = sessionCourses[match.session].holes[activeHoleIdx].par;
@@ -1882,19 +2713,16 @@
             if (cur === undefined || cur === '') cur = par;
             else cur = Math.max(1, parseInt(cur, 10) + delta);
             match.scores[activeHoleIdx][key] = cur;
-            const el = document.getElementById(`team_score_${team}`);
-            if (el) el.value = cur;
             saveState();
             renderHoleStrip();
-            const st = calculateMatchStatus(match);
-            document.getElementById('modal-match-state').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1.5"></span> ${st.text}`;
+            renderHoleScoring();
         }
         window.adjustTeamScore = adjustTeamScore;
 
         function savePlayerScore(team, pId, val) {
             const match = matches.find(m => m.id === currentMatchId);
-            if (!match || sessionLocks[match.session]) {
-                showToast('Session is locked');
+            if (sessionLocks[match.session]) {
+                showToast('Session is locked by Admin');
                 return;
             }
             if (!match.scores[activeHoleIdx]) match.scores[activeHoleIdx] = { burnie: {}, port: {} };
@@ -1902,16 +2730,15 @@
             match.scores[activeHoleIdx][team][pId] = val === '' ? '' : parseInt(val, 10);
             saveState();
             renderHoleStrip();
-            const st = calculateMatchStatus(match);
-            document.getElementById('modal-match-state').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1.5"></span> ${st.text}`;
+            renderHoleScoring();
             showToast('Score saved');
         }
         window.savePlayerScore = savePlayerScore;
 
         function adjustPlayerScore(team, pId, delta) {
             const match = matches.find(m => m.id === currentMatchId);
-            if (!match || sessionLocks[match.session]) {
-                showToast('Session is locked');
+            if (sessionLocks[match.session]) {
+                showToast('Session is locked by Admin');
                 return;
             }
             const par = sessionCourses[match.session].holes[activeHoleIdx].par;
@@ -1921,12 +2748,9 @@
             if (cur === undefined || cur === '') cur = par;
             else cur = Math.max(1, parseInt(cur, 10) + delta);
             match.scores[activeHoleIdx][team][pId] = cur;
-            const el = document.getElementById(`score_${team}_${pId}`);
-            if (el) el.value = cur;
             saveState();
             renderHoleStrip();
-            const st = calculateMatchStatus(match);
-            document.getElementById('modal-match-state').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1.5"></span> ${st.text}`;
+            renderHoleScoring();
         }
         window.adjustPlayerScore = adjustPlayerScore;
 
@@ -1957,10 +2781,10 @@
                 document.getElementById('admin-lock-icon').className = 'fa-solid fa-lock-open text-emerald-400';
                 document.getElementById('admin-btn-text').innerText = 'Admin On';
                 document.getElementById('nav-course').classList.remove('hidden');
-                updateSessionLockUI();
                 closeAdminModal();
-                switchTab('course');
-                showToast('Admin Mode unlocked • Course setup available');
+                if (activeTab === 'matches') switchSession(currentSession);
+                else renderCurrentView();
+                showToast('Admin Mode unlocked');
             } else {
                 document.getElementById('admin-pin-error').classList.remove('hidden');
             }
@@ -1972,8 +2796,8 @@
             document.getElementById('admin-lock-icon').className = 'fa-solid fa-lock text-amber-400';
             document.getElementById('admin-btn-text').innerText = 'Admin';
             document.getElementById('nav-course').classList.add('hidden');
-            updateSessionLockUI();
-            if (activeTab === 'course') switchTab('invitation');
+            if (activeTab === 'course') switchTab('matches');
+            else if (activeTab === 'matches') switchSession(currentSession);
             else renderCurrentView();
             closeAdminModal();
             showToast('Admin Mode locked');
@@ -1998,7 +2822,7 @@
             const buildSelect = (teamKey, slotIdx, currentId) => {
                 return `
                     <select id="pair_${teamKey}_${slotIdx}" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-                        ${rosters[teamKey].map(p => `<option value="${p.id}" ${p.id === currentId ? 'selected' : ''}>${p.name} (HCP ${p.hcp})</option>`).join('')}
+                        ${rosters[teamKey].map(p => `<option value="${p.id}" ${p.id === currentId ? 'selected' : ''}>${p.name} (HI ${p.hcp})</option>`).join('')}
                     </select>
                 `;
             };
@@ -2059,7 +2883,6 @@
 
         window.onload = function () {
             loadState();
-            switchSession(1);
             switchTab('invitation');
             updateOverallStandings();
         };
