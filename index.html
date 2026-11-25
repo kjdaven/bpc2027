@@ -268,13 +268,18 @@
     <div id="scorecard-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex flex-col justify-end transition-opacity duration-300 opacity-0 pointer-events-none">
         <div id="modal-panel" class="bg-slate-900 border-t border-slate-800 rounded-t-3xl max-h-[90vh] flex flex-col shadow-2xl transform translate-y-full transition-transform duration-300 max-w-md w-full mx-auto">
             <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950 rounded-t-3xl">
-                <div>
+                <div class="min-w-0 pr-2">
                     <span id="modal-match-subtitle" class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Session 1 • Scramble</span>
-                    <h3 id="modal-match-title" class="font-bold text-sm text-white">Team Burnie vs. Team Port</h3>
+                    <h3 id="modal-match-title" class="font-bold text-sm text-white truncate">Team Burnie vs. Team Port</h3>
                 </div>
-                <button onclick="closeMatchModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center transition">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
+                <div class="flex items-center space-x-2 flex-shrink-0">
+                    <button id="modal-edit-pairings-btn" onclick="openPairingModal(currentMatchId)" class="hidden text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-1.5 rounded-lg font-bold hover:bg-amber-500/30">
+                        <i class="fa-solid fa-user-pen mr-1"></i>Edit Players
+                    </button>
+                    <button onclick="closeMatchModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center transition">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="bg-slate-950/60 px-4 py-2.5 border-b border-slate-800 flex justify-between items-center text-xs">
@@ -284,10 +289,9 @@
                 <span id="modal-course-name" class="text-slate-400 text-[11px]">9-Hole Match Play</span>
             </div>
 
-            <!-- Locked Session Warning Banner inside Modal -->
-            <div id="modal-locked-banner" class="hidden bg-rose-950/80 border-b border-rose-800/70 px-4 py-2 text-[11px] text-rose-200 flex items-center justify-center space-x-1.5 font-semibold">
+            <div id="modal-locked-banner" class="hidden bg-rose-950/80 border-b border-rose-800/70 px-4 py-2 text-[11px] font-semibold text-rose-200 flex items-center justify-center space-x-1.5">
                 <i class="fa-solid fa-lock text-rose-400"></i>
-                <span>This session is locked by Admin. Scores are view-only.</span>
+                <span>This session is locked by Admin — View Only</span>
             </div>
 
             <!-- 9-Hole Selector Strip -->
@@ -363,6 +367,15 @@
                     <button onclick="closeAdminModal(); switchTab('course');" class="w-full py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs transition">
                         <i class="fa-solid fa-flag-checkered mr-1.5"></i> Open 9-Hole Course Setup
                     </button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="exportTournamentBackup()" class="py-2.5 px-2 rounded-xl bg-emerald-950/70 hover:bg-emerald-900/70 text-emerald-300 border border-emerald-800/60 font-semibold text-xs transition flex items-center justify-center">
+                            <i class="fa-solid fa-download mr-1.5"></i> Backup Data
+                        </button>
+                        <label class="cursor-pointer py-2.5 px-2 rounded-xl bg-sky-950/70 hover:bg-sky-900/70 text-sky-300 border border-sky-800/60 font-semibold text-xs transition flex items-center justify-center">
+                            <i class="fa-solid fa-upload mr-1.5"></i> Restore Data
+                            <input type="file" accept=".json,application/json" onchange="importTournamentBackup(event)" class="hidden">
+                        </label>
+                    </div>
                     <button onclick="confirmResetScores()" class="w-full py-2.5 rounded-xl bg-red-950/60 hover:bg-red-900/70 text-red-300 border border-red-800/60 font-semibold text-xs transition">
                         <i class="fa-solid fa-rotate-right mr-1.5"></i> Reset All Match Scores
                     </button>
@@ -399,6 +412,21 @@
             <div class="flex space-x-2">
                 <button onclick="closeConfirmModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-semibold text-xs">Cancel</button>
                 <button onclick="executeResetScores()" class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Roster Reset Confirmation Modal -->
+    <div id="confirm-roster-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-xs w-full p-5 shadow-2xl text-center">
+            <div class="w-12 h-12 rounded-full bg-amber-950/80 border border-amber-800 text-amber-400 flex items-center justify-center mx-auto mb-3">
+                <i class="fa-solid fa-users-gear text-lg"></i>
+            </div>
+            <h4 class="font-bold text-sm text-white mb-1">Reset Roster Info?</h4>
+            <p class="text-xs text-slate-400 mb-4">This will reset all 24 player names, Handicap Indexes, and headshot links back to their default values.</p>
+            <div class="flex space-x-2">
+                <button onclick="closeConfirmRosterModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-semibold text-xs">Cancel</button>
+                <button onclick="executeResetRosters()" class="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs">Reset Roster</button>
             </div>
         </div>
     </div>
@@ -1017,15 +1045,15 @@
 
                 html += `
                     <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-4 hover:border-emerald-500/60 transition shadow-lg">
-                        <div class="flex justify-between items-center mb-3">
-                            <div class="flex items-center space-x-1.5">
+                        <div class="flex justify-between items-center gap-2 mb-3">
+                            <div class="flex items-center space-x-1.5 flex-wrap">
                                 <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2.5 py-0.5 rounded-md border border-emerald-900">
                                     Match ${idx + 1} • ${m.format}
                                 </span>
                                 ${isLocked ? '<span class="text-[10px] font-bold text-rose-300 bg-rose-950/80 border border-rose-800/60 px-2 py-0.5 rounded-md"><i class="fa-solid fa-lock mr-1"></i>Locked</span>' : ''}
                             </div>
-                            <div class="flex items-center space-x-2">
-                                ${isAdmin ? `<button onclick="openPairingModal('${m.id}')" class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-md font-bold hover:bg-amber-500/30">Edit Pairings</button>` : ''}
+                            <div class="flex items-center space-x-2 flex-shrink-0">
+                                ${isAdmin ? `<button type="button" onclick="event.stopPropagation(); openPairingModal('${m.id}')" class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-md font-bold hover:bg-amber-500/30"><i class="fa-solid fa-user-pen mr-1"></i>Edit Players</button>` : ''}
                                 <span onclick="openMatchModal('${m.id}')" class="text-xs ${st.color} cursor-pointer flex items-center">
                                     ${st.text} <i class="fa-solid fa-chevron-right text-[10px] ml-1.5 text-slate-500"></i>
                                 </span>
@@ -1100,6 +1128,17 @@
             };
 
             container.innerHTML =
+                (isAdmin ? `
+                    <div class="bg-slate-800/80 border border-amber-500/40 rounded-2xl p-3.5 shadow-lg flex items-center justify-between gap-2">
+                        <div>
+                            <span class="text-xs font-bold text-white block">Roster Management</span>
+                            <span class="text-[10px] text-slate-400">Restore all 24 player names & handicaps to defaults</span>
+                        </div>
+                        <button onclick="confirmResetRosters()" class="px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow transition flex-shrink-0">
+                            <i class="fa-solid fa-rotate-left mr-1"></i>Reset Roster Info
+                        </button>
+                    </div>
+                ` : '') +
                 renderTeamCard('burnie', 'Team Burnie Roster', 'text-emerald-400', 'border-emerald-900/50', 'border-emerald-500') +
                 renderTeamCard('port', 'Team Port Roster', 'text-purple-400', 'border-purple-900/50', 'border-purple-500');
         }
@@ -2852,6 +2891,12 @@
             if (isLocked) lockedBanner.classList.remove('hidden');
             else lockedBanner.classList.add('hidden');
 
+            const modalEditBtn = document.getElementById('modal-edit-pairings-btn');
+            if (modalEditBtn) {
+                if (isAdmin) modalEditBtn.classList.remove('hidden');
+                else modalEditBtn.classList.add('hidden');
+            }
+
             const bNames = match.burnie.map(id => getPlayerById(id).name.split(' ')[0]).join(' & ');
             const pNames = match.port.map(id => getPlayerById(id).name.split(' ')[0]).join(' & ');
             document.getElementById('modal-match-title').innerText = `${bNames} vs ${pNames}`;
@@ -3116,6 +3161,9 @@
             m.port = m.port.map((_, idx) => document.getElementById(`pair_port_${idx}`).value);
             saveState();
             closePairingModal();
+            if (currentMatchId === m.id && !document.getElementById('scorecard-modal').classList.contains('pointer-events-none')) {
+                renderHoleScoring();
+            }
             renderCurrentView();
             showToast('Match pairings updated');
         }
@@ -3140,6 +3188,87 @@
             showToast('All match scores reset');
         }
         window.executeResetScores = executeResetScores;
+
+        function confirmResetRosters() {
+            if (!isAdmin) return;
+            document.getElementById('confirm-roster-modal').classList.remove('opacity-0', 'pointer-events-none');
+        }
+        window.confirmResetRosters = confirmResetRosters;
+
+        function closeConfirmRosterModal() {
+            document.getElementById('confirm-roster-modal').classList.add('opacity-0', 'pointer-events-none');
+        }
+        window.closeConfirmRosterModal = closeConfirmRosterModal;
+
+        function executeResetRosters() {
+            if (!isAdmin) return;
+            rosters = JSON.parse(JSON.stringify(defaultRosters));
+            saveState();
+            closeConfirmRosterModal();
+            renderRosters();
+            showToast('Roster info reset to defaults');
+        }
+        window.executeResetRosters = executeResetRosters;
+
+        function exportTournamentBackup() {
+            const payload = {
+                exportedAt: new Date().toISOString(),
+                rosters,
+                sessionCourses,
+                matches,
+                adminPin,
+                sessionLocks,
+                skinsConfig,
+                kodakHoles,
+                venueHouses,
+                uploadedMedia
+            };
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `bpc2027-backup-${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Backup JSON downloaded');
+        }
+        window.exportTournamentBackup = exportTournamentBackup;
+
+        function importTournamentBackup(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed.rosters) rosters = parsed.rosters;
+                    if (parsed.sessionCourses) sessionCourses = parsed.sessionCourses;
+                    if (Array.isArray(parsed.matches) && parsed.matches.length === 42) matches = parsed.matches;
+                    if (parsed.adminPin) adminPin = parsed.adminPin;
+                    if (parsed.sessionLocks) sessionLocks = Object.assign(sessionLocks, parsed.sessionLocks);
+                    if (parsed.skinsConfig) skinsConfig = Object.assign(skinsConfig, parsed.skinsConfig);
+                    if (Array.isArray(parsed.kodakHoles) && parsed.kodakHoles.length === 9) kodakHoles = parsed.kodakHoles;
+                    if (parsed.venueHouses) venueHouses = Object.assign(venueHouses, parsed.venueHouses);
+                    if (Array.isArray(parsed.uploadedMedia)) {
+                        uploadedMedia = parsed.uploadedMedia;
+                        saveMedia();
+                    }
+                    saveState();
+                    closeAdminModal();
+                    renderCurrentView();
+                    updateOverallStandings();
+                    showToast('Tournament data restored!');
+                } catch (err) {
+                    console.error('Invalid backup file', err);
+                    showToast('Invalid backup file');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+        window.importTournamentBackup = importTournamentBackup;
 
         function showToast(msg) {
             const toast = document.getElementById('toast');
