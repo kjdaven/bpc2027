@@ -249,6 +249,10 @@
                 <i class="fa-solid fa-coins text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">BPC Skins</span>
             </button>
+            <button onclick="switchTab('optskins')" id="nav-optskins" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[68px]">
+                <i class="fa-solid fa-sack-dollar text-base mb-0.5"></i>
+                <span class="text-[10px] font-medium">Opt. Skins</span>
+            </button>
             <button onclick="switchTab('kodak')" id="nav-kodak" class="flex-shrink-0 flex flex-col items-center text-slate-400 hover:text-white transition py-1 px-3 min-w-[72px]">
                 <i class="fa-solid fa-bullseye text-base mb-0.5"></i>
                 <span class="text-[10px] font-medium">LuckySpa9</span>
@@ -540,7 +544,7 @@
         const makeDefaultNine = (startNum) => Array.from({ length: 9 }, (_, i) => ({
             num: startNum + i,
             par: [4, 4, 5, 3, 4, 4, 3, 5, 4][i],
-            hcp: [7, 3, 11, 15, 1, 9, 17, 5, 13][i]
+            hcp: [4, 2, 6, 8, 1, 5, 9, 3, 7][i]
         }));
 
         const defaultSessionCourses = {
@@ -617,6 +621,18 @@
         };
         let activeSkinsSession = 1;
         let skinsViewMode = 'session';
+        const makeDefaultEighteen = () => Array.from({ length: 18 }, (_, i) => ({
+            num: i + 1,
+            par: [4, 4, 5, 3, 4, 4, 3, 5, 4, 4, 4, 3, 5, 4, 4, 3, 5, 4][i],
+            hcp: [7, 3, 11, 15, 1, 9, 17, 5, 13, 8, 4, 16, 10, 2, 12, 18, 6, 14][i]
+        }));
+        let optionalSkinsRounds = {
+            1: { label: 'Opt. Round 1', courseName: 'Optional Round 1 (18 Holes)', rating: 72.0, slope: 130, entryFee: 10, holes: makeDefaultEighteen(), participants: {}, scores: {} },
+            2: { label: 'Opt. Round 2', courseName: 'Optional Round 2 (18 Holes)', rating: 72.0, slope: 130, entryFee: 10, holes: makeDefaultEighteen(), participants: {}, scores: {} },
+            3: { label: 'Opt. Round 3', courseName: 'Optional Round 3 (18 Holes)', rating: 72.0, slope: 130, entryFee: 10, holes: makeDefaultEighteen(), participants: {}, scores: {} }
+        };
+        let activeOptSkinsRound = 1;
+        let optSkinsSubTab = 'scores';
         let kodakHoles = [
             { session: 1, holeIdx: 0 },
             { session: 1, holeIdx: 4 },
@@ -671,6 +687,13 @@
                         skinsConfig.entryFees = Object.assign({ 1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 10 }, parsed.skinsConfig.entryFees || {});
                         skinsConfig.participants = Object.assign({ 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {} }, parsed.skinsConfig.participants || {});
                     }
+                    if (parsed.optionalSkinsRounds) {
+                        [1, 2, 3].forEach(r => {
+                            if (parsed.optionalSkinsRounds[r]) {
+                                optionalSkinsRounds[r] = Object.assign(optionalSkinsRounds[r], parsed.optionalSkinsRounds[r]);
+                            }
+                        });
+                    }
                     if (Array.isArray(parsed.kodakHoles) && parsed.kodakHoles.length === 9) {
                         kodakHoles = parsed.kodakHoles;
                     }
@@ -701,6 +724,7 @@
                     adminPin,
                     sessionLocks,
                     skinsConfig,
+                    optionalSkinsRounds,
                     kodakHoles,
                     venueHouses
                 }));
@@ -1021,7 +1045,7 @@
 
         function switchTab(tabName) {
             activeTab = tabName;
-            const navIds = ['invitation', 'eventatglance', 'weekatglance', 'venues', 'format', 'rules', 'pastresults', 'handicaps', 'bpcname', 'bpclogo', 'roster', 'leaderboard', 'indleaders', 'skins', 'kodak', 'matches', 'picsvids', 'course'];
+            const navIds = ['invitation', 'eventatglance', 'weekatglance', 'venues', 'format', 'rules', 'pastresults', 'handicaps', 'bpcname', 'bpclogo', 'roster', 'leaderboard', 'indleaders', 'skins', 'optskins', 'kodak', 'matches', 'picsvids', 'course'];
             navIds.forEach(id => {
                 const el = document.getElementById(`nav-${id}`);
                 if (!el) return;
@@ -1054,6 +1078,7 @@
             else if (activeTab === 'leaderboard') renderLeaderboard();
             else if (activeTab === 'indleaders') renderIndLeaders();
             else if (activeTab === 'skins') renderSkins();
+            else if (activeTab === 'optskins') renderOptionalSkins();
             else if (activeTab === 'kodak') renderKodakChallenge();
             else if (activeTab === 'eventatglance') renderEventAtGlance();
             else if (activeTab === 'weekatglance') renderWeekAtGlance();
@@ -1904,6 +1929,446 @@
                     </div>
 
                     <div class="space-y-2">${playersHtml}</div>
+                </div>
+            `;
+        }
+
+        // --- Optional Days 18-Hole NET Skins (Using 18-Hole Course Handicap CH) ---
+        function getEighteenHolePar(roundNum) {
+            const r = optionalSkinsRounds[roundNum];
+            return r.holes.reduce((sum, h) => sum + (Number(h.par) || 4), 0);
+        }
+
+        // Standard USGA 18-Hole Course Handicap: CH = HI * (Slope / 113) + (Rating - Par)
+        function calculateEighteenHoleCH(handicapIndex, roundNum) {
+            const r = optionalSkinsRounds[roundNum];
+            const par18 = getEighteenHolePar(roundNum);
+            const slope18 = Number(r.slope) || 113;
+            const rating18 = Number(r.rating) || par18;
+            const rawCH = (Number(handicapIndex) || 0) * (slope18 / 113) + (rating18 - par18);
+            return Math.max(0, Math.round(rawCH));
+        }
+
+        function getEighteenHoleStrokesForCH(courseHandicap, roundNum, holeIdx) {
+            const ch = Math.max(0, Math.round(Number(courseHandicap) || 0));
+            if (ch === 0) return 0;
+            const holes = optionalSkinsRounds[roundNum].holes;
+            const ranked = holes
+                .map((h, idx) => ({ idx, hcp: Number(h.hcp) || 99 }))
+                .sort((a, b) => a.hcp - b.hcp);
+            const rankPos = ranked.findIndex(item => item.idx === holeIdx); // 0 to 17
+            if (rankPos === -1) return 0;
+            const fullRounds = Math.floor(ch / 18);
+            const remainder = ch % 18;
+            return fullRounds + (rankPos < remainder ? 1 : 0);
+        }
+
+        function setActiveOptSkinsRound(r) {
+            activeOptSkinsRound = r;
+            renderOptionalSkins();
+        }
+        window.setActiveOptSkinsRound = setActiveOptSkinsRound;
+
+        function setOptSkinsSubTab(tab) {
+            optSkinsSubTab = tab;
+            renderOptionalSkins();
+        }
+        window.setOptSkinsSubTab = setOptSkinsSubTab;
+
+        function updateOptSkinsMeta(roundNum, field, val) {
+            if (!isAdmin) return;
+            const r = optionalSkinsRounds[roundNum];
+            if (field === 'courseName') r.courseName = val;
+            else if (field === 'rating') r.rating = parseFloat(val) || 72.0;
+            else if (field === 'slope') r.slope = parseInt(val, 10) || 113;
+            else if (field === 'entryFee') r.entryFee = Math.max(0, parseFloat(val) || 0);
+            saveState();
+            renderOptionalSkins();
+            showToast('Optional round updated');
+        }
+        window.updateOptSkinsMeta = updateOptSkinsMeta;
+
+        function updateOptSkinsHole(roundNum, holeIdx, field, val) {
+            if (!isAdmin) return;
+            const numVal = parseInt(val, 10);
+            if (isNaN(numVal)) return;
+            if (field === 'hcp') {
+                optionalSkinsRounds[roundNum].holes[holeIdx].hcp = Math.min(18, Math.max(1, numVal));
+            } else {
+                optionalSkinsRounds[roundNum].holes[holeIdx].par = Math.min(6, Math.max(3, numVal));
+            }
+            saveState();
+            renderOptionalSkins();
+        }
+        window.updateOptSkinsHole = updateOptSkinsHole;
+
+        function toggleOptSkinParticipant(roundNum, playerId) {
+            if (!isAdmin) return;
+            const r = optionalSkinsRounds[roundNum];
+            if (!r.participants) r.participants = {};
+            r.participants[playerId] = !r.participants[playerId];
+            saveState();
+            renderOptionalSkins();
+        }
+        window.toggleOptSkinParticipant = toggleOptSkinParticipant;
+
+        function setAllOptSkinsParticipants(roundNum, stateBool) {
+            if (!isAdmin) return;
+            const nextMap = {};
+            if (stateBool) {
+                [...rosters.burnie, ...rosters.port, ...(rosters.unassigned || [])].forEach(p => { nextMap[p.id] = true; });
+            }
+            optionalSkinsRounds[roundNum].participants = nextMap;
+            saveState();
+            renderOptionalSkins();
+            showToast(stateBool ? 'All players added to Optional Skins' : 'Cleared participants');
+        }
+        window.setAllOptSkinsParticipants = setAllOptSkinsParticipants;
+
+        function updateOptSkinGrossScore(roundNum, playerId, holeIdx, rawVal) {
+            const r = optionalSkinsRounds[roundNum];
+            if (!r.scores) r.scores = {};
+            if (!r.scores[playerId]) r.scores[playerId] = {};
+            const trimmed = String(rawVal).trim();
+            r.scores[playerId][holeIdx] = trimmed === '' ? '' : Math.max(1, parseInt(trimmed, 10));
+            saveState();
+            renderOptionalSkins();
+        }
+        window.updateOptSkinGrossScore = updateOptSkinGrossScore;
+
+        function calculateOptionalRoundSkins(roundNum) {
+            const r = optionalSkinsRounds[roundNum];
+            const entryFee = Math.max(0, Number(r.entryFee) || 0);
+            const allPlayers = [
+                ...rosters.burnie.map(p => ({ ...p, team: 'burnie' })),
+                ...rosters.port.map(p => ({ ...p, team: 'port' })),
+                ...(rosters.unassigned || []).map(p => ({ ...p, team: 'unassigned' }))
+            ];
+
+            const playerMap = {};
+            const activeList = [];
+            allPlayers.forEach(p => {
+                const isIn = !!(r.participants && r.participants[p.id]);
+                const ch18 = calculateEighteenHoleCH(p.hcp, roundNum);
+                playerMap[p.id] = {
+                    ...p,
+                    participating: isIn,
+                    ch18,
+                    skinsWon: 0,
+                    wonHoles: [],
+                    winnings: 0,
+                    grossTotal: 0,
+                    netTotal: 0,
+                    holesScored: 0
+                };
+                if (isIn) activeList.push(playerMap[p.id]);
+            });
+
+            // Sum Gross & Net across 18 holes for participating players
+            activeList.forEach(pr => {
+                const pScores = (r.scores && r.scores[pr.id]) || {};
+                for (let hIdx = 0; hIdx < 18; hIdx++) {
+                    const gVal = pScores[hIdx];
+                    if (gVal !== undefined && gVal !== '' && !isNaN(parseInt(gVal, 10))) {
+                        const gross = parseInt(gVal, 10);
+                        const strokes = getEighteenHoleStrokesForCH(pr.ch18, roundNum, hIdx);
+                        pr.grossTotal += gross;
+                        pr.netTotal += (gross - strokes);
+                        pr.holesScored += 1;
+                    }
+                }
+            });
+
+            // Determine sole low Net score on each of the 18 holes
+            const holeWinners = [];
+            for (let hIdx = 0; hIdx < 18; hIdx++) {
+                const holeNum = r.holes[hIdx].num;
+                const contenders = [];
+                activeList.forEach(pr => {
+                    const pScores = (r.scores && r.scores[pr.id]) || {};
+                    const gVal = pScores[hIdx];
+                    if (gVal === undefined || gVal === '' || isNaN(parseInt(gVal, 10))) return;
+                    const strokes = getEighteenHoleStrokesForCH(pr.ch18, roundNum, hIdx);
+                    const netScore = parseInt(gVal, 10) - strokes;
+                    contenders.push({ pid: pr.id, netScore });
+                });
+
+                if (contenders.length >= 2) {
+                    const minNet = Math.min(...contenders.map(c => c.netScore));
+                    const tiedLow = contenders.filter(c => c.netScore === minNet);
+                    if (tiedLow.length === 1) {
+                        const winPid = tiedLow[0].pid;
+                        playerMap[winPid].skinsWon += 1;
+                        playerMap[winPid].wonHoles.push(holeNum);
+                        holeWinners.push({ holeNum, netScore: minNet, winnerName: playerMap[winPid].name });
+                    }
+                }
+            }
+
+            const totalPot = activeList.length * entryFee;
+            const totalSkinsCount = holeWinners.length;
+            const valuePerSkin = totalSkinsCount > 0 ? totalPot / totalSkinsCount : 0;
+
+            activeList.forEach(pr => {
+                pr.winnings = pr.skinsWon * valuePerSkin;
+            });
+
+            return {
+                roundNum,
+                entryFee,
+                totalPot,
+                totalSkinsCount,
+                valuePerSkin,
+                allPlayers,
+                activeList,
+                playerMap,
+                holeWinners
+            };
+        }
+
+        function renderOptionalSkins() {
+            const container = document.getElementById('main-view-container');
+            const r = optionalSkinsRounds[activeOptSkinsRound];
+            const par18 = getEighteenHolePar(activeOptSkinsRound);
+            const calc = calculateOptionalRoundSkins(activeOptSkinsRound);
+
+            const roundPillsHtml = [1, 2, 3].map(num => `
+                <button onclick="setActiveOptSkinsRound(${num})" class="flex-1 py-2 px-2.5 rounded-xl text-xs font-bold border transition ${num === activeOptSkinsRound ? 'bg-emerald-600 text-white border-emerald-400 shadow' : 'bg-slate-900 text-slate-300 border-slate-700 hover:text-white'}">
+                    Opt. Round ${num}
+                </button>
+            `).join('');
+
+            const subTabsHtml = `
+                <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
+                    <button onclick="setOptSkinsSubTab('scores')" class="flex-1 py-1.5 px-2 rounded-lg font-bold transition ${optSkinsSubTab === 'scores' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'}">
+                        18-Hole Scorecard
+                    </button>
+                    <button onclick="setOptSkinsSubTab('standings')" class="flex-1 py-1.5 px-2 rounded-lg font-bold transition ${optSkinsSubTab === 'standings' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'}">
+                        Players & Payouts (${calc.activeList.length})
+                    </button>
+                    ${isAdmin ? `
+                        <button onclick="setOptSkinsSubTab('course')" class="flex-1 py-1.5 px-2 rounded-lg font-bold transition ${optSkinsSubTab === 'course' ? 'bg-amber-500 text-slate-950' : 'text-slate-400 hover:text-white'}">
+                            18H Holes Setup
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+
+            // Course & Pot Summary Header Card
+            const metaCardHtml = `
+                <div class="bg-slate-900/90 border border-slate-700/80 rounded-xl p-3 space-y-2.5">
+                    ${isAdmin ? `
+                        <div class="space-y-2">
+                            <input type="text" value="${r.courseName}" onchange="updateOptSkinsMeta(${activeOptSkinsRound}, 'courseName', this.value)" placeholder="Course Name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold">
+                            <div class="grid grid-cols-4 gap-1.5 text-center">
+                                <div class="bg-slate-950 border border-slate-800 rounded-lg p-1.5">
+                                    <span class="text-[9px] text-slate-400 uppercase block">18H Par</span>
+                                    <span class="text-xs font-black text-emerald-400">${par18}</span>
+                                </div>
+                                <div class="bg-slate-950 border border-slate-800 rounded-lg p-1.5">
+                                    <label class="text-[9px] text-slate-400 uppercase block">18H Rating</label>
+                                    <input type="number" step="0.1" value="${r.rating}" onchange="updateOptSkinsMeta(${activeOptSkinsRound}, 'rating', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded mt-0.5 py-0.5 text-center text-xs font-bold text-white">
+                                </div>
+                                <div class="bg-slate-950 border border-slate-800 rounded-lg p-1.5">
+                                    <label class="text-[9px] text-slate-400 uppercase block">18H Slope</label>
+                                    <input type="number" step="1" value="${r.slope}" onchange="updateOptSkinsMeta(${activeOptSkinsRound}, 'slope', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded mt-0.5 py-0.5 text-center text-xs font-bold text-amber-300">
+                                </div>
+                                <div class="bg-slate-950 border border-slate-800 rounded-lg p-1.5">
+                                    <label class="text-[9px] text-slate-400 uppercase block">Entry ($)</label>
+                                    <input type="number" step="1" min="0" value="${calc.entryFee}" onchange="updateOptSkinsMeta(${activeOptSkinsRound}, 'entryFee', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded mt-0.5 py-0.5 text-center text-xs font-bold text-emerald-300">
+                                </div>
+                            </div>
+                        </div>
+                    ` : `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-white text-xs">${r.courseName}</h3>
+                                <span class="text-[10px] text-slate-400">Par ${par18} • 18H Rating <strong class="text-slate-200">${r.rating}</strong> • Slope <strong class="text-slate-200">${r.slope}</strong></span>
+                            </div>
+                            <span class="text-[11px] font-bold text-amber-300 bg-slate-950 border border-slate-800 px-2 py-1 rounded-lg">$${calc.entryFee} / player</span>
+                        </div>
+                    `}
+
+                    <div class="grid grid-cols-3 gap-2 text-center pt-1">
+                        <div class="bg-slate-950 border border-slate-800 rounded-lg p-2">
+                            <span class="text-[9px] uppercase text-slate-400 block">Total Pot</span>
+                            <span class="text-sm font-black text-emerald-400">$${calc.totalPot.toFixed(0)}</span>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800 rounded-lg p-2">
+                            <span class="text-[9px] uppercase text-slate-400 block">Skins Won</span>
+                            <span class="text-sm font-black text-amber-300">${calc.totalSkinsCount}</span>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800 rounded-lg p-2">
+                            <span class="text-[9px] uppercase text-slate-400 block">Per Skin</span>
+                            <span class="text-sm font-black text-white">$${calc.valuePerSkin.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let bodyHtml = '';
+
+            if (optSkinsSubTab === 'course' && isAdmin) {
+                bodyHtml = `
+                    <div class="space-y-2">
+                        <p class="text-[11px] text-slate-400">Configure 18-hole Pars and 1–18 Stroke Indexes for ${r.courseName}:</p>
+                        <div class="grid grid-cols-1 gap-1.5">
+                            ${r.holes.map((h, idx) => `
+                                <div class="grid grid-cols-3 gap-2 items-center bg-slate-900/80 border border-slate-700/60 p-2 rounded-xl text-xs">
+                                    <span class="font-bold text-white pl-1">Hole ${h.num}</span>
+                                    <div class="flex items-center justify-center space-x-1.5">
+                                        <span class="text-[10px] text-slate-400">Par</span>
+                                        <input type="number" min="3" max="6" value="${h.par}" onchange="updateOptSkinsHole(${activeOptSkinsRound}, ${idx}, 'par', this.value)" class="w-12 bg-slate-950 border border-slate-700 rounded-lg py-1 text-center font-bold text-emerald-400">
+                                    </div>
+                                    <div class="flex items-center justify-center space-x-1.5">
+                                        <span class="text-[10px] text-slate-400">HCP</span>
+                                        <input type="number" min="1" max="18" value="${h.hcp}" onchange="updateOptSkinsHole(${activeOptSkinsRound}, ${idx}, 'hcp', this.value)" class="w-12 bg-slate-950 border border-slate-700 rounded-lg py-1 text-center font-bold text-amber-300">
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (optSkinsSubTab === 'standings') {
+                bodyHtml = `
+                    ${isAdmin ? `
+                        <div class="flex space-x-2">
+                            <button onclick="setAllOptSkinsParticipants(${activeOptSkinsRound}, true)" class="flex-1 py-1.5 rounded-lg bg-emerald-950/70 hover:bg-emerald-900/70 border border-emerald-800/60 text-emerald-300 text-[11px] font-bold">
+                                Select All Players
+                            </button>
+                            <button onclick="setAllOptSkinsParticipants(${activeOptSkinsRound}, false)" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-[11px] font-semibold">
+                                Clear All
+                            </button>
+                        </div>
+                    ` : ''}
+                    <div class="space-y-2">
+                        ${calc.allPlayers.map(p => {
+                            const pr = calc.playerMap[p.id];
+                            const ringClass = p.team === 'burnie' ? 'border-emerald-500' : (p.team === 'port' ? 'border-purple-500' : 'border-amber-500');
+                            return `
+                                <div class="flex items-center justify-between bg-slate-900/80 border ${pr.participating ? 'border-slate-700' : 'border-slate-800/60 opacity-75'} rounded-xl p-2.5 text-xs">
+                                    <div class="flex items-center space-x-2.5 min-w-0 pr-2">
+                                        <input type="checkbox"
+                                            ${pr.participating ? 'checked' : ''}
+                                            ${isAdmin ? '' : 'disabled'}
+                                            onchange="toggleOptSkinParticipant(${activeOptSkinsRound}, '${p.id}')"
+                                            class="w-4 h-4 rounded accent-emerald-500 cursor-pointer disabled:cursor-not-allowed flex-shrink-0">
+                                        ${getAvatarHtml(p, ringClass)}
+                                        <div class="truncate">
+                                            <div class="font-bold text-white truncate">${p.name}</div>
+                                            <div class="text-[10px] text-slate-400">
+                                                HI ${Number(p.hcp).toFixed(1)} • <strong class="text-emerald-300">18H CH: ${pr.ch18}</strong>
+                                                ${pr.wonHoles.length > 0 ? `<span class="text-amber-300 font-semibold"> • Won H${pr.wonHoles.join(', H')}</span>` : ''}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-2 flex-shrink-0 text-right">
+                                        <div class="bg-slate-800/90 border border-slate-700 rounded-lg px-2 py-1 text-center min-w-[44px]">
+                                            <span class="text-[9px] text-slate-400 block leading-none">SKINS</span>
+                                            <span class="font-extrabold ${pr.skinsWon > 0 ? 'text-amber-300' : 'text-slate-300'}">${pr.skinsWon}</span>
+                                        </div>
+                                        <div class="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-right min-w-[62px]">
+                                            <span class="text-[9px] text-slate-400 block leading-none">PAYOUT</span>
+                                            <span class="font-black ${pr.winnings > 0 ? 'text-emerald-400' : 'text-slate-500'}">$${pr.winnings.toFixed(2)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            } else {
+                // Default: 18-Hole Gross/Net Scorecard Grid for Participating Players
+                if (calc.activeList.length === 0) {
+                    bodyHtml = `
+                        <div class="bg-slate-900/70 border border-dashed border-slate-700 rounded-xl p-5 text-center text-slate-400 space-y-2">
+                            <p class="font-semibold text-slate-200">No players entered in ${r.label} Skins yet.</p>
+                            <p class="text-[11px]">${isAdmin ? 'Switch to "Players & Payouts" above to check off which players are competing.' : 'Admin can select participating players once unlocked.'}</p>
+                            <button onclick="setOptSkinsSubTab('standings')" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold text-xs">
+                                View Player List
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    const holeHeaders = r.holes.map(h => `
+                        <th class="px-1.5 py-1.5 text-center border-l border-slate-800 min-w-[44px]">
+                            <span class="font-extrabold text-white block">${h.num}</span>
+                            <span class="text-[9px] text-slate-400 font-normal block">P${h.par} • #${h.hcp}</span>
+                        </th>
+                    `).join('');
+
+                    const playerRows = calc.activeList.map(pr => {
+                        const pScores = (r.scores && r.scores[pr.id]) || {};
+                        const cells = r.holes.map((h, hIdx) => {
+                            const gVal = pScores[hIdx] !== undefined ? pScores[hIdx] : '';
+                            const strokes = getEighteenHoleStrokesForCH(pr.ch18, activeOptSkinsRound, hIdx);
+                            const hasScore = gVal !== '' && !isNaN(parseInt(gVal, 10));
+                            const netVal = hasScore ? parseInt(gVal, 10) - strokes : null;
+                            const wonHole = pr.wonHoles.includes(h.num);
+
+                            return `
+                                <td class="p-1 text-center border-l border-slate-800 ${wonHole ? 'bg-amber-500/20' : ''}">
+                                    <input type="number" min="1" max="15" value="${gVal}" placeholder="-"
+                                        onchange="updateOptSkinGrossScore(${activeOptSkinsRound}, '${pr.id}', ${hIdx}, this.value)"
+                                        class="w-9 h-7 bg-slate-950 border ${wonHole ? 'border-amber-400 text-amber-300' : 'border-slate-700 text-white'} rounded text-center font-bold text-xs focus:outline-none focus:border-emerald-400">
+                                    <span class="text-[9px] block mt-0.5 ${wonHole ? 'text-amber-300 font-extrabold' : 'text-slate-400'}">
+                                        ${hasScore ? `N:${netVal}` : (strokes > 0 ? `+${strokes}` : '0')}
+                                    </span>
+                                </td>
+                            `;
+                        }).join('');
+
+                        return `
+                            <tr class="border-b border-slate-800/80">
+                                <td class="sticky left-0 bg-slate-900 px-2.5 py-2 whitespace-nowrap z-10">
+                                    <span class="font-bold text-white block">${pr.name}</span>
+                                    <span class="text-[9px] text-emerald-400 font-semibold">18H CH: ${pr.ch18} • Skins: ${pr.skinsWon}</span>
+                                </td>
+                                ${cells}
+                                <td class="px-2 py-2 text-center border-l border-slate-700 font-bold text-slate-300">${pr.holesScored > 0 ? pr.grossTotal : '—'}</td>
+                                <td class="px-2 py-2 text-center font-black text-emerald-400">${pr.holesScored > 0 ? pr.netTotal : '—'}</td>
+                                <td class="px-2 py-2 text-right font-black text-amber-300">$${pr.winnings.toFixed(0)}</td>
+                            </tr>
+                        `;
+                    }).join('');
+
+                    bodyHtml = `
+                        <p class="text-[10px] text-slate-400">Enter 18-hole <strong class="text-white">Gross</strong> scores below; Net scores (using <strong class="text-emerald-300">18-Hole CH</strong>) and sole-winner Skins highlight automatically in gold.</p>
+                        <div class="overflow-x-auto rounded-xl border border-slate-700 bg-slate-900">
+                            <table class="w-full text-left border-collapse text-[11px]">
+                                <thead>
+                                    <tr class="bg-slate-950 text-slate-300 border-b border-slate-700">
+                                        <th class="sticky left-0 bg-slate-950 px-2.5 py-2 font-bold z-10">Player (18H CH)</th>
+                                        ${holeHeaders}
+                                        <th class="px-2 py-2 text-center border-l border-slate-700 font-bold">GRS</th>
+                                        <th class="px-2 py-2 text-center font-bold text-emerald-400">NET</th>
+                                        <th class="px-2 py-2 text-right font-bold text-amber-300">WIN</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${playerRows}</tbody>
+                            </table>
+                        </div>
+                    `;
+                }
+            }
+
+            container.innerHTML = `
+                <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-lg space-y-3">
+                    <div class="border-b border-slate-700 pb-2.5 flex justify-between items-center">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">18-Hole Individual Ball (Using 18H CH)</span>
+                            <h2 class="text-base font-extrabold text-white">Optional Golf NET Skins</h2>
+                        </div>
+                        <span class="text-[10px] text-slate-400">${isAdmin ? 'Admin Edit On' : 'Unlock Admin to Setup'}</span>
+                    </div>
+
+                    <div class="flex space-x-1.5">${roundPillsHtml}</div>
+
+                    ${metaCardHtml}
+
+                    ${subTabsHtml}
+
+                    ${bodyHtml}
                 </div>
             `;
         }
@@ -3172,9 +3637,13 @@
             if (!isAdmin) return;
             const numVal = parseInt(val, 10);
             if (isNaN(numVal)) return;
-            sessionCourses[sessionNum].holes[holeIdx][field] = numVal;
+            if (field === 'hcp') {
+                sessionCourses[sessionNum].holes[holeIdx][field] = Math.min(9, Math.max(1, numVal));
+            } else {
+                sessionCourses[sessionNum].holes[holeIdx][field] = numVal;
+            }
             saveState();
-            if (field === 'par') renderCourseEditor();
+            renderCourseEditor();
             showToast('Hole updated');
         }
         window.updateCourseHole = updateCourseHole;
@@ -3207,8 +3676,8 @@
                         <input type="number" min="3" max="6" value="${h.par}" onchange="updateCourseHole(${activeCourseSession}, ${idx}, 'par', this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-lg py-1 text-center font-bold text-emerald-400">
                     </div>
                     <div>
-                        <label class="text-[9px] text-slate-400 uppercase block text-center">HCP Index</label>
-                        <input type="number" min="1" max="18" value="${h.hcp}" onchange="updateCourseHole(${activeCourseSession}, ${idx}, 'hcp', this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-lg py-1 text-center font-bold text-amber-300">
+                        <label class="text-[9px] text-slate-400 uppercase block text-center">HCP Index (1-9)</label>
+                        <input type="number" min="1" max="9" value="${h.hcp}" onchange="updateCourseHole(${activeCourseSession}, ${idx}, 'hcp', this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-lg py-1 text-center font-bold text-amber-300">
                     </div>
                 </div>
             `).join('');
@@ -3604,6 +4073,7 @@
                     if (parsed.adminPin) adminPin = parsed.adminPin;
                     if (parsed.sessionLocks) sessionLocks = parsed.sessionLocks;
                     if (parsed.skinsConfig) skinsConfig = parsed.skinsConfig;
+                    if (parsed.optionalSkinsRounds) optionalSkinsRounds = parsed.optionalSkinsRounds;
                     if (parsed.kodakHoles) kodakHoles = parsed.kodakHoles;
                     if (parsed.venueHouses) venueHouses = parsed.venueHouses;
                     saveState();
