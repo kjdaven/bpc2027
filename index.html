@@ -1186,7 +1186,7 @@
                                 <div class="text-center">
                                     <span class="text-[9px] text-slate-400 uppercase block">Event HI</span>
                                     <span class="text-xs font-extrabold ${colorText}">${Number(p.hcp).toFixed(1)}</span>
-                                    <span class="text-[9px] text-slate-500 block">${hasTypical ? '(70% Typ)' : '(GHIN/HI)'}</span>
+                                    <span class="text-[9px] text-slate-500 block">${hasTypical ? '((Typ-72)×.7)' : '(GHIN/HI)'}</span>
                                 </div>
                             </div>
                             <input type="text" value="${p.photo || ''}" onchange="updatePlayerField('${teamKey}', ${idx}, 'photo', this.value)" placeholder="Paste Headshot Image URL (optional)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-[11px] text-slate-300 focus:outline-none focus:border-emerald-500">
@@ -1200,7 +1200,7 @@
                             ${getAvatarHtml(p, ringClass)}
                             <div class="truncate">
                                 <span class="font-medium text-white block truncate">${p.name}</span>
-                                ${hasTypical ? `<span class="text-[10px] text-slate-400">Typical: ${p.typicalScore} (×0.70)</span>` : ''}
+                                ${hasTypical ? `<span class="text-[10px] text-slate-400">Typical: ${p.typicalScore} ((${p.typicalScore}-72)×0.70)</span>` : ''}
                             </div>
                         </div>
                         <span class="bg-slate-800 text-slate-300 px-2 py-1 rounded-lg flex-shrink-0">HI: <strong class="${colorText}">${Number(p.hcp).toFixed(1)}</strong></span>
@@ -1292,7 +1292,7 @@
                     const typ = parseFloat(trimmed);
                     if (!isNaN(typ) && typ > 0) {
                         player.typicalScore = typ;
-                        player.hcp = Math.round(typ * 0.70 * 10) / 10;
+                        player.hcp = Math.max(0, Math.round((typ - 72) * 0.70 * 10) / 10);
                     }
                 }
             } else if (field === 'hcp') {
